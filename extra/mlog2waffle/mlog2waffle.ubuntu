@@ -21,7 +21,7 @@ PATH=/sbin:/usr/sbin:/bin:/usr/bin
 DESC="Modsecurity events to WAF-FLE"
 NAME=mlog2waffle
 DAEMON=/usr/sbin/$NAME
-DAEMON_ARGS=""
+DAEMON_ARGS="--daemon"
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
 

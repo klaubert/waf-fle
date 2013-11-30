@@ -1,5 +1,15 @@
 WAF-FLE ChangeLog
 
+Version 0.6.x:
+Bug: mlog2waffle in batch mode not exiting after finish. Fixed.
+Bug: mlog2waffle.ubuntu init template argument allow to start as a daemon in batch mode. Fixed.
+
+
+Version 0.6.1: Apr, 23 2013
+-------------
+Bug: Solve a issue with no standard timezones, like used in Venezuela.
+
+
 Version 0.6.0: Apr, 23 2013
 -------------
 Bug: Issue #18 fixed, mysql user permissions corrected in README file, thanks for Reinhard Sojka for report. 
