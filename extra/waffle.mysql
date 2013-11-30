@@ -1,0 +1,871 @@
+-- phpMyAdmin SQL Dump
+-- version 3.3.7deb5build0.10.10.1
+-- http://www.phpmyadmin.net
+--
+-- Host: localhost
+-- Generation Time: Oct 24, 2012 at 12:28 AM
+-- Server version: 5.1.61
+-- PHP Version: 5.3.3-1ubuntu9.10
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
+--
+-- Database: `waffle`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `events`
+--
+
+CREATE TABLE IF NOT EXISTS `events` (
+  `event_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `sensor_id` smallint(5) unsigned NOT NULL,
+  `received_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `a_timestamp` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Event timestamp as processesd on modsecurity',
+  `a_timezone` char(6) NOT NULL,
+  `a_date` date NOT NULL,
+  `a_uniqid` char(24) NOT NULL,
+  `a_client_ip` int(10) unsigned NOT NULL,
+  `a_client_ip_cc` enum('A1','A2','AD','AE','AF','AG','AI','AL','AM','AN','AO','AP','AQ','AR','AS','AT','AU','AW','AX','AZ','BA','BB','BD','BE','BF','BG','BH','BI','BJ','BM','BN','BO','BR','BS','BT','BV','BW','BY','BZ','CA','CC','CD','CF','CG','CH','CI','CK','CL','CM','CN','CO','CR','CU','CV','CX','CY','CZ','DE','DJ','DK','DM','DO','DZ','EC','EE','EG','EH','ER','ES','ET','EU','FI','FJ','FK','FM','FO','FR','GA','GB','GD','GE','GF','GG','GH','GI','GL','GM','GN','GP','GQ','GR','GS','GT','GU','GW','GY','HK','HN','HR','HT','HU','ID','IE','IL','IM','IN','IO','IQ','IR','IS','IT','JE','JM','JO','JP','KE','KG','KH','KI','KM','KN','KP','KR','KW','KY','KZ','LA','LB','LC','LI','LK','LR','LS','LT','LU','LV','LY','MA','MC','MD','ME','MG','MH','MK','ML','MM','MN','MO','MP','MQ','MR','MS','MT','MU','MV','MW','MX','MY','MZ','NA','NC','NE','NF','NG','NI','NL','NO','NP','NR','NU','NZ','OM','PA','PE','PF','PG','PH','PK','PL','PM','PR','PS','PT','PW','PY','QA','RE','RO','RS','RU','RW','SA','SB','SC','SD','SE','SG','SH','SI','SJ','SK','SL','SM','SN','SO','SR','ST','SV','SY','SZ','TC','TD','TF','TG','TH','TJ','TK','TL','TM','TN','TO','TR','TT','TV','TW','TZ','UA','UG','UM','US','UY','UZ','VA','VC','VE','VG','VI','VN','VU','WF','WS','YE','YT','ZA','ZM','ZW') DEFAULT NULL,
+  `a_client_ip_asn` smallint(5) unsigned DEFAULT NULL,
+  `a_client_port` smallint(5) unsigned NOT NULL,
+  `a_server_ip` int(10) unsigned NOT NULL,
+  `a_server_port` smallint(5) unsigned NOT NULL,
+  `b_method` varchar(10) NOT NULL,
+  `b_path` varchar(4096) NOT NULL,
+  `b_path_parameter` varchar(4096) NOT NULL,
+  `b_protocol` char(8) NOT NULL,
+  `b_host` int(10) unsigned NOT NULL,
+  `b_user_agent` varchar(1024) NOT NULL,
+  `b_referer` varchar(8096) NOT NULL,
+  `f_protocol` char(8) NOT NULL,
+  `f_status` smallint(3) unsigned NOT NULL,
+  `f_msg` varchar(300) NOT NULL,
+  `f_content_length` int(10) unsigned NOT NULL,
+  `f_connection` varchar(16) NOT NULL,
+  `f_content_type` varchar(30) NOT NULL,
+  `h_apache_error_file` varchar(128) NOT NULL,
+  `h_apache_error_line` smallint(5) unsigned DEFAULT NULL,
+  `h_apache_error_level` tinyint(3) unsigned DEFAULT NULL,
+  `h_apache_error_message` varchar(256) NOT NULL,
+  `h_stopwatch_timestamp` bigint(16) unsigned DEFAULT NULL,
+  `h_stopwatch_duration` int(10) unsigned DEFAULT NULL,
+  `h_stopwatch_time_checkpoint_1` varchar(8) DEFAULT NULL,
+  `h_stopwatch_time_checkpoint_2` varchar(8) DEFAULT NULL,
+  `h_stopwatch_time_checkpoint_3` varchar(8) DEFAULT NULL,
+  `h_stopwatch2_Timestamp` bigint(16) unsigned DEFAULT NULL,
+  `h_stopwatch2_duration` int(10) unsigned DEFAULT NULL,
+  `h_stopwatch2_combined` int(10) unsigned DEFAULT NULL,
+  `h_stopwatch2_p1` int(10) unsigned DEFAULT NULL,
+  `h_stopwatch2_p2` int(10) unsigned DEFAULT NULL,
+  `h_stopwatch2_p3` int(10) unsigned DEFAULT NULL,
+  `h_stopwatch2_p4` int(10) unsigned DEFAULT NULL,
+  `h_stopwatch2_p5` int(10) unsigned DEFAULT NULL,
+  `h_stopwatch2_sr` int(10) unsigned DEFAULT NULL,
+  `h_stopwatch2_sw` int(10) unsigned DEFAULT NULL,
+  `h_stopwatch2_l` int(10) unsigned DEFAULT NULL,
+  `h_stopwatch2_gc` int(10) unsigned DEFAULT NULL,
+  `h_producer` varchar(128) NOT NULL,
+  `h_producer_ruleset` varchar(64) DEFAULT NULL,
+  `h_server` varchar(128) NOT NULL,
+  `h_score_total` smallint(5) unsigned NOT NULL,
+  `h_score_SQLi` smallint(5) unsigned NOT NULL,
+  `h_score_XSS` smallint(5) unsigned NOT NULL,
+  `h_Interception_phase` tinyint(3) unsigned NOT NULL COMMENT 'When a block action are triggered this record the processing phase of disruption',
+  `h_wa_info_app_id` varchar(32) NOT NULL,
+  `h_wa_info_sess_id` varchar(32) NOT NULL,
+  `h_wa_info_user_id` varchar(32) NOT NULL,
+  `h_apache_handler` varchar(32) NOT NULL,
+  `h_response_body_transf` varchar(50) NOT NULL,
+  `h_severity` tinyint(3) unsigned NOT NULL COMMENT 'Top severity for this event',
+  `h_action_status` tinyint(2) unsigned NOT NULL,
+  `h_action_status_msg` varchar(256) NOT NULL,
+  `h_engine_mode` enum('ENABLED','DETECTION_ONLY') DEFAULT NULL,
+  `preserve` tinyint(1) unsigned NOT NULL COMMENT 'Events marked to preserv will no be deleted',
+  `false_positive` tinyint(1) NOT NULL,
+  PRIMARY KEY (`event_id`),
+  UNIQUE KEY `b_host` (`a_date`,`b_host`,`event_id`,`a_timestamp`),
+  UNIQUE KEY `f_status` (`a_date`,`f_status`,`event_id`,`a_timestamp`),
+  UNIQUE KEY `a_client_ip` (`a_date`,`a_client_ip`,`event_id`,`a_timestamp`),
+  UNIQUE KEY `sensor_id` (`a_date`,`sensor_id`,`event_id`,`a_timestamp`),
+  UNIQUE KEY `h_action` (`a_date`,`h_action_status`,`event_id`,`a_timestamp`),
+  KEY `a_uniqid` (`a_uniqid`),
+  KEY `b_method` (`a_date`,`b_method`,`event_id`,`a_timestamp`),
+  KEY `clientIP_CC` (`a_date`,`a_client_ip_cc`,`event_id`,`a_timestamp`),
+  KEY `clientIP_ASN` (`a_date`,`a_client_ip_asn`,`event_id`,`a_timestamp`),
+  KEY `date` (`a_date`,`event_id`,`a_timestamp`),
+  KEY `severity` (`a_date`,`h_severity`,`event_id`,`a_timestamp`),
+  KEY `path` (`a_date`,`b_path`(32),`event_id`,`a_timestamp`),
+  KEY `method` (`b_method`),
+  KEY `webhost` (`b_host`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Events received from sensors' AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `events`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `events_full_sections`
+--
+
+CREATE TABLE IF NOT EXISTS `events_full_sections` (
+  `event_id` int(10) unsigned NOT NULL,
+  `a_full` mediumblob NOT NULL COMMENT 'Full A section',
+  `b_full` mediumblob NOT NULL COMMENT 'Full B section',
+  `c_full` mediumblob COMMENT 'Full C section',
+  `e_full` mediumblob COMMENT 'Full E section',
+  `f_full` mediumblob NOT NULL COMMENT 'Full F section',
+  `h_full` mediumblob NOT NULL COMMENT 'Full H section',
+  `i_full` mediumblob COMMENT 'Full I section',
+  `k_full` mediumblob COMMENT 'Full K section',
+  `z_full` mediumtext NOT NULL COMMENT 'Full Z section',
+  `compressed` tinyint(1) NOT NULL,
+  UNIQUE KEY `event_id` (`event_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Events received from analyzers';
+
+--
+-- Dumping data for table `events_full_sections`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `events_hostname`
+--
+
+CREATE TABLE IF NOT EXISTS `events_hostname` (
+  `host_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `hostname` varchar(64) NOT NULL,
+  PRIMARY KEY (`host_id`),
+  UNIQUE KEY `hostname` (`hostname`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Keep a list of web hostname' AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `events_hostname`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `events_messages`
+--
+
+CREATE TABLE IF NOT EXISTS `events_messages` (
+  `event_id` int(10) unsigned NOT NULL,
+  `msg_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `h_message_pattern` varchar(512) NOT NULL,
+  `h_message_action` varchar(256) NOT NULL,
+  `h_message_ruleFile` varchar(128) NOT NULL,
+  `h_message_ruleLine` tinyint(8) NOT NULL,
+  `h_message_ruleId` mediumint(9) unsigned NOT NULL,
+  `h_message_ruleData` varchar(256) NOT NULL,
+  `h_message_ruleSeverity` tinyint(2) unsigned NOT NULL,
+  PRIMARY KEY (`msg_id`),
+  KEY `idx1` (`event_id`,`h_message_ruleSeverity`,`h_message_ruleId`),
+  KEY `eventid_ruleid` (`event_id`,`h_message_ruleId`),
+  KEY `msgid_eventid` (`msg_id`,`event_id`),
+  KEY `eventid_msgid_ruleid` (`event_id`,`msg_id`,`h_message_ruleId`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Events received from analyzers' AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `events_messages`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `events_messages_tag`
+--
+
+CREATE TABLE IF NOT EXISTS `events_messages_tag` (
+  `msg_id` int(10) unsigned NOT NULL,
+  `h_message_tag` smallint(5) unsigned NOT NULL,
+  KEY `msgid_msgtag` (`msg_id`,`h_message_tag`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Events received from analyzers';
+
+--
+-- Dumping data for table `events_messages_tag`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `http_code`
+--
+
+CREATE TABLE IF NOT EXISTS `http_code` (
+  `code` smallint(3) unsigned NOT NULL,
+  `msg` char(35) NOT NULL,
+  PRIMARY KEY (`code`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Http status code';
+
+--
+-- Dumping data for table `http_code`
+--
+
+INSERT INTO `http_code` (`code`, `msg`) VALUES
+(100, 'Continue'),
+(101, 'Switching Protocols'),
+(102, 'Processing'),
+(200, 'OK'),
+(201, 'Created'),
+(202, 'Accepted'),
+(203, 'Non-Authoritative Information'),
+(204, 'No Content'),
+(205, 'Reset Content'),
+(206, 'Partial Content'),
+(207, 'Multi-Status'),
+(208, 'Already Reported'),
+(226, 'IM Used'),
+(300, 'Multiple Choices'),
+(301, 'Moved Permanently'),
+(302, 'Found'),
+(303, 'See Other'),
+(304, 'Not Modified'),
+(305, 'Use Proxy'),
+(307, 'Temporary Redirect'),
+(400, 'Bad Request'),
+(401, 'Unauthorized'),
+(402, 'Payment Required'),
+(403, 'Forbidden'),
+(404, 'Not Found'),
+(405, 'Method Not Allowed'),
+(406, 'Not Acceptable'),
+(407, 'Proxy Authentication Required'),
+(408, 'Request Time-out'),
+(409, 'Conflict'),
+(410, 'Gone'),
+(411, 'Length Required'),
+(412, 'Precondition Failed'),
+(413, 'Request Entity Too Large'),
+(414, 'Request-URI Too Large'),
+(415, 'Unsupported Media Type"'),
+(416, 'Requested range not satisfiable'),
+(417, 'Expectation Failed'),
+(422, 'Unprocessable Entity'),
+(423, 'Locked'),
+(424, 'Failed Dependency'),
+(425, 'Unordered Collection'),
+(426, 'Upgrade Required'),
+(444, 'No Response'),
+(449, 'Retry With'),
+(499, 'Client Closed Request'),
+(500, 'Internal Server Error'),
+(501, 'Not Implemented'),
+(502, 'Bad Gateway'),
+(503, 'Service Unavailable'),
+(504, 'Gateway Time-out'),
+(505, 'HTTP Version not supported'),
+(506, 'Variant Also Negotiates'),
+(507, 'Insufficient Storage'),
+(508, 'Loop Detected'),
+(509, 'Bandwidth Limit Exceeded'),
+(510, 'Not Extended');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `rule_message`
+--
+
+CREATE TABLE IF NOT EXISTS `rule_message` (
+  `message_ruleId` mediumint(9) unsigned NOT NULL,
+  `message_ruleMsg` varchar(256) NOT NULL,
+  PRIMARY KEY (`message_ruleId`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `rule_message`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sensors`
+--
+
+CREATE TABLE IF NOT EXISTS `sensors` (
+  `sensor_id` smallint(5) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL,
+  `password` varchar(20) NOT NULL,
+  `IP` varchar(15) DEFAULT NULL COMMENT 'IP Address of analyzer',
+  `description` varchar(300) DEFAULT NULL,
+  `type` tinyint(4) unsigned NOT NULL,
+  `status` enum('Enabled','Disabled') NOT NULL,
+  `client_ip_via` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Define if the client ip address is sent in other header',
+  `client_ip_header` char(40) DEFAULT NULL COMMENT 'define ip client header, like x-forwarded-for',
+  PRIMARY KEY (`sensor_id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Sensors list' AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `sensors`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sensors_type`
+--
+
+CREATE TABLE IF NOT EXISTS `sensors_type` (
+  `type` tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
+  `Description` varchar(30) NOT NULL COMMENT 'Type of analyzer',
+  PRIMARY KEY (`type`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='Types of sensors' AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `sensors_type`
+--
+
+INSERT INTO `sensors_type` (`type`, `Description`) VALUES
+(1, 'ModSecurity Apache');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `severity`
+--
+
+CREATE TABLE IF NOT EXISTS `severity` (
+  `id_severity` tinyint(1) unsigned NOT NULL,
+  `severity` tinytext NOT NULL,
+  PRIMARY KEY (`id_severity`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Severity used by modsecurity';
+
+--
+-- Dumping data for table `severity`
+--
+
+INSERT INTO `severity` (`id_severity`, `severity`) VALUES
+(0, 'EMERGENCY'),
+(1, 'ALERT'),
+(2, 'CRITICAL'),
+(3, 'ERROR'),
+(4, 'WARNING'),
+(5, 'NOTICE'),
+(6, 'INFO'),
+(7, 'DEBUG');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tags`
+--
+
+CREATE TABLE IF NOT EXISTS `tags` (
+  `tag_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+  `tag_name` varchar(128) NOT NULL,
+  `url` varchar(128) DEFAULT NULL,
+  `tag_title` varchar(128) DEFAULT NULL,
+  `tag_text` varchar(2048) DEFAULT NULL,
+  PRIMARY KEY (`tag_id`),
+  UNIQUE KEY `tag_name` (`tag_name`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='Tags used by rules' AUTO_INCREMENT=408 ;
+
+--
+-- Dumping data for table `tags`
+--
+
+INSERT INTO `tags` (`tag_id`, `tag_name`, `url`, `tag_title`, `tag_text`) VALUES
+(1, 'attempted-admin', NULL, 'attempted-admin', NULL),
+(2, 'attempted-recon', NULL, 'attempted-recon', NULL),
+(3, 'AUTOMATION/MALICIOUS', NULL, 'AUTOMATION/MALICIOUS', NULL),
+(4, 'AUTOMATION/SECURITY_SCANNER', NULL, 'AUTOMATION/SECURITY_SCANNER', NULL),
+(5, 'bad-unknown', NULL, 'bad-unknown', NULL),
+(6, 'http://i-technica.com/whitestuff/asciichart.html', 'http://i-technica.com/whitestuff/asciichart.html', 'Ascii Code Chart', 'Ascii Code Chart'),
+(7, 'http://technet.microsoft.com/en-us/magazine/2005.01.hackerbasher.aspx', 'http://technet.microsoft.com/en-us/magazine/2005.01.hackerbasher.aspx', 'Hackerbasher ', 'Hackerbasher '),
+(8, 'http://www.bad-behavior.ioerror.us/documentation/how-it-works/', 'http://www.bad-behavior.ioerror.us/documentation/how-it-works/', 'How Bad Behavior Works', 'How Bad Behavior Works'),
+(9, 'http://www.kb.cert.org/vuls/id/739224', 'http://www.kb.cert.org/vuls/id/739224', 'HTTP content scanning', 'HTTP content scanning systems full-width/half-width Unicode encoding bypass'),
+(10, 'http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.13', 'http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.13', 'rfc2616-sec14', 'rfc2616 section 14\r\n'),
+(11, 'http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.2.1', 'http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.2.1', 'rfc2616-sec3', 'rfc2616 section 3'),
+(12, 'http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.5', 'http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.5', 'rfc2616-sec3', 'rfc2616 section 3'),
+(13, 'http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.3', 'http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.3', 'rfc2616-sec4', 'rfc2616 section 4'),
+(14, 'http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9.5', 'http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9.5', 'rfc2616-sec9', 'rfc2616 section 9'),
+(15, 'LEAKAGE/ERRORS', NULL, 'LEAKAGE/ERRORS', NULL),
+(16, 'LEAKAGE/INFO', NULL, 'LEAKAGE/INFO', NULL),
+(17, 'LEAKAGE/SOURCE_CODE', NULL, 'LEAKAGE/SOURCE_CODE', NULL),
+(18, 'MALICIOUS_IFRAME', NULL, 'MALICIOUS_IFRAME', NULL),
+(19, 'MALICIOUS_SOFTWARE/TROJAN', NULL, 'MALICIOUS_SOFTWARE/TROJAN', NULL),
+(20, 'MALWARE_LINK', NULL, 'MALWARE_LINK', NULL),
+(21, 'MISCONFIGURATION', NULL, 'MISCONFIGURATION', NULL),
+(22, 'OWASP_AppSensor/CIE1', 'https://www.owasp.org/images/2/2f/OWASP_AppSensor_Beta_1.1.pdf', 'Blacklist Inspection For Common SQL Injection Values', 'A request is received which contains common SQL injection attack attempts. The point of this detection is not to detect all variations of a SQL injection attack, but to detect the common probes which an attacker or tool might use to determine if a SQL injection vulnerability is present.'),
+(23, 'OWASP_AppSensor/CIE3', 'https://www.owasp.org/images/2/2f/OWASP_AppSensor_Beta_1.1.pdf', 'Null Byte Character In File Request', 'A request is received to download a file from the server. The filename requested contains the null byte the file name. This is an attempted OS injection attack.'),
+(24, 'OWASP_AppSensor/CIE4', 'https://www.owasp.org/images/2/2f/OWASP_AppSensor_Beta_1.1.pdf', 'Carriage Return Or Line Feed Character In File Request', 'A request is received which contains the carriage return or line feed characters within the posted data or the URL parameters. This is an attempted HTTP split response attack.'),
+(25, 'OWASP_AppSensor/EE2', 'https://www.owasp.org/images/2/2f/OWASP_AppSensor_Beta_1.1.pdf', 'Unexpected Encoding Used', 'An HTTP request is received which contains values that have encoded in an unexpected format.'),
+(26, 'OWASP_AppSensor/IE1', 'https://www.owasp.org/images/2/2f/OWASP_AppSensor_Beta_1.1.pdf', 'Cross Site Scripting Attempt', 'The HTTP request contains common XSS attacks which are often used by attackers probing for XSS vulnerabilities. Detection should be configured to test all GET and POST values as well as all header names and values for the following values.'),
+(27, 'OWASP_AppSensor/RE1', 'https://www.owasp.org/images/2/2f/OWASP_AppSensor_Beta_1.1.pdf', 'Unexpected HTTP Commands', 'An HTTP request is received which contains unexpected commands. A list of accepted commands should be generated (i.e. GET and POST) and all other HTTP commands should generate an event.'),
+(28, 'OWASP_TOP_10/A1', 'http://www.owasp.org/index.php/Top_10_2007-A1', 'Cross Site Scripting (XSS)', 'XSS flaws occur whenever an application takes user supplied data and sends it to a web browser without first validating or encoding that content. XSS allows attackers to execute script in the victim''s browser which can hijack user sessions, deface web sites, possibly introduce worms, etc. '),
+(29, 'OWASP_TOP_10/A2', 'http://www.owasp.org/index.php/Top_10_2007-A2', 'Injection Flaws', 'Injection flaws, particularly SQL injection, are common in web applications. Injection occurs when user-supplied data is sent to an interpreter as part of a command or query. The attacker''s hostile data tricks the interpreter into executing unintended commands or changing data.'),
+(30, 'OWASP_TOP_10/A3', 'http://www.owasp.org/index.php/Top_10_2007-A3', 'Malicious File Execution', 'Code vulnerable to remote file inclusion (RFI) allows attackers to include hostile code and data, resulting in devastating attacks, such as total server compromise. Malicious file execution attacks affect PHP, XML and any framework which accepts filenames or files from users.'),
+(31, 'OWASP_TOP_10/A4', 'http://www.owasp.org/index.php/Top_10_2007-A4', 'Insecure Direct Object Reference', 'A direct object reference occurs when a developer exposes a reference to an internal implementation object, such as a file, directory, database record, or key, as a URL or form parameter. Attackers can manipulate those references to access other objects without authorization.'),
+(32, 'OWASP_TOP_10/A6', 'http://www.owasp.org/index.php/Top_10_2007-A6', 'Information Leakage and Improper Error Handling', 'Applications can unintentionally leak information about their configuration, internal workings, or violate privacy through a variety of application problems. Attackers use this weakness to steal sensitive data, or conduct more serious attacks.'),
+(33, 'OWASP_TOP_10/A7', 'http://www.owasp.org/index.php/Top_10_2007-A7', 'Broken Authentication and Session Management', 'Account credentials and session tokens are often not properly protected. Attackers compromise passwords, keys, or authentication tokens to assume other users'' identities.'),
+(34, 'PCI/12.1', 'https://www.pcisecuritystandards.org/security_standards/pci_dss.shtml', 'Establish, publish, maintain, and disseminate a security policy', 'Examine the information security policy and verify that the policy is published and disseminated to all relevant system users (including vendors, contractors, and business partners).'),
+(35, 'PCI/5.1.1', 'https://www.pcisecuritystandards.org/security_standards/pci_dss.shtml', 'Ensure that all anti-virus programs are capable of detecting, removing, and protecting against all known types of malicious soft', 'For a sample of system components, verify that all anti-virus programs detect, remove, and protect against all known types of malicious software (for example, viruses, Trojans, worms, spyware, adware, and rootkits).'),
+(36, 'PCI/6.5.1', 'https://www.pcisecuritystandards.org/security_standards/pci_dss.shtml', 'Cross-site scripting (XSS)', 'Cross-site scripting (XSS) (Validate all parameters before inclusion.)'),
+(37, 'PCI/6.5.10', 'https://www.pcisecuritystandards.org/security_standards/pci_dss.shtml', 'Failure to restrict URL access', 'Failure to restrict URL access (Consistently enforce access control in presentation layer and business logic for all URLs.)'),
+(38, 'PCI/6.5.2', 'https://www.pcisecuritystandards.org/security_standards/pci_dss.shtml', 'Injection flaws, particularly SQL injection. Also consider LDAP and Xpath injection flaws as well as other injection flaws.', 'Injection flaws, particularly SQL injection (Validate input to verify user data cannot modify meaning of commands and queries.)'),
+(39, 'PCI/6.5.4', 'https://www.pcisecuritystandards.org/security_standards/pci_dss.shtml', 'Insecure direct object references', 'Insecure direct object references (Do not expose internal object references to users.)'),
+(40, 'PCI/6.5.6', 'https://www.pcisecuritystandards.org/security_standards/pci_dss.shtml', 'Information leakage and improper error handling', 'Information leakage and improper error handling (Do not leak information via error messages or other means.)'),
+(41, 'PCI/6.5.7', 'https://www.pcisecuritystandards.org/security_standards/pci_dss.shtml', 'Broken authentication and session management', 'Broken authentication and session management (Properly authenticate users and protect account credentials and session tokens.)'),
+(42, 'POLICY/ENCODING_NOT_ALLOWED', NULL, 'POLICY/ENCODING_NOT_ALLOWED', NULL),
+(43, 'POLICY/EXT_RESTRICTED', NULL, 'POLICY/EXT_RESTRICTED', NULL),
+(44, 'POLICY/FILES_NOT_ALLOWED', NULL, 'POLICY/FILES_NOT_ALLOWED', NULL),
+(45, 'POLICY/HEADER_RESTRICTED', NULL, 'POLICY/HEADER_RESTRICTED', NULL),
+(46, 'POLICY/METHOD_NOT_ALLOWED', NULL, 'POLICY/METHOD_NOT_ALLOWED', NULL),
+(47, 'POLICY/PROTOCOL_NOT_ALLOWED', NULL, 'POLICY/PROTOCOL_NOT_ALLOWED', NULL),
+(48, 'PROTOCOL_VIOLATION/EVASION', NULL, 'PROTOCOL_VIOLATION/EVASION', NULL),
+(49, 'PROTOCOL_VIOLATION/INVALID_HREQ', NULL, 'PROTOCOL_VIOLATION/INVALID_HREQ', NULL),
+(50, 'PROTOCOL_VIOLATION/IP_HOST', NULL, 'PROTOCOL_VIOLATION/IP_HOST', NULL),
+(51, 'PROTOCOL_VIOLATION/MISSING_HEADER', NULL, 'PROTOCOL_VIOLATION/MISSING_HEADER', NULL),
+(52, 'PROTOCOL_VIOLATION/PROXY_ACCESS', NULL, 'PROTOCOL_VIOLATION/PROXY_ACCESS', NULL),
+(53, 'trojan-activity', NULL, NULL, NULL),
+(54, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_2020_Auto_gallery', NULL, NULL, NULL),
+(55, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_2z_project', NULL, NULL, NULL),
+(56, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_8pixel', NULL, NULL, NULL),
+(57, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Absolute_Image_Gallery', NULL, NULL, NULL),
+(58, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Acart', NULL, NULL, NULL),
+(59, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_ACGVannu', NULL, NULL, NULL),
+(60, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_ActiveNews', NULL, NULL, NULL),
+(61, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_aFAQ', NULL, NULL, NULL),
+(62, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_AIOCP', NULL, NULL, NULL),
+(63, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_AJ', NULL, NULL, NULL),
+(64, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Aktueldownload_Haber_script', NULL, NULL, NULL),
+(65, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Alex_Guestbook', NULL, NULL, NULL),
+(66, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Alstrasoft', NULL, NULL, NULL),
+(67, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Angel_Learning_Mgmt', NULL, NULL, NULL),
+(68, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_AnnounceScriptHP', NULL, NULL, NULL),
+(69, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_ASP_EDGE', NULL, NULL, NULL),
+(70, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Aspee', NULL, NULL, NULL),
+(71, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_ASP_listpics', NULL, NULL, NULL),
+(72, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_ASPMForum', NULL, NULL, NULL),
+(73, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_ASP_NEWS', NULL, NULL, NULL),
+(74, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_ASP_Siteware', NULL, NULL, NULL),
+(75, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Audins', NULL, NULL, NULL),
+(76, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Basicforum', NULL, NULL, NULL),
+(77, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_bbPress', NULL, NULL, NULL),
+(78, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_bitweaver', NULL, NULL, NULL),
+(79, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Bluetrait', NULL, NULL, NULL),
+(80, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Bookmark4U', NULL, NULL, NULL),
+(81, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_BP_Blog', NULL, NULL, NULL),
+(82, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_BPG_Infotech', NULL, NULL, NULL),
+(83, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_BtiTracker', NULL, NULL, NULL),
+(84, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_BtitTracker', NULL, NULL, NULL),
+(85, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Burak', NULL, NULL, NULL),
+(86, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Calendar_MX', NULL, NULL, NULL),
+(87, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_CandyPress', NULL, NULL, NULL),
+(88, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_chatwm', NULL, NULL, NULL),
+(89, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Clicktech', NULL, NULL, NULL),
+(90, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_CMS_Made_Simple', NULL, NULL, NULL),
+(91, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_CodeAvalance', NULL, NULL, NULL),
+(92, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Comersus', NULL, NULL, NULL),
+(93, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_ComicSense_Portal', NULL, NULL, NULL),
+(94, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Connectix_Portal', NULL, NULL, NULL),
+(95, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_ContentNow', NULL, NULL, NULL),
+(96, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Contra_Haber', NULL, NULL, NULL),
+(97, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Coppermine_Photo_Gallery', NULL, NULL, NULL),
+(98, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_cpCommerce', NULL, NULL, NULL),
+(99, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Creascripts', NULL, NULL, NULL),
+(100, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_CreateAuction', NULL, NULL, NULL),
+(101, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_CubeCart', NULL, NULL, NULL),
+(102, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_dB_Masters', NULL, NULL, NULL),
+(103, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Design4Online', NULL, NULL, NULL),
+(104, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_dev4u', NULL, NULL, NULL),
+(105, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_DGNews', NULL, NULL, NULL),
+(106, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Digiappz', NULL, NULL, NULL),
+(107, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Digirez', NULL, NULL, NULL),
+(108, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_DMXReady', NULL, NULL, NULL),
+(109, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Dokeos', NULL, NULL, NULL),
+(110, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_dol_storye', NULL, NULL, NULL),
+(111, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_DQOS', NULL, NULL, NULL),
+(112, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Dragon_Business_Dir', NULL, NULL, NULL),
+(113, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Duruyu', NULL, NULL, NULL),
+(114, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Duware', NULL, NULL, NULL),
+(115, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_E-Annu', NULL, NULL, NULL),
+(116, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Easebay', NULL, NULL, NULL),
+(117, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_EasyMoblog', NULL, NULL, NULL),
+(118, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_EasyPage', NULL, NULL, NULL),
+(119, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Eclectic_Designs', NULL, NULL, NULL),
+(120, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Efkan', NULL, NULL, NULL),
+(121, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Elxis', NULL, NULL, NULL),
+(122, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_eNdonesia', NULL, NULL, NULL),
+(123, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Enthrallweb', NULL, NULL, NULL),
+(124, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Enthusiast', NULL, NULL, NULL),
+(125, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_EQdkp', NULL, NULL, NULL),
+(126, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Eric_Guillaume', NULL, NULL, NULL),
+(127, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Esmartcart', NULL, NULL, NULL),
+(128, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Evision', NULL, NULL, NULL),
+(129, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Evolve', NULL, NULL, NULL),
+(130, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_ExoPHPDesk', NULL, NULL, NULL),
+(131, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Expinion.net', NULL, NULL, NULL),
+(132, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Ezboxx', NULL, NULL, NULL),
+(133, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_EzHRS', NULL, NULL, NULL),
+(134, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Fantastic_News', NULL, NULL, NULL),
+(135, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_FAQEngine', NULL, NULL, NULL),
+(136, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_FileRun', NULL, NULL, NULL),
+(137, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_fips', NULL, NULL, NULL),
+(138, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_FipsSHOP', NULL, NULL, NULL),
+(139, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Fixit_iDMS', NULL, NULL, NULL),
+(140, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Flashgames', NULL, NULL, NULL),
+(141, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Forum_Livre', NULL, NULL, NULL),
+(142, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Fullaspsite', NULL, NULL, NULL),
+(143, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_FUM', NULL, NULL, NULL),
+(144, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Fusetalk', NULL, NULL, NULL),
+(145, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Future_Internet', NULL, NULL, NULL),
+(146, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Fuzzylime', NULL, NULL, NULL),
+(147, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Gazi', NULL, NULL, NULL),
+(148, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_GaziYapBoz', NULL, NULL, NULL),
+(149, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_gCards', NULL, NULL, NULL),
+(150, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_GlobalMegaCorp', NULL, NULL, NULL),
+(151, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Glossaire', NULL, NULL, NULL),
+(152, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Grayscale_Blog', NULL, NULL, NULL),
+(153, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Guo_Xu_Guos', NULL, NULL, NULL),
+(154, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Hazir', NULL, NULL, NULL),
+(155, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_HC_News', NULL, NULL, NULL),
+(156, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_HIOX', NULL, NULL, NULL),
+(157, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Hunkaray', NULL, NULL, NULL),
+(158, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_iGeneric', NULL, NULL, NULL),
+(159, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Image_Gallery', NULL, NULL, NULL),
+(160, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Infinitytechs', NULL, NULL, NULL),
+(161, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Invision', NULL, NULL, NULL),
+(162, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_iWare_Pro', NULL, NULL, NULL),
+(163, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Ixprim', NULL, NULL, NULL),
+(164, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_JackKnife', NULL, NULL, NULL),
+(165, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Jasmine_CMS', NULL, NULL, NULL),
+(166, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Jelsoft', NULL, NULL, NULL),
+(167, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Jetbox', NULL, NULL, NULL),
+(168, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_JFF_NM', NULL, NULL, NULL),
+(169, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_JGBBS', NULL, NULL, NULL),
+(170, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Jiros', NULL, NULL, NULL),
+(171, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Jobsitepro', NULL, NULL, NULL),
+(172, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_John_Mordo', NULL, NULL, NULL),
+(173, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Joomla', NULL, NULL, NULL),
+(174, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Kartli', NULL, NULL, NULL),
+(175, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Katalog_Plyt', NULL, NULL, NULL),
+(176, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Kisisel', NULL, NULL, NULL),
+(177, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_KLF_Design', NULL, NULL, NULL),
+(178, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Kolayindir', NULL, NULL, NULL),
+(179, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Kubix', NULL, NULL, NULL),
+(180, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_L2J_DropCalc', NULL, NULL, NULL),
+(181, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_LDU', NULL, NULL, NULL),
+(182, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Liberum', NULL, NULL, NULL),
+(183, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_LI_Guestbook', NULL, NULL, NULL),
+(184, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Link_CMS', NULL, NULL, NULL),
+(185, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Link_Exchange_Lite', NULL, NULL, NULL),
+(186, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Links_Management', NULL, NULL, NULL),
+(187, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_LiveCMS', NULL, NULL, NULL),
+(188, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_LocazoList', NULL, NULL, NULL),
+(189, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Lotfian', NULL, NULL, NULL),
+(190, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Lushi', NULL, NULL, NULL),
+(191, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Mambo', NULL, NULL, NULL),
+(192, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Martyn_Kilbryde_Newsposter', NULL, NULL, NULL),
+(193, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_mcRefer', NULL, NULL, NULL),
+(194, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_MDPro', NULL, NULL, NULL),
+(195, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Mega_Mall', NULL, NULL, NULL),
+(196, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Messageriescripthp', NULL, NULL, NULL),
+(197, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Metyus', NULL, NULL, NULL),
+(198, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_MGB', NULL, NULL, NULL),
+(199, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_MGinternet', NULL, NULL, NULL),
+(200, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Midicart', NULL, NULL, NULL),
+(201, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Minerva', NULL, NULL, NULL),
+(202, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_MiNT', NULL, NULL, NULL),
+(203, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Motionborg', NULL, NULL, NULL),
+(204, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_myBloggie', NULL, NULL, NULL),
+(205, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_MyConference', NULL, NULL, NULL),
+(206, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_My_Datebook', NULL, NULL, NULL),
+(207, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_My_Little_Forum', NULL, NULL, NULL),
+(208, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_MyStats', NULL, NULL, NULL),
+(209, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Nabopoll', NULL, NULL, NULL),
+(210, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Neochrome', NULL, NULL, NULL),
+(211, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Neocrome', NULL, NULL, NULL),
+(212, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_NetClassifieds', NULL, NULL, NULL),
+(213, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_NetVIOS', NULL, NULL, NULL),
+(214, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Neuron_Blog', NULL, NULL, NULL),
+(215, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Nicola_Asuni', NULL, NULL, NULL),
+(216, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Noname_Media_Gallerie', NULL, NULL, NULL),
+(217, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Novell_Zenworks', NULL, NULL, NULL),
+(218, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_NukeSentinel', NULL, NULL, NULL),
+(219, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_O2PHP', NULL, NULL, NULL),
+(220, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Okul', NULL, NULL, NULL),
+(221, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_olboolmarks', NULL, NULL, NULL),
+(222, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Omegasoft', NULL, NULL, NULL),
+(223, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Online_Web_Building', NULL, NULL, NULL),
+(224, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Outfront', NULL, NULL, NULL),
+(225, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Particle_Blogger', NULL, NULL, NULL),
+(226, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Particle_Gallery', NULL, NULL, NULL),
+(227, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Phil-A-Form', NULL, NULL, NULL),
+(228, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Philboard', NULL, NULL, NULL),
+(229, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_PHPAccounts', NULL, NULL, NULL),
+(230, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_PHPBB', NULL, NULL, NULL),
+(231, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_phpCC', NULL, NULL, NULL),
+(232, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_PHPEcho', NULL, NULL, NULL),
+(233, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_PHPHoo3', NULL, NULL, NULL),
+(234, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_PHPKit', NULL, NULL, NULL),
+(235, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_PHP_Nuke', NULL, NULL, NULL),
+(236, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_PHP-Stats', NULL, NULL, NULL),
+(237, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_PHP_Update', NULL, NULL, NULL),
+(238, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_PHPWind', NULL, NULL, NULL),
+(239, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_phpx', NULL, NULL, NULL),
+(240, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_pnFlashGames', NULL, NULL, NULL),
+(241, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_PNphpBB2', NULL, NULL, NULL),
+(242, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_PollMentor', NULL, NULL, NULL),
+(243, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Portix', NULL, NULL, NULL),
+(244, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_PostNuke', NULL, NULL, NULL),
+(245, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_ProNews', NULL, NULL, NULL),
+(246, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_PSY_Auction', NULL, NULL, NULL),
+(247, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_PWP', NULL, NULL, NULL),
+(248, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Rapid_Classified', NULL, NULL, NULL),
+(249, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Raymond_Berthou', NULL, NULL, NULL),
+(250, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Recipes_Complete', NULL, NULL, NULL),
+(251, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_ResManager', NULL, NULL, NULL),
+(252, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_RevokeSoft', NULL, NULL, NULL),
+(253, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Rialto', NULL, NULL, NULL),
+(254, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Rigter_portal', NULL, NULL, NULL),
+(255, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_RunawaySoft', NULL, NULL, NULL),
+(256, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_RunCMS', NULL, NULL, NULL),
+(257, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Salescart', NULL, NULL, NULL),
+(258, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Savas', NULL, NULL, NULL),
+(259, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_ScriptMagix', NULL, NULL, NULL),
+(260, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_ScriptMate', NULL, NULL, NULL),
+(261, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Serendipity', NULL, NULL, NULL),
+(262, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_ShopStoreNow', NULL, NULL, NULL),
+(263, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_SimpleNews', NULL, NULL, NULL),
+(264, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Simple_PHP_Portal', NULL, NULL, NULL),
+(265, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Simple_Web_CMS', NULL, NULL, NULL),
+(266, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_SmE', NULL, NULL, NULL),
+(267, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Snitz', NULL, NULL, NULL),
+(268, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Softwebs', NULL, NULL, NULL),
+(269, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Solar_Empire', NULL, NULL, NULL),
+(270, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_SonicMailer', NULL, NULL, NULL),
+(271, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Sphider', NULL, NULL, NULL),
+(272, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_SpoonLabs', NULL, NULL, NULL),
+(273, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Superfreaker', NULL, NULL, NULL),
+(274, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Super_Link_Exchange', NULL, NULL, NULL),
+(275, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_The_Address_Book', NULL, NULL, NULL),
+(276, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_ThWboard', NULL, NULL, NULL),
+(277, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Turuncu', NULL, NULL, NULL),
+(278, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Tyger_Bug_Tracker', NULL, NULL, NULL),
+(279, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Uapplication', NULL, NULL, NULL),
+(280, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Ublog', NULL, NULL, NULL),
+(281, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_UDS', NULL, NULL, NULL),
+(282, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Ultimate_Survey', NULL, NULL, NULL),
+(283, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_uniForm', NULL, NULL, NULL),
+(284, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_vBSupport', NULL, NULL, NULL),
+(285, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Verliadmin', NULL, NULL, NULL),
+(286, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Virtuemart', NULL, NULL, NULL),
+(287, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Vizayn', NULL, NULL, NULL),
+(288, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_VP-ASP', NULL, NULL, NULL),
+(289, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Vspin', NULL, NULL, NULL),
+(290, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_vSupport', NULL, NULL, NULL),
+(291, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_VT_Forum', NULL, NULL, NULL),
+(292, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_W1L3D4_WEBmarlet', NULL, NULL, NULL),
+(293, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_W2B', NULL, NULL, NULL),
+(294, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_W-Agora', NULL, NULL, NULL),
+(295, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Wallpaper_Complete', NULL, NULL, NULL),
+(296, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Warhound', NULL, NULL, NULL),
+(297, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_WBBlog', NULL, NULL, NULL),
+(298, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_WDFL', NULL, NULL, NULL),
+(299, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Web_Ban', NULL, NULL, NULL),
+(300, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_WebMplayer', NULL, NULL, NULL),
+(301, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Website_Baker', NULL, NULL, NULL),
+(302, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_webSPELL', NULL, NULL, NULL),
+(303, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_WebTester', NULL, NULL, NULL),
+(304, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Web_Wiz', NULL, NULL, NULL),
+(305, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Weekly_Drawing', NULL, NULL, NULL),
+(306, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_WF-Links', NULL, NULL, NULL),
+(307, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Woltlab', NULL, NULL, NULL),
+(308, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Wordpress', NULL, NULL, NULL),
+(309, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_WSN', NULL, NULL, NULL),
+(310, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_WSPortal', NULL, NULL, NULL),
+(311, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_WYWO', NULL, NULL, NULL),
+(312, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_X-dev', NULL, NULL, NULL),
+(313, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_X-Ice_News', NULL, NULL, NULL),
+(314, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_XLAtunes', NULL, NULL, NULL),
+(315, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_xNews', NULL, NULL, NULL),
+(316, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Xoops', NULL, NULL, NULL),
+(317, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Xt-News', NULL, NULL, NULL),
+(318, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Xtreme', NULL, NULL, NULL),
+(319, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_ZephyrSoft', NULL, NULL, NULL),
+(320, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Zindizayn', NULL, NULL, NULL),
+(321, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB_SQL_INJECTION/WEB_Zomplog', NULL, NULL, NULL),
+(322, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_Adobe', NULL, NULL, NULL),
+(323, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_Apache.cgi', NULL, NULL, NULL),
+(324, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_Apache_Open_Proxy', NULL, NULL, NULL),
+(325, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_Awstats', NULL, NULL, NULL),
+(326, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_Cacti', NULL, NULL, NULL),
+(327, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_CGI', NULL, NULL, NULL),
+(328, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_Cisco', NULL, NULL, NULL),
+(329, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_Domino_XSS', NULL, NULL, NULL),
+(330, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_General', NULL, NULL, NULL),
+(331, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_Horde', NULL, NULL, NULL),
+(332, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_HP_Openview', NULL, NULL, NULL),
+(333, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_IIS_ADS_Source_Code_Exposure', NULL, NULL, NULL),
+(334, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_IIS_Canonicalization_Bypass', NULL, NULL, NULL),
+(335, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_Java', NULL, NULL, NULL),
+(336, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_Light_Weight_Calendar', NULL, NULL, NULL),
+(337, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_LINK_Method', NULL, NULL, NULL),
+(338, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_Misc_CSS', NULL, NULL, NULL),
+(339, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_Netquery', NULL, NULL, NULL),
+(340, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_Netwin', NULL, NULL, NULL),
+(341, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_PassWiki', NULL, NULL, NULL),
+(342, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_Philips_VOIP', NULL, NULL, NULL),
+(343, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_PHP', NULL, NULL, NULL),
+(344, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_PHP_EasyDynamicPages_Exploit', NULL, NULL, NULL),
+(345, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_PHPGedView', NULL, NULL, NULL),
+(346, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_phpMyAdmin', NULL, NULL, NULL),
+(347, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_PHPOutsourcing', NULL, NULL, NULL),
+(348, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_PHP_Shells', NULL, NULL, NULL),
+(349, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_PHP_vBulletin', NULL, NULL, NULL),
+(350, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_PHP_ZeroBoard', NULL, NULL, NULL),
+(351, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_Piranha', NULL, NULL, NULL),
+(352, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_PMWiki', NULL, NULL, NULL),
+(353, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_Pritlog', NULL, NULL, NULL),
+(354, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_RFI_Generic', NULL, NULL, NULL),
+(355, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_RSA', NULL, NULL, NULL),
+(356, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_Sharepoint', NULL, NULL, NULL),
+(357, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_SQL_Injection_Monster_List', NULL, NULL, NULL),
+(358, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_sumthin', NULL, NULL, NULL),
+(359, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_TellTarget_CMS', NULL, NULL, NULL),
+(360, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_tikiwiki', NULL, NULL, NULL),
+(361, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_Twiki', NULL, NULL, NULL),
+(362, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_URI', NULL, NULL, NULL),
+(363, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_VersatileBB', NULL, NULL, NULL),
+(364, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_Webdav', NULL, NULL, NULL),
+(365, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_WikyBlog', NULL, NULL, NULL),
+(366, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_WinIPDS', NULL, NULL, NULL),
+(367, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_Wordpress', NULL, NULL, NULL),
+(368, 'url,www.emergingthreats.net/cgi-bin/cvsweb.cgi/sigs/WEB/WEB_WPS', NULL, NULL, NULL),
+(369, 'WASCTC/WASC-01', 'http://projects.webappsec.org/Insufficient-Authentication', 'Insufficient Authentication', 'Insufficient Authentication occurs when a web site permits an attacker to access sensitive content or functionality without having to properly authenticate. Web-based administration tools are a good example of web sites providing access to sensitive functionality. Depending on the specific online resource, these web applications should not be directly accessible without requiring the user to properly verify their identity.'),
+(370, 'WASCTC/WASC-13', 'http://projects.webappsec.org/Information-Leakage', 'Information Leakage', 'Information Leakage is an application weakness where an application reveals sensitive data, such as technical details of the web application, environment, or user-specific data. Sensitive data may be used by an attacker to exploit the target web application, its hosting network, or its users. Therefore, leakage of sensitive data should be limited or prevented whenever possible.'),
+(371, 'WASCTC/WASC-14', 'http://projects.webappsec.org/Server-Misconfiguration', 'Server Misconfiguration', 'Server Misconfiguration attacks exploit configuration weaknesses found in web servers and application servers. Many servers come with unnecessary default and sample files, including applications, configuration files, scripts, and web pages. They may also have unnecessary services enabled, such as content management and remote administration functionality.'),
+(372, 'WASCTC/WASC-15', 'http://projects.webappsec.org/Application-Misconfiguration', 'Application Misconfiguration', 'Application Misconfiguration attacks exploit configuration weaknesses found in web applications. Many applications come with unnecessary and unsafe features, such as debug and QA features, enabled by default. These features may provide a means for a hacker to bypass authentication methods and gain access to sensitive information, perhaps with elevated privileges.'),
+(373, 'WASCTC/WASC-19', 'http://projects.webappsec.org/SQL-Injection', 'SQL Injection', 'SQL Injection is an attack technique used to exploit applications that construct SQL statements from user-supplied input. When successful, the attacker is able to change the logic of SQL statements executed against the database.'),
+(374, 'WASCTC/WASC-20', 'http://projects.webappsec.org/Improper-Input-Handling', 'Improper Input Handling', 'Improper input handling is one of the most common weaknesses identified across applications today. Poorly handled input is a leading cause behind critical vulnerabilities that exist in systems and applications.'),
+(375, 'WASCTC/WASC-21', 'http://projects.webappsec.org/Insufficient+Anti-automation', 'Insufficient Anti-automation', 'Insufficient Anti-automation occurs when a web application permits an attacker to automate a process that was originally designed to be performed only in a manual fashion, i.e. by a human web user.'),
+(376, 'WASCTC/WASC-22', 'http://projects.webappsec.org/Improper-Output-Handling', 'Improper Output Handling', 'Output handling refers to how an application generates outgoing data.  If an application has improper output handling, the output data may be consumed leading to vulnerabilities and actions never intended by the application developer.  In many cases, this unintended interpretation is classified as one or more forms of critical application vulnerabilities.'),
+(377, 'WASCTC/WASC-25', 'http://projects.webappsec.org/HTTP-Response-Splitting', 'HTTP Response Splitting', 'In the HTTP Response Splitting attack, there are always 3 parties (at least) involved:  Web server, which has a security hole enabling HTTP Response Splitting; Target - an entity that interacts with the web server perhaps on behalf of the attacker. Typically this is a cache server forward/reverse proxy), or a browser (possibly with a browser cache).; Attacker - initiates the attack'),
+(378, 'WASCTC/WASC-26', 'http://projects.webappsec.org/HTTP-Response-Splitting', 'HTTP Response Splitting', 'In the HTTP Response Splitting attack, there are always 3 parties (at least) involved:  Web server, which has a security hole enabling HTTP Response Splitting; Target - an entity that interacts with the web server perhaps on behalf of the attacker. Typically this is a cache server forward/reverse proxy), or a browser (possibly with a browser cache).;   Attacker - initiates the attack'),
+(379, 'WASCTC/WASC-28', 'http://projects.webappsec.org/Null-Byte-Injection', 'Null Byte Injection', 'Null Byte Injection is an active exploitation technique used to bypass sanity checking filters in web infrastructure by adding URL-encoded null byte characters (i.e. %00, or 0x00 in hex) to the user-supplied data. This injection process can alter the intended logic of the application and allow malicious adversary to get unauthorized access to the system files.'),
+(380, 'WASCTC/WASC-29', 'http://projects.webappsec.org/LDAP-Injection', 'LDAP Injection', 'LDAP Injection is an attack technique used to exploit web sites that construct LDAP statements from user-supplied input.'),
+(381, 'WASCTC/WASC-31', 'http://projects.webappsec.org/OS-Commanding', 'OS Commanding', 'OS Commanding is an attack technique used for unauthorized execution of operating system commands.'),
+(382, 'WASCTC/WASC-33', 'http://projects.webappsec.org/Path-Traversal', 'Path Traversal', 'The Path Traversal attack technique allows an attacker access to files, directories, and commands that potentially reside outside the web document root directory. An attacker may manipulate a URL in such a way that the web site will execute or reveal the contents of arbitrary files anywhere on the web server. Any device that exposes an HTTP-based interface is potentially vulnerable to Path Traversal.'),
+(383, 'WASCTC/WASC-36', 'http://projects.webappsec.org/SSI-Injection', 'SSI Injection', 'SSI Injection (Server-side Include) is a server-side exploit technique that allows an attacker to send code into a web application, which will later be executed locally by the web server. SSI Injection exploits a web application''s failure to sanitize user-supplied data before they are inserted into a server-side interpreted HTML file.');
+INSERT INTO `tags` (`tag_id`, `tag_name`, `url`, `tag_title`, `tag_text`) VALUES
+(384, 'WASCTC/WASC-37', 'http://projects.webappsec.org/Session-Fixation', 'Session Fixation', 'Session Fixation is an attack technique that forces a user''s session ID to an explicit value. Depending on the functionality of the target web site, a number of techniques can be utilized to "fix" the session ID value. These techniques range from Cross-site Scripting exploits to peppering the web site with previously made HTTP requests. After a user''s session ID has been fixed, the attacker will wait for that user to login. Once the user does so, the attacker uses the predefined session ID value to assume the same online identity.'),
+(385, 'WASCTC/WASC-8', 'http://projects.webappsec.org/Cross-Site-Scripting', 'Cross Site Scripting', 'Cross-site Scripting (XSS) is an attack technique that involves echoing attacker-supplied code into a user''s browser instance. A browser instance can be a standard web browser client, or a browser object embedded in a software product such as the browser within WinAmp, an RSS reader, or an email client. The code itself is usually written in HTML/JavaScript, but may also extend to VBScript, ActiveX, Java, Flash, or any other browser-supported technology.'),
+(386, 'web-application-activity', NULL, 'web-application-activity', NULL),
+(387, 'web-application-attack', NULL, 'web-application-attack', NULL),
+(388, 'WEB_ATTACK/CF_INJECTION', NULL, 'WEB_ATTACK/CF_INJECTION', NULL),
+(389, 'WEB_ATTACK/COMMAND_INJECTION', NULL, 'WEB_ATTACK/COMMAND_INJECTION', NULL),
+(390, 'WEB_ATTACK/CSRF', NULL, 'WEB_ATTACK/CSRF', NULL),
+(391, 'WEB_ATTACK/DOS', NULL, 'WEB_ATTACK/DOS', NULL),
+(392, 'WEB_ATTACK/DT', NULL, 'WEB_ATTACK/DT', NULL),
+(393, 'WEB_ATTACK/EVASION', NULL, 'WEB_ATTACK/EVASION', NULL),
+(394, 'WEB_ATTACK/FILE_INJECTION', NULL, 'WEB_ATTACK/FILE_INJECTION', NULL),
+(395, 'WEB_ATTACK/HTTP_RESPONSSE_SPLITTING', NULL, 'WEB_ATTACK/HTTP_RESPONSSE_SPLITTING', NULL),
+(396, 'WEB_ATTACK/ID', NULL, 'WEB_ATTACK/ID', NULL),
+(397, 'WEB_ATTACK/LDAP_INJECTION', NULL, 'WEB_ATTACK/LDAP_INJECTION', NULL),
+(398, 'WEB_ATTACK/LFI', NULL, 'WEB_ATTACK/LFI', NULL),
+(399, 'WEB_ATTACK/PHP_INJECTION', NULL, 'WEB_ATTACK/PHP_INJECTION', NULL),
+(400, 'WEB_ATTACK/REQUEST_SMUGGLING', NULL, 'WEB_ATTACK/REQUEST_SMUGGLING', NULL),
+(401, 'WEB_ATTACK/RFE', NULL, 'WEB_ATTACK/RFE', NULL),
+(402, 'WEB_ATTACK/SESSION_FIXATION', NULL, 'WEB_ATTACK/SESSION_FIXATION', NULL),
+(403, 'WEB_ATTACK/SPAM', NULL, 'WEB_ATTACK/SPAM', NULL),
+(404, 'WEB_ATTACK/SQLI', NULL, 'WEB_ATTACK/SQLI', NULL),
+(405, 'WEB_ATTACK/SQL_INJECTION', NULL, 'WEB_ATTACK/SQL_INJECTION', NULL),
+(406, 'WEB_ATTACK/SSI_INJECTION', NULL, 'WEB_ATTACK/SSI_INJECTION', NULL),
+(407, 'WEB_ATTACK/XSS', NULL, 'WEB_ATTACK/XSS', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tags_custom`
+--
+
+CREATE TABLE IF NOT EXISTS `tags_custom` (
+  `tag_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+  `tag_name` varchar(128) NOT NULL,
+  `url` varchar(128) DEFAULT NULL,
+  `tag_title` varchar(128) DEFAULT NULL,
+  `tag_text` varchar(2048) DEFAULT NULL,
+  PRIMARY KEY (`tag_id`),
+  UNIQUE KEY `tag_name` (`tag_name`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Tags used by rules' AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `tags_custom`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE IF NOT EXISTS `users` (
+  `user_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+  `username` varchar(20) NOT NULL,
+  `password` varchar(40) NOT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='Users table' AUTO_INCREMENT=8 ;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`user_id`, `username`, `password`, `email`) VALUES
+(1, 'admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_permissions`
+--
+
+CREATE TABLE IF NOT EXISTS `user_permissions` (
+  `user_id` smallint(5) NOT NULL,
+  `sensor_id` smallint(5) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='User x Analyzers access';
+
+--
+-- Dumping data for table `user_permissions`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `version`
+--
+
+CREATE TABLE IF NOT EXISTS `version` (
+  `waffle_version` tinytext NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Define the WAF-FLE version';
+
+--
+-- Dumping data for table `version`
+--
+
+INSERT INTO `version` (`waffle_version`) VALUES
+('0.6.0');

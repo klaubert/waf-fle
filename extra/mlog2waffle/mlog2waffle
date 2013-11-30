@@ -1,0 +1,547 @@
+#!/usr/bin/perl
+#       This program is free software; you can redistribute it and/or modify
+#       it under the terms of the GNU General Public License as published by
+#       the Free Software Foundation; either version 2 of the License, or
+#       (at your option) any later version.
+#       
+#       This program is distributed in the hope that it will be useful,
+#       but WITHOUT ANY WARRANTY; without even the implied warranty of
+#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#       GNU General Public License for more details.
+#       
+#       You should have received a copy of the GNU General Public License
+#       along with this program; if not, write to the Free Software
+#       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+#       MA 02110-1301, USA.
+#
+#  Copyright (C) 2011 Klaubert Herr < http://www.waf-fle.org >
+#  This program use some code from logtail2, Copyright (C) 2003 Jonathan
+#  Middleton and Copyright (C) 2001 Paul Slootman <paul@debian.org>, Daemon code
+#  adapted from Andrew Ault, www.andrewault.net
+#
+#  mlog2waffle push modsecurity events to WAF-FLE, see README and
+#  mlog2waffle.conf for usage and configuration details
+
+use strict;
+#use warnings;
+
+use LWP::UserAgent;
+push(@LWP::Protocol::http::EXTRA_SOCK_OPTS, SendTE => 0);
+
+use threads;
+use Thread::Queue;
+use threads::shared;
+
+use POSIX;
+use File::Pid;
+
+use Time::HiRes qw ( usleep );
+
+use Fcntl ':flock';
+
+use File::Tail;
+
+my $daemonName    = "mlog2waffle";
+
+our $VERSION = "0.5.1";
+our $CONSOLE_URI;
+our $CONSOLE_USERNAME;
+our $CONSOLE_PASSWORD;
+our $OFFSET_FILE;
+our $MODE;
+our $FULL_TAIL;
+our $MODSEC_DIRECTORY;
+our $INDEX_FILE;
+our $ERROR_LOG;
+our $THREADMAX;
+our $CHECK_CONNECTIVITY;
+our $DEBUG;
+our $DEBUG_FILE;
+our $PIDFILE;
+
+my $CONFIGFILE = "/etc/mlog2waffle.conf";
+my $exitNot = 0;
+
+my $queue = new Thread::Queue;
+my $logQueue = new Thread::Queue;
+
+my ($size);
+my ($inode, $offset) = (0, 0);
+
+my $errorCond : shared = 0;
+my $commitedOffset : shared = 0;
+my $ino : shared;
+my $logLine;
+my $DAEMON;
+
+sub send_event
+{
+    my $ua = new LWP::UserAgent(keep_alive => 1, agent => "mlog2waffle/$VERSION");
+    $ua->timeout(5);
+    my $tid = threads->tid();
+
+    my $timestamp;
+    while ( my $line = $queue->dequeue ) {
+        return 0 unless defined $line;
+        return 0 if ($errorCond > 0);  # An error was triggered in other thread
+
+        my ($file_name, $file_size, $hash, $summary, $offset) = split(/_\|_/, $line);
+
+        if (!open(F,$file_name)) {
+            $timestamp = strftime('[%d/%b/%Y %H:%M:%S %z]',localtime);
+            $logLine = "$timestamp Could not open event file for: $summary\n";
+            $logQueue->enqueue($logLine); 
+            
+            # skip to next event
+            next;
+        }
+        binmode F;
+
+        my $event_content;
+
+        # load event content from file
+        while (<F>) {
+            return 0 if ($errorCond > 0);  # An error was triggered in other thread
+            $event_content .= $_;            
+        };
+        close(F);
+
+        my $request = HTTP::Request->new(PUT => $CONSOLE_URI);
+        $request->authorization_basic($CONSOLE_USERNAME, $CONSOLE_PASSWORD);
+        $request->header('Connection' => 'Keep-Alive');
+        $request->header('content-length' => $file_size);
+        $request->header('X-ForensicLog-Summary' => $summary);
+        $request->header('X-Content-Hash' => $hash);
+        if ($DEBUG eq "TRUE") {
+            $request->header('X-WAFFLE-Debug' => 'ON');
+        }
+        $request->content($event_content);
+      
+        my $response = $ua->request($request);
+        if ($DEBUG eq "TRUE") {
+            my $debugdata = "--------- Event Index ---------\n";
+            $debugdata .= $summary . "\n";
+            $debugdata .= "--------- mlog2waffle to WAF-FLE Request ---------\n";
+            $debugdata .= $request->as_string;
+            $debugdata .= "--------- WAF-FLE to mlog2waffle Response ---------\n";            
+            $debugdata .= $response->as_string;
+            flock(WRITEDEBUG, LOCK_EX);
+            print WRITEDEBUG $debugdata;
+            flock(WRITEDEBUG, LOCK_UN);
+        }
+       
+        if (!$response->is_success) {
+            my $timestamp = strftime('[%d/%b/%Y %H:%M:%S %z]',localtime); 
+            print STDERR "Error in HTTP connection: " . $response->code . " " . $response->message . "\n";
+            $logLine = "$timestamp Error in HTTP connection: " . $response->code . " " . $response->message . "\n";
+            $logQueue->enqueue($logLine); 
+            
+            if ($response->code == 503) {       # server too busy, give some time to take a breath, and try again
+                usleep(100);
+                redo;
+            } elsif ($response->code == 500) {   # server error, _this_ entry cannot be accepted, go to next one
+                next;
+            } elsif ($response->code == 501) {   # general server error, exiting thread
+                return 501;
+            } elsif ($response->code == 403) {   # Access denied, exiting thread
+                return 403;
+            }
+        } else {
+            # remove event file
+            my $timestamp = strftime('[%d/%b/%Y %H:%M:%S %z]',localtime); 
+            if (unlink $file_name) {
+                $logLine = "$timestamp Event $summary sent to console with status, file deleted\n";
+                $logQueue->enqueue($logLine);
+                lock $commitedOffset;
+                if ($commitedOffset < $offset) {
+                    $commitedOffset = $offset;
+                }
+            } else {
+                $logLine = "$timestamp Event $summary sent to console, but was impossible to delete the event file\n";
+                $logQueue->enqueue($logLine);                  
+            }
+        }
+    }
+    return 0;
+}
+
+sub readIndex {
+    my ($MODE) = @_;
+    if ($MODE eq "batch") {
+
+        # For a read file in logtail way
+        unless ($OFFSET_FILE) {
+            # offsetFile not given, use .offset/$logfile in the same directory
+            $OFFSET_FILE = $INDEX_FILE . '.offset';
+        }
+
+        if ($OFFSET_FILE) {
+            # If offset file exists, open and parse it.
+            if (open(OFFSET, $OFFSET_FILE)) {
+                $_ = <OFFSET>;
+                if (defined $_) {
+                    chomp $_;
+                    $inode = $_;
+                    $_ = <OFFSET>;
+                    if (defined $_) {
+                        chomp $_;
+                        $offset = $_;
+                        lock $commitedOffset;
+                        $commitedOffset = $offset;
+                    }
+                }
+            }
+
+            # determine log file inode and size
+            unless (($ino,$size) = (stat($INDEX_FILE))[1,7]) {
+                print STDERR "Cannot get $INDEX_FILE file size: $!\n";
+                $logLine = "Cannot get $INDEX_FILE file size: $!\n";
+                $logQueue->enqueue($logLine);               
+                $queue->enqueue( (undef)x$THREADMAX );
+                $logQueue->enqueue(undef);
+                close(ModsecIndex);
+                $errorCond = 1;  # Trigger an general error
+            }
+
+            if ($inode == $ino) {
+                if ($offset > $size) {
+                    $offset = 0;
+                }
+            }
+
+            if ($inode != $ino) {
+                $offset = 0;
+            }
+        }
+        
+        unless (open(ModsecIndex, $INDEX_FILE)) {
+            print STDERR "File $INDEX_FILE cannot be read: $!\n";
+            $logLine = "File $INDEX_FILE cannot be read: $!\n";
+            $logQueue->enqueue($logLine);               
+            $queue->enqueue( (undef)x$THREADMAX );
+            $logQueue->enqueue(undef);
+            close(ModsecIndex);
+            $errorCond = 1;  # Trigger an general error
+        }
+        seek(ModsecIndex, $offset, 0);
+      
+    } elsif ($MODE eq "tail") {
+        my $tailmode;
+        if ($FULL_TAIL eq "TRUE") {
+            $tailmode = -1;
+        } else {
+            $tailmode = 0;
+        }
+        my $ref=tie *ModsecIndex,"File::Tail",(name=>$INDEX_FILE, maxinterval=> 10, interval=>2, nowait=>1, tail=>$tailmode);
+    }
+    my $loop = 0;
+    my $indexline;
+    while ($errorCond == 0) {
+        $indexline=<ModsecIndex>;
+        # Wait 1sec if no new content on file
+        if ($indexline eq "") {
+            sleep 1;
+        }
+        return 0 if ($errorCond > 0);  # An error was triggered in other thread
+        chomp($indexline);
+        if ($indexline =~ m{
+            ^          # Start
+            \S+\s      # Hostname
+            \S+\s      # IP Address
+            \S+\s      # Username
+            \S+\s      #
+            \S+\s      # Timestamp
+            \S+\s      # Timezone
+            \".*\S\"\s # Request
+            \d+\s      # HTTP Status
+            \d+\s      # Response length
+            \"\S+\"\s  #
+            \"\S+\"\s  #
+            \S+\s      # UniqID
+            \S+\s      # Session ID
+            (\S+)\s    # Event File
+            \d+\s      #
+            (\d+)\s    # Event Lenght
+            (\S+)      # Event Hash
+        }x) {
+
+            my $file = $MODSEC_DIRECTORY . "/" . $1;
+            if ($MODE eq "batch") {
+                $size = tell ModsecIndex;
+            } else {
+                $size = 0;
+            }
+            
+            my $event_data = $file . "_|_" . $2 . "_|_" . $3 . "_|_" . $indexline . "_|_" . $size;
+
+            $queue->enqueue($event_data);
+
+            if ($queue->pending > $THREADMAX * 50) {
+                return 0 if ($errorCond > 0);  # An error was triggered in other thread
+                
+                while ($queue->pending > $THREADMAX * 25) {
+                    return 0 if ($errorCond > 0);  # An error was triggered in other thread
+                    usleep(30);
+                }
+            }        
+        }
+        $loop++;
+    }
+    
+    while ($queue->pending > 0) {
+        if ($errorCond > 0) {  # An error was triggered in other thread
+            close(ModsecIndex);
+            return 0;
+        }
+        usleep(200);
+    }
+    # Nothing more to do, killing other threads by make queue undef
+    $queue->enqueue( (undef)x$THREADMAX );
+    $logQueue->enqueue(undef);
+    close(ModsecIndex);
+    return 0;
+}
+
+
+sub logWrite
+{
+    unless (open(LOG, "+>>$ERROR_LOG")) {
+        print STDERR "Log $ERROR_LOG cannot be writen: $!\n";
+        return 65;
+    }
+    
+    while ( my $line = $logQueue->dequeue ) {
+        return 0 unless defined $line;
+        print LOG $line;
+    }
+    close (LOG);
+    return 0;
+}
+
+sub inode {
+    my ($filename) = @_;
+    my $inode = 0;
+    unless (-e $filename && ($inode = ((stat($filename))[1])) ) {
+        print STDERR "Cannot get $filename inode: $!\n";
+        $errorCond = 1;  # Trigger an general error
+    }
+return $inode;
+}
+
+
+sub check_conn
+{
+    my $ua = new LWP::UserAgent(agent => "mlog2waffle/$VERSION");
+    $ua->timeout(5);
+    my $request = HTTP::Request->new(PUT => $CONSOLE_URI);
+    $request->authorization_basic($CONSOLE_USERNAME, $CONSOLE_PASSWORD);
+    $request->header('Connection' => 'Close');
+    $request->content("WAF-FLE PROBE\n");
+
+    my $response = $ua->request($request);
+    if (!$response->is_success) {
+        my $timestamp = strftime('[%d/%b/%Y %H:%M:%S %z]',localtime); 
+        print STDERR "Error in HTTP connection: " . $response->code . " " . $response->message . "\n";
+        exit 40;
+    } elsif ($response->header('X-WAF-FLE') !~ m{^READY$}) {
+        my $timestamp = strftime('[%d/%b/%Y %H:%M:%S %z]',localtime); 
+        print STDERR "Error in HTTP connection: " . $response->code . " " . $response->message . "\n";
+        exit 40;
+    }
+   return;
+}
+
+
+# -- Main
+
+if (@ARGV == 1) {
+    if ($ARGV[0] eq "--daemon") {
+        $DAEMON = 1;
+    }
+}
+unless ( -e $CONFIGFILE ) {
+    print "Config file \"$CONFIGFILE\" not found, inform a valid config file and try again. \n\n";
+    exit 1;
+} 
+require $CONFIGFILE;
+
+my $configParseError;
+unless ($CONSOLE_URI) {
+    print "Error: \$CONSOLE_URI not properly defined in config file: $CONFIGFILE\n";
+    $configParseError = 1;
+}
+unless ($CONSOLE_USERNAME) {
+    print "Error: \$CONSOLE_USERNAME not properly defined in config file: $CONFIGFILE\n";
+    $configParseError = 1;
+}
+unless ($CONSOLE_PASSWORD) {
+    print "Error: \$CONSOLE_PASSWORD not properly defined in config file: $CONFIGFILE\n";
+    $configParseError = 1;
+}
+unless ($OFFSET_FILE) {
+    print "Error: \$OFFSET_FILE not properly defined in config file: $CONFIGFILE\n";
+    $configParseError = 1;
+}
+if ($MODE eq "tail" || $MODE eq "batch") {
+    if ($MODE eq "tail") {
+        unless ($PIDFILE ) {
+            print "Error: \$PIDFILE not properly defined in config file: $PIDFILE\n";
+            $configParseError = 1;           
+        }
+        unless ($FULL_TAIL eq "TRUE") {
+            $FULL_TAIL = "FALSE";
+        }
+        if ( -e $PIDFILE ) {
+            print "Error: mlog2waffle already running or crash in last execution. \nCheck file $PIDFILE or the process. Exiting...\n\n";
+            exit 1;
+        }
+    }
+} else {
+    print "Error: \$MODE not properly defined in config file: $CONFIGFILE\n";
+    $configParseError = 1;
+}
+
+
+unless ($MODSEC_DIRECTORY) {
+    print "Error: \$MODSEC_DIRECTORY not properly defined in config file: $CONFIGFILE\n";
+    $configParseError = 1;
+}
+unless ($INDEX_FILE) {
+    print "Error: \$INDEX_FILE not properly defined in config file: $CONFIGFILE\n";
+    $configParseError = 1;
+}
+# Check if index file exist, exit if not
+unless (-e $INDEX_FILE) {
+    print STDERR "Cannot read Index $INDEX_FILE: $!\n";
+    $configParseError = 1;
+}
+
+unless ($ERROR_LOG) {
+    print "Error: \$ERROR_LOG not properly defined in config file: $CONFIGFILE\n";
+    $configParseError = 1;
+}
+unless ($THREADMAX) {
+    print "Error: \$THREADMAX not properly defined in config file: $CONFIGFILE\n";
+    $configParseError = 1;
+}
+if ($THREADMAX > 5) {
+    $THREADMAX = 5;
+    print "Lowering \$THREADMAX to 5, to avoid over resource usage\n";
+}
+unless ($CHECK_CONNECTIVITY) {
+    print "Error: \$CHECK_CONNECTIVITY not properly defined in config file: $CONFIGFILE\n";
+    $configParseError = 1;
+}
+if ($configParseError) {
+    exit 1;
+}
+
+print "Starting up mlog2waffle in \"$MODE\" mode, using config file $CONFIGFILE\n";
+  
+
+# Check if log file is writable
+unless (open(LOG, "+>>$ERROR_LOG")) {
+    print STDERR "Log $ERROR_LOG cannot be writen: $!\n";
+    return 65;
+}
+close LOG;
+
+# Probe WAF-FLE connectivity
+if ($CHECK_CONNECTIVITY eq "TRUE") {
+    check_conn();
+}
+
+# daemonize
+if ($DAEMON) {
+    if ($MODE ne "tail") {
+        die "Error: You only can run mlog2waffle as a daemon in \"tail\" mode\n";
+    }
+    if ($DEBUG eq "TRUE") {
+        die "Error: You can't run mlog2waffle as a daemon with debug enabled\n";
+    }
+    use POSIX qw(setsid);
+    chdir '/';
+    umask 0;
+   # open STDIN,  '/dev/null'   or die "Can't read /dev/null: $!";
+   # open STDOUT, '>>/dev/null' or die "Can't write to /dev/null: $!";
+   # open STDERR, '>>/tmp/err' or die "Can't write to /dev/null: $!";
+    defined( my $pid = fork ) or die "Can't fork: $!";
+    exit if $pid;
+
+    POSIX::setsid() or die "Can't start a new session.";
+    # callback signal handler for signals.
+    $SIG{INT} = $SIG{TERM} = $SIG{HUP} = \&signalHandler;
+    $SIG{PIPE} = 'ignore';
+    $PIDFILE = File::Pid->new( { file => $PIDFILE, } );
+    $PIDFILE->write or die "Can't write PID file, /dev/null: $!";
+}
+
+if ($DEBUG eq "TRUE") {
+    open(WRITEDEBUG, '>>', $DEBUG_FILE) or die "Error: Debug File is not writable, check and run again\n";
+    print "Debug mode is ON, check file $DEBUG_FILE it can become huge...\n";
+}
+
+# start Log thread
+my $threadLog = new threads \&logWrite;
+
+
+# Check if index file exist, exit if not
+unless (-e $INDEX_FILE) {
+    print STDERR "Cannot read Index $INDEX_FILE: $!\n";
+    $logLine = "Cannot read Index $INDEX_FILE: $!\n";
+    $logQueue->enqueue($logLine);
+    $logQueue->enqueue(undef);
+    $threadLog->join;
+    exit 1;
+}
+
+# start threads to send events
+my @eventthreads;
+foreach (1..$THREADMAX) {
+    push @eventthreads, new threads \&send_event;
+}
+
+# start thread to read events
+my $threadreadIndex = new threads(\&readIndex, $MODE);
+
+# Wait for threads finish, and monitor their status
+my $threadTotal = threads->list();
+#while ( $threadTotal > 0 || $exitNot ) {
+while ( $threadTotal > 0 ) {
+    sleep 1;
+    foreach (threads->list(threads::joinable)) {
+        if ($_->is_joinable()) {
+            my $result = $_->join;
+            if ($result != 0) {
+                $errorCond = 1;  # Trigger an general error, to die
+                $logQueue->enqueue(undef);
+            }
+        }
+    }
+    $threadTotal = threads->list();
+    usleep(30);
+}
+
+# catch signals and end the program if one is caught.
+sub signalHandler {
+    $errorCond = 1;
+    $queue->enqueue( (undef)x$THREADMAX );
+    $logQueue->enqueue(undef);
+}
+
+if ($MODE eq "batch") {
+    # update offset
+    unless (open(OFFSET, ">", $OFFSET_FILE)) {
+        print STDERR "File $OFFSET_FILE cannot be created. Check your permissions: $!\n";
+        return 73;
+    }
+    print OFFSET "$ino\n$commitedOffset\n";
+    close OFFSET;
+}
+if ($DEBUG eq "TRUE") {
+    close WRITEDEBUG;
+}
+
+if ($DAEMON) {
+    $PIDFILE->remove if defined $PIDFILE;
+}

@@ -1,0 +1,193 @@
+/* Based on http://blog.geotitles.com/2011/10/creating-top-fixed-menu-bar-with-css3-buttons-found-in-gmail/ */
+.toolmenu {
+	/* position:fixed; */
+	height:15px; 
+	font-size:14px;
+	color:#FFF;
+/*	margin:0 auto;
+	margin-top:20px;
+	margin-right:20px;
+	* 
+	*/
+}
+.toolmenu ul {
+	list-style:none;
+	color:#FFF;
+	width:auto;
+    /* Changed z-index to make menu go over flexigrid, as suggested in 
+     * http://groups.google.com/group/flexigrid/browse_thread/thread/40e86c9bc69666/b484e824e1aa3633
+     *  */
+    z-index:100; 
+    
+}
+.toolmenu ul li {
+	float:left;
+	position: relative;
+}
+.toolmenu ul li a {
+	color:#666;
+	font:bold 75% arial,sans-serif;
+	text-decoration:none;
+	padding:7px 12px;
+	position:relative;
+	display:inline-block;
+	/*Background*/
+	background:#f3f3f3;
+	background:-webkit-gradient(linear,0% 40%,0% 70%,from(#F5F5F5),to(#F1F1F1));
+	/*linear-gradient*/
+	background:-webkit-gradient(linear,left top,left bottom,from(from(#F5F5F5)),to(to(#F1F1F1)));
+	background:-webkit-linear-gradient(linear,0% 40%,0% 70%,from(#F5F5F5),to(#F1F1F1));
+	background:-moz-linear-gradient(linear,0% 40%,0% 70%,from(#F5F5F5),to(#F1F1F1));
+	background:-o-linear-gradient(linear,0% 40%,0% 70%,from(#F5F5F5),to(#F1F1F1));
+	background:linear-gradient(linear,0% 40%,0% 70%,from(#F5F5F5),to(#F1F1F1));
+	border:solid 1px #dcdcdc;
+	/*border-radius*/
+	-webkit-border-radius:2px;
+	-moz-border-radius:2px;
+	border-radius:2px;
+	margin-right:10px;
+}
+.toolmenu ul li a:hover {
+	color:#333;
+	border-color:#999;
+	/*box-shadow*/
+	-webkit-box-shadow:0 2px 0 rgba(0,0,0,0.2) -webkit-box-shadow:0 2px 5px rgba(0,0,0,0.2);
+	-moz-box-shadow:0 2px 0 rgba(0,0,0,0.2) -moz-box-shadow:0 2px 5px rgba(0,0,0,0.2);
+	box-shadow:0 2px 0 rgba(0,0,0,0.2) box-shadow:0 2px 5px rgba(0,0,0,0.2);
+}
+/* styling for the left buttons(buttons which are joined)*/
+.toolmenu ul li a.left {
+	-webkit-border-top-right-radius:0;
+	-moz-border-radius-topright:0;
+	border-top-right-radius:0;
+	-webkit-border-bottom-right-radius:0;
+	-moz-border-radius-bottomright:0;
+	border-bottom-right-radius:0;
+	margin: 0;
+}
+/* styling for the middle buttons(buttons which are joined)*/
+.toolmenu ul li a.middle {
+	/*border-radius*/
+	-webkit-border-radius:0;
+	-moz-border-radius:0;
+	border-radius:0;
+	border-left:solid 1px #f3f3f3;
+	margin:0;
+	border-left:solid 1px rgba(255,255,255,0);
+}
+.toolmenu ul li a.middle:hover,.menu ul li a.right:hover {
+	border-left: solid 1px #999;
+}
+/* styling for the right buttons(buttons which are joined)*/
+.toolmenu ul li a.right {
+	-webkit-border-top-left-radius:0;
+	-moz-border-radius-topleft:0;
+	border-top-left-radius:0;
+	-webkit-border-bottom-left-radius:0;
+	-moz-border-radius-bottomleft:0;
+	border-bottom-left-radius:0;
+	border-left:solid 1px #f3f3f3;
+	border-left: solid 1px rgba(255,255,255,0);
+}
+/*style for the arrow pointing downward*/
+.arrow {
+	border:thick;
+	border-color:#777777 transparent white;
+	border-style:solid dashed dashed;
+	margin-left:5px;
+	position:relative;
+	top: 10px;
+}
+/* button with checkbox*/
+.toolmenu ul li a.check {
+	padding:6px 10px 7px 12px;
+	position:relative;
+	display:inline-block;
+	margin-right: 12px;
+}
+/*refresh button*/
+.toolmenu ul li a.refresh {
+	background:url(images/refresh.png) 10px 4px no-repeat #f3f3f3;
+	width: 17px;
+}
+/* previous button*/
+.toolmenu ul li a.previous {
+	background:url(images/previous.png) 10px 4px no-repeat #f3f3f3;
+	width: 17px;
+}
+/*next button */
+.toolmenu ul li a.next {
+	background:url(images/next.png) 10px 4px no-repeat #f3f3f3;
+	width: 17px;
+}
+/*showing the number of emails in inbox(eg:1–50 of 52)*/
+.toolmenu ul li a.num {
+	color:#000;
+	font:normal 80% arial,sans-serif;
+	text-decoration:none;
+	padding:7px 12px;
+	position:relative;
+	display:inline-block;
+	text-shadow:none;
+	background:#FFF;
+	margin-right:10px;
+	border: none;
+}
+/* hide the dropdown*/
+.toolmenu ul li ul {
+	display: none;
+}
+/*changing the background of the button(which has a dropdown) to creyish gradient when we hover the mouse over it*/
+.toolmenu ul li:hover a.dropdown {
+	background:#888888;
+	/* Old browsers */
+	background:-moz-linear-gradient(top,#888888 0%,#8e8e8e 43%,#7a7a7a 45%,#989898 100%);
+	/* FF3.6+*/
+	background:-webkit-gradient(linear,left top,left bottom,color-stop(0%,#888888),color-stop(43%,#8e8e8e),color-stop(45%,#7a7a7a),color-stop(100%,#989898));
+	/* Chrome,Safari4+*/
+	background:-webkit-linear-gradient(top,#888888 0%,#8e8e8e 43%,#7a7a7a 45%,#989898 100%);
+	/* Chrome10+,Safari5.1+*/
+	background:-o-linear-gradient(top,#888888 0%,#8e8e8e 43%,#7a7a7a 45%,#989898 100%);
+	/* Opera 11.10+*/
+	background:-ms-linear-gradient(top,#888888 0%,#8e8e8e 43%,#7a7a7a 45%,#989898 100%);
+	/* IE10+*/
+	background:linear-gradient(top,#888888 0%,#8e8e8e 43%,#7a7a7a 45%,#989898 100%);
+	/* W3C */
+	filter:progid:DXImageTransform.Microsoft.gradient( startColorstr='#888888',endColorstr='#989898',GradientType=0 );
+	/* IE6-9 */ border:1px solid #989898;
+	color:#000;
+}
+.toolmenu ul li:hover ul {
+	display:block;
+	position:absolute;
+	margin-left:0px;
+	margin-top:-1px;
+	-webkit-box-shadow:0 4px 10px #8b8b8b;
+	-moz-box-shadow:0 4px 10px #8b8b8b;
+	box-shadow:0 4px 10px #8b8b8b;
+	padding:1px;
+}
+.toolmenu ul li:hover ul li a {
+	display:block;
+	color:#000000;
+	background:#ffffff;
+	border:none;
+	margin-right:1px;
+}
+.toolmenu ul li:hover ul li a:hover {
+	background: #EEEEEE;
+}
+/*the first item in dropdown must not have a border on top */
+.toolmenu ul li ul li:first-child a {
+	border-top: none;
+}
+/* now let us define the widths of various dropdown*/
+.width-1 li a {
+	width:55px;
+}
+.width-2 li a {
+	width: 125px;
+}
+.width-3 li a {
+	width: 165px;
+}
