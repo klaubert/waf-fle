@@ -1,6 +1,7 @@
 WAF-FLE ChangeLog
 
 Version 0.6.x:
+
 Bug: mlog2waffle in batch mode not exiting after finish. Fixed.
 Bug: mlog2waffle.ubuntu init template argument allow to start as a daemon in batch mode. Fixed.
 
