@@ -56,7 +56,7 @@ if (file_exists("../config.php")) {
          } catch (PDOException $e) {
             die("DB ERROR: ". $e->getMessage());
          }
-         print "Database created successfully. <b>Now edit config.php and turn \$SETUP false</b>. <br />After that, access waf-fle using <a href=\"login.php\">the login page</a>:<br> <b>&nbsp;&nbsp;username:</b><i> admin</i><br /><b>&nbsp;&nbsp;password:</b> <i>admin</i>. <br /><br />You will be prompted to change the password to continue.<br ><br>Good Waf-fling!";
+         print "Database created successfully. <br><br><font color=\"red\"><b>Now edit config.php and turn \$SETUP false</b></font>. <br /><br />After that, access waf-fle using <a href=\"login.php\">the login page</a>:<br> <b>&nbsp;&nbsp;username:</b><i> admin</i><br /><b>&nbsp;&nbsp;password:</b> <i>admin</i>. <br /><br />You will be prompted to change the password to continue.<br ><br>Good Waf-fling!";
             
          exit();
       } else {

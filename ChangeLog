@@ -1,9 +1,13 @@
 WAF-FLE ChangeLog
 
-Version 0.6.x:
+Version 0.6.3:
 
-Bug: mlog2waffle in batch mode not exiting after finish. Fixed.
-Bug: mlog2waffle.ubuntu init template argument allow to start as a daemon in batch mode. Fixed.
+Bug: mlog2waffle in batch mode dont exit after finish. Fixed.
+Bug: fixed mlog2waffle.ubuntu init script to allow start as a daemon in batch mode.
+Improve: Apache authorization config ajusted to be compatible with Apache 2.4+, see waf-fle.conf comments for details.
+Improve: Give more enfasis on success message on setup (instructing to edit config.php when finished).
+Bug: Fixed issues #21 and #25, when an incomplete request is rejected by waf-fle's  database schema, producing an error 500;
+Bug: Fixed filter dialog showed in login page when accessed with a valid session
 
 
 Version 0.6.1: Apr, 23 2013

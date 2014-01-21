@@ -519,6 +519,15 @@ if (!isset($PhaseF['Connection']) || is_null($PhaseF['Connection'])) {
 if (!isset($PhaseF['Content-Type']) || is_null($PhaseF['Content-Type'])) {
     $PhaseF['Content-Type'] = "";
 };
+if (!isset($PhaseF['MSG']) || is_null($PhaseF['MSG'])) {
+    $PhaseF['MSG'] = "";
+};
+if (!isset($PhaseF['Protocol']) || is_null($PhaseF['Protocol'])) {
+    $PhaseF['Protocol'] = "";
+};
+if (!isset($PhaseF['Status']) || is_null($PhaseF['Protocol'])) {
+    $PhaseF['Status'] = "";
+};
 if (!isset($PhaseH['Apache_error-File']) || is_null($PhaseH['Apache_error-File'])) {
     $PhaseH['Apache_error-File'] = "";
 };

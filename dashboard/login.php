@@ -128,6 +128,6 @@ if ($emptyField) {
 		</div>	
 	</div>
 <?PHP
-//$hideFilter = true;
+$hideFilter = true;
 require_once "../footer.php";
 ?>
