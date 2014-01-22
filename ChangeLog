@@ -3,12 +3,20 @@ WAF-FLE ChangeLog
 Version 0.6.3:
 
 Bug: mlog2waffle in batch mode dont exit after finish. Fixed.
-Bug: fixed mlog2waffle.ubuntu init script to allow start as a daemon in batch mode.
-Improve: Apache authorization config ajusted to be compatible with Apache 2.4+, see waf-fle.conf comments for details.
-Improve: Give more enfasis on success message on setup (instructing to edit config.php when finished).
-Bug: Fixed issues #21 and #25, when an incomplete request is rejected by waf-fle's  database schema, producing an error 500;
-Bug: Fixed filter dialog showed in login page when accessed with a valid session
-
+Bug: fixed mlog2waffle.ubuntu init script to allow start as a daemon in 
+     batch mode.
+Bug: Fixed issues #21 and #25, when an incomplete request is rejected by
+     waf-fle's  database schema, producing an error 500;
+Bug: Fixed filter dialog showed in login page when accessed with a valid 
+     session
+Bug: Fixed issue #20, setup now handle database privilege when mysql and 
+     waf-fle are in diferent hosts. Now you can specify the client 
+     hostname/address or even a wildcard on setup.
+Improve: Apache authorization config ajusted to be compatible with 
+         version 2.4+, see waf-fle.conf comments for details.
+Improve: Give more enfasis on success message on setup (instructing to 
+         edit config.php when finished).
+Improve: ChangeLog reformated
 
 Version 0.6.1: Apr, 23 2013
 -------------
@@ -17,57 +25,102 @@ Bug: Solve a issue with no standard timezones, like used in Venezuela.
 
 Version 0.6.0: Apr, 23 2013
 -------------
-Bug: Issue #18 fixed, mysql user permissions corrected in README file, thanks for Reinhard Sojka for report. 
+Bug: Issue #18 fixed, mysql user permissions corrected in README file, 
+     thanks for Reinhard Sojka for report. 
 Bug: Fixed the template for mlogc usage, when used Event Feeder Wizard.
 Improve: Better handling of missing config.php.
-Bug: Issue #15 fixed, delete event in event detail don't work, thanks for Juraj Sakala for report. 
-Bug: Issue #14 fixed, when an events is deleted the full event detail was not deleted, thanks for Juraj Sakala for report. 
-Bug: Issue #11 fixed, improper use of XFF header when undesired, thanks for Juraj Sakala for report.
-Bug: Issue #10 fixed, bad header parsing when receiving events, thanks for Juraj Sakala for report.
-Bug: Issue #9 fixed, correct the filter dialog to not be showed in login page, when a sucessful login happen and expected redirection don't work (by browser configuration, extention blocking redirect etc). A html link was created to allow user to get in the WAF-FLE in this situation. Thanks to Stelio Plautz for report the issue.
+Bug: Issue #15 fixed, delete event in event detail don't work, thanks 
+     for Juraj Sakala for report. 
+Bug: Issue #14 fixed, when an events is deleted the full event detail 
+     was not deleted, thanks for Juraj Sakala for report. 
+Bug: Issue #11 fixed, improper use of XFF header when undesired, thanks 
+     for Juraj Sakala for report.
+Bug: Issue #10 fixed, bad header parsing when receiving events, thanks 
+     for Juraj Sakala for report.
+Bug: Issue #9 fixed, correct the filter dialog to not be showed in login 
+     page, when a sucessful login happen and expected redirection don't 
+     work (by browser configuration, extention blocking redirect etc). 
+     A html link was created to allow user to get in the WAF-FLE in this 
+     situation. Thanks to Stelio Plautz for report the issue.
 
 Version 0.6.0-RC2: Oct, 25 2012
 -------------
-Bug: Fixed an error that prevent to add a new sensor, by adding the missed "Use Client IP from header" to "Add New Sensor".
+Bug: Fixed an error that prevent to add a new sensor, by adding the 
+     missed "Use Client IP from header" to "Add New Sensor".
 
 Version 0.6.0-RC1: Oct, 24 2012
 -------------
-New Feature: mlog2waffle, daemon to push logs from modsecurity to WAF-FLE
+New Feature: mlog2waffle, daemon to push logs from modsecurity to 
+             WAF-FLE
 New Feature: add controller mlog2waffle aware with probe response
-New Feature: (issue #6) this release include a button to delete events selected by filter.
-New Feature: Is now possible to disable a sensor in management interface, blocking the event reception until it be enable again.
-New Feature: added support of modsecurity 2.7 Engine-Mode variable: enabled or detection_only
-New Feature: Add GeoIP support with Country Code and Autonomous System Number, and are filter enabled
-New Feature: A wizard was created to make sensor configuration more fast and simple, providing support to generate a sample config files make sensor use both: mlogc and mlog2waffle, in piped, service, and scheduled modes.
-New Feature: A setup script was created to help in new installation and version upgrade.
-New Feature: Events can be marked as false positive: event by event, a group of events, or can mark all events defined by a filter. You can filter (and exclude from filtering) events marked as false positive.
-New Feature: Dashboard now has new textual tables showing Top events grouped by: URI Path, Country Code and Autonomous Systems Number.
+New Feature: (issue #6) this release include a button to delete events 
+             selected by filter.
+New Feature: Is now possible to disable a sensor in management 
+             interface, blocking the event reception until it be enable 
+             again.
+New Feature: added support of modsecurity 2.7 Engine-Mode variable: 
+             enabled or detection_only
+New Feature: Add GeoIP support with Country Code and Autonomous System 
+             Number, and are filter enabled
+New Feature: A wizard was created to make sensor configuration more fast 
+             and simple, providing support to generate a sample config 
+             files make sensor use both: mlogc and mlog2waffle, in 
+             piped, service, and scheduled modes.
+New Feature: A setup script was created to help in new installation and 
+             version upgrade.
+New Feature: Events can be marked as false positive: event by event, a 
+             group of events, or can mark all events defined by a 
+             filter. You can filter (and exclude from filtering) events 
+             marked as false positive.
+New Feature: Dashboard now has new textual tables showing Top events 
+             grouped by: URI Path, Country Code and Autonomous Systems 
+             Number.
 New Feature: Dashboard pie chart for severity.
-New Feature: Dashboard are now able to use filter, charts and tables are clickable enabling the drill down data on dashboard.
+New Feature: Dashboard are now able to use filter, charts and tables are 
+             clickable enabling the drill down data on dashboard.
 New Feature: Management 'Info' section added.
-New Feature: You can choose to compress full section to store in database (require PHP Zlib support), that save around 60% to storage full events
-New Feature: You can customize, per sensor, when ModSecurity is behind a reverse proxy with send a header that contain the client real ip address, ie. X-Forwarded-For, X-Real-IP.
+New Feature: You can choose to compress full section to store in 
+             database (require PHP Zlib support), that save around 60% 
+             to storage full events
+New Feature: You can customize, per sensor, when ModSecurity is behind a 
+             reverse proxy with send a header that contain the client 
+             real ip address, ie. X-Forwarded-For, X-Real-IP.
 New Feature: Add support to filter by event TAG
-New Feature: Add support to new TAG defined automatically by events with new tags
-Improve: starting with this version, only PHP 5.3 and higher is supported
-Improve: Management interface for Users and Sensors with more information and better formatted.
+New Feature: Add support to new TAG defined automatically by events with 
+             new tags
+Improve: starting with this version, only PHP 5.3 and higher is 
+         supported
+Improve: Management interface for Users and Sensors with more 
+         information and better formatted.
 Improve: Filter is able to search for absolute and wildcard paths.
 Improve: Events list better formatted in a grid table.
-Improve: Delete sensor now use the same function of 'delete events on current filter' above, and avoid to block the database for long time.
-Improve: New, optimized database scheme to speed filters. That change require a database upgrade when migrate from version 0.5 to 0.6.
+Improve: Delete sensor now use the same function of 'delete events on 
+         current filter' above, and avoid to block the database for long 
+         time.
+Improve: New, optimized database scheme to speed filters. That change 
+         require a database upgrade when migrate from version 0.5 to 
+         0.6:
          - full section of events is now stored in a independent table
          - Some columns was changed to better types and sizes
-Improve: Changed all database access to PDO, more clear and toward to database abstraction, resulting in only one database connection
+Improve: Changed all database access to PDO, more clear and toward to 
+         database abstraction, resulting in only one database connection
 Improve: Add GPL warning in all files
-Improve: Now the default admin password need to be changed on first access
+Improve: Now the default admin password need to be changed on first 
+         access
 Improve: Some web interface cleanup and rearrange
 Improve: Filter Dialog support now the negation of a parameter
-Improve: Many Tags has information as a tooltip and link for more information 
-Improve: "Phase H" "Message" duplicated are now excluded from database insert (but still preserved in raw event)
-Improve: "Phase H", support added to "Anomaly Score Exceeded" score value
+Improve: Many Tags has information as a tooltip and link for more 
+         information 
+Improve: "Phase H" "Message" duplicated are now excluded from database 
+         insert (but still preserved in raw event)
+Improve: "Phase H", support added to "Anomaly Score Exceeded" score 
+         value
 Improve: HTTP Status code, now following RFC values
-Improve: Events "Rules Alert" don't show duplicate entries sometimes catched by rules
-Improve: Add support to all stopwatch2 timers (available in modsecurity 2.6.0+), and add then to filter to help in rules performance measurement (thanks Breno by idea)
+Improve: Events "Rules Alert" don't show duplicate entries sometimes 
+         catched by rules
+Improve: Add support to all stopwatch2 timers (available in modsecurity 
+         2.6.0+), and add then to filter to help in rules performance 
+         measurement (thanks Breno by idea)
 Improve: The sensor ip address can now be a network in CIDR format
 Bug: Limit "Phase C" to a max of 100 lines of 4096 bytes each
 Bug: "Phase H" "Message" parsing changed to make it is more robust
@@ -81,7 +134,9 @@ Bug: (issue #8) Fixed usage of short php tag in some files
 Bug: Force the php timezone to system timezone
 Bug: Force php display_errors to off to avoid disturb in http headers
 Bug: Change user information is now possible without change password
-Bug: Fixed the not accepting events when no rule set defined (modsecurity SecComponentSignature directive), thanks Hanafiah to help in find this.
+Bug: Fixed the not accepting events when no rule set defined 
+     (modsecurity SecComponentSignature directive), thanks Hanafiah to 
+     help in find this.
 
 
 Version 0.5.1: Oct, 16 2011

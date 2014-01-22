@@ -29,6 +29,7 @@ if (file_exists("../config.php")) {
 
          $user=$_POST['user']; 
          $pass=$_POST['pass']; 
+         $clientHost= (isset($_POST['host']) ? $_POST['host'] : 'localhost');
          try {
             $dbh = null;
             $dbh = new PDO("mysql:host=$DB_HOST", $user, $pass);
@@ -37,8 +38,8 @@ if (file_exists("../config.php")) {
             $dbh->exec("CREATE DATABASE `".$DATABASE."`;");
 
             // Create waf-fle user
-            $dbh->exec("CREATE USER '".$DB_USER."'@localhost IDENTIFIED BY '".$DB_PASS."';
-               GRANT SELECT, INSERT, UPDATE, DELETE, CREATE TEMPORARY TABLES ON `".$DATABASE."`.* TO '".$DB_USER."'@localhost;                        
+            $dbh->exec("CREATE USER '".$DB_USER."'@'".$clientHost."' IDENTIFIED BY '".$DB_PASS."';
+               GRANT SELECT, INSERT, UPDATE, DELETE, CREATE TEMPORARY TABLES ON `".$DATABASE."`.* TO '".$DB_USER."'@'".$clientHost."';                        
                FLUSH PRIVILEGES;");
 
          } catch (PDOException $e) {
@@ -68,9 +69,11 @@ if (file_exists("../config.php")) {
          print "<td>Username: </td> <td><input type=\"text\" name=\"user\" size=\"30\"> <br /> </td>";
          print "</tr><tr>";
          print "<td>Password:</td><td><input type=\"password\" name=\"pass\" size=\"30\"> </td>";
+         print "</tr><tr>";
+         print "<td>Client Host:</td><td><input type=\"text\" name=\"host\" size=\"30\" value=\"localhost\"> (You should inform the client <i>hostname, IP address or % wildcard</i>, to define MySQL privilege)  </td>";
          print "</tr>";
          print "<tr>";
-         print "<td>Delete an old database and user account if they exists:</td><td><input type=\"checkbox\" name=\"del\"> </td>";
+         print "<td>Delete an old database and <br />user account if they exists:</td><td valign=\"top\"><input type=\"checkbox\" name=\"del\"> </td>";
          print "</tr>";
          print "<td></td><td><button name=\"go\" value=\"create\" type=\"submit\">Create Database</button> </td>";
          print "</tr>";         
@@ -83,6 +86,7 @@ if (file_exists("../config.php")) {
 
          $user=$_POST['user']; 
          $pass=$_POST['pass']; 
+         $clientHost= (isset($_POST['host']) ? $_POST['host'] : 'localhost');
          try {
             $dbh = null;
             $dbh = new PDO("mysql:host=$DB_HOST", $user, $pass);
@@ -108,8 +112,6 @@ if (file_exists("../config.php")) {
             $handle = fopen($databaseSchema, "r");
             $createTable_events = fread($handle, filesize($databaseSchema));
 
-            $user=$_POST['user']; 
-            $pass=$_POST['pass']; 
             try {
                $dbh = null;
                $dbh = new PDO("mysql:host=$DB_HOST", $user, $pass);
@@ -118,9 +120,9 @@ if (file_exists("../config.php")) {
                $dbh->exec("CREATE DATABASE `".$DATABASE."`;");
 
                // Update waf-fle user
-               $dbh->exec("DROP USER '".$DB_USER."'@'localhost';
-                  CREATE USER '".$DB_USER."'@localhost IDENTIFIED BY '".$DB_PASS."';
-                  GRANT SELECT, INSERT, UPDATE, DELETE, CREATE TEMPORARY TABLES ON `".$DATABASE."`.* TO '".$DB_USER."'@localhost;                        
+               $dbh->exec("DROP USER '".$DB_USER."'@'".$clientHost."';
+                  CREATE USER '".$DB_USER."'@'".$clientHost."' IDENTIFIED BY '".$DB_PASS."';
+                  GRANT SELECT, INSERT, UPDATE, DELETE, CREATE TEMPORARY TABLES ON `".$DATABASE."`.* TO '".$DB_USER."'@'".$clientHost."';                        
                   FLUSH PRIVILEGES;");
 
             } catch (PDOException $e) {
@@ -349,21 +351,6 @@ if (file_exists("../config.php")) {
          } catch (PDOException $e) {
              die("DB ERROR: ". $e->getMessage());
          }
-         /*
-         // Create tables
-         $handle = fopen($databaseSchema, "r");
-         $createTable_events = fread($handle, filesize($databaseSchema));
-         try {
-            $dbh = new PDO('mysql:host='.$DB_HOST.';dbname='.$DATABASE, $user, $pass);
-
-            // create database
-            $dbh->exec($createTable_events) 
-               or die(print_r($dbh->errorInfo(), true));
-
-         } catch (PDOException $e) {
-                die("DB ERROR: ". $e->getMessage());
-         } 
-      */         
          exit();
       } else {
          print "<h3>Upgrade WAF-FLE database</h3> <br />";
