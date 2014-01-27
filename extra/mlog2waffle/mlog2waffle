@@ -42,7 +42,7 @@ use File::Tail;
 
 my $daemonName    = "mlog2waffle";
 
-our $VERSION = "0.6.0";
+our $VERSION = "0.6.3";
 our $CONSOLE_URI;
 our $CONSOLE_USERNAME;
 our $CONSOLE_PASSWORD;
@@ -57,6 +57,8 @@ our $CHECK_CONNECTIVITY;
 our $DEBUG;
 our $DEBUG_FILE;
 our $PIDFILE;
+our $CHECK_CERT;
+
 
 my $CONFIGFILE = "/etc/mlog2waffle.conf";
 my $exitNot = 0;
@@ -75,8 +77,9 @@ my $DAEMON;
 
 sub send_event
 {
-   my $ua = new LWP::UserAgent(keep_alive => 1, agent => "mlog2waffle/$VERSION");
+   my $ua = new LWP::UserAgent(keep_alive => 1, agent => "mlog2waffle/$VERSION" );
    $ua->timeout(5);
+   $ua->ssl_opts( verify_hostname => $CHECK_CERT );
    my $tid = threads->tid();
 
    my $timestamp;
@@ -343,6 +346,8 @@ sub inode {
 sub check_conn {
    my $ua = new LWP::UserAgent(agent => "mlog2waffle/$VERSION");
    $ua->timeout(5);
+   $ua->ssl_opts( verify_hostname => $CHECK_CERT );
+
    my $request = HTTP::Request->new(PUT => $CONSOLE_URI);
    $request->authorization_basic($CONSOLE_USERNAME, $CONSOLE_PASSWORD);
    $request->header('Connection' => 'Close');
@@ -443,6 +448,14 @@ if ($THREADMAX > 5) {
 unless ($CHECK_CONNECTIVITY) {
    print "Error: \$CHECK_CONNECTIVITY not properly defined in config file: $CONFIGFILE\n";
    $configParseError = 1;
+}
+
+
+if ( $CHECK_CERT eq "FALSE" ) {
+   $CHECK_CERT = 0;
+   print "Server certificate will not be checked\n";
+} else {
+   $CHECK_CERT = 1;
 }
 
 if ($configParseError) {

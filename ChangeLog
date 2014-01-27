@@ -12,6 +12,9 @@ Bug: Fixed filter dialog showed in login page when accessed with a valid
 Bug: Fixed issue #20, setup now handle database privilege when mysql and 
      waf-fle are in diferent hosts. Now you can specify the client 
      hostname/address or even a wildcard on setup.
+Improve: when used with SSL mlog2waffle now allow to define if 
+         certificate need to be validated or not. Needed when a self-
+         signed certificate is used. Edit mlog2waffle.conf to configure.
 Improve: Apache authorization config ajusted to be compatible with 
          version 2.4+, see waf-fle.conf comments for details.
 Improve: Give more enfasis on success message on setup (instructing to 
