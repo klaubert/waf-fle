@@ -922,8 +922,8 @@ function superFilter($selector, $trailer, $filterType, $count = FALSE, $extraFie
                 $sthTempTable = $dbconn->prepare($sqlCreateDateRangeTempTable);
                 $sthTempTable->execute();
 
-                $insertTempDateRange = 'INSERT INTO `date_range` (`a_date`) SELECT DISTINCT a_date FROM events WHERE a_date BETWEEN :startDate
-AND :stopDate ORDER BY a_date DESC';
+                $insertTempDateRange = 'INSERT INTO `date_range` 
+                (`a_date`) SELECT DISTINCT a_date FROM events WHERE a_date BETWEEN :startDate AND :stopDate ORDER BY a_date DESC';
                 $st_dateRange = $dbconn->prepare($insertTempDateRange);
 
                 try {
@@ -1407,8 +1407,10 @@ AND :stopDate ORDER BY a_date DESC';
         if (isset($_SESSION[$filterType]['engineMode'])) {
             $sth->bindParam(":engineMode", $_SESSION[$filterType]['engineMode']);
         }
+        global $timingScale;
         if (isset($_SESSION[$filterType]['duration'])) {
-            $duration = $_SESSION[$filterType]['duration'] * $timingScale;
+            $duration = ($_SESSION[$filterType]['duration'] * 
+            $timingScale);
             $sth->bindParam(":duration", $duration);
         }
         if (isset($_SESSION[$filterType]['combined'])) {

@@ -212,7 +212,7 @@ if (isset($_GET['duration']) AND isset($_GET['duration_interval'])) {
             $_SESSION['filter']['duration_interval'] = "ge";
         }
        if (isset($_GET['duration']) AND preg_match('/^\d{1,10}$/', $_GET['duration'])) {
-            $_SESSION['filter']['duration'] = $_GET['duration'];
+            $_SESSION['filter']['duration'] = (int) $_GET['duration'];
         } else {
             unset($_SESSION['filter']['duration']);
             unset($_SESSION['filter']['duration_interval']);
@@ -232,7 +232,7 @@ if (isset($_GET['combined']) AND isset($_GET['combined_interval'])) {
             $_SESSION['filter']['combined_interval'] = "ge";
         }
        if (isset($_GET['combined']) AND preg_match('/^\d{1,10}$/', $_GET['combined'])) {
-            $_SESSION['filter']['combined'] = $_GET['combined'];
+            $_SESSION['filter']['combined'] = (int) $_GET['combined'];
         } else {
             unset($_SESSION['filter']['combined']);
             unset($_SESSION['filter']['combined_interval']);
@@ -252,7 +252,7 @@ if (isset($_GET['p1']) AND isset($_GET['p1_interval'])) {
             $_SESSION['filter']['p1_interval'] = "ge";
         }
        if (isset($_GET['p1']) AND preg_match('/^\d{1,10}$/', $_GET['p1'])) {
-            $_SESSION['filter']['p1'] = $_GET['p1'];
+            $_SESSION['filter']['p1'] = (int) $_GET['p1'];
         } else {
             unset($_SESSION['filter']['p1']);
             unset($_SESSION['filter']['p1_interval']);
@@ -272,7 +272,7 @@ if (isset($_GET['p2']) AND isset($_GET['p2_interval'])) {
             $_SESSION['filter']['p2_interval'] = "ge";
         }
        if (isset($_GET['p2']) AND preg_match('/^\d{1,10}$/', $_GET['p2'])) {
-            $_SESSION['filter']['p2'] = $_GET['p2'];
+            $_SESSION['filter']['p2'] = (int) $_GET['p2'];
         } else {
             unset($_SESSION['filter']['p2']);
             unset($_SESSION['filter']['p2_interval']);
@@ -292,7 +292,7 @@ if (isset($_GET['p3']) AND isset($_GET['p3_interval'])) {
             $_SESSION['filter']['p3_interval'] = "ge";
         }
        if (isset($_GET['p3']) AND preg_match('/^\d{1,10}$/', $_GET['p3'])) {
-            $_SESSION['filter']['p3'] = $_GET['p3'];
+            $_SESSION['filter']['p3'] = (int) $_GET['p3'];
         } else {
             unset($_SESSION['filter']['p3']);
             unset($_SESSION['filter']['p3_interval']);
@@ -312,7 +312,7 @@ if (isset($_GET['p4']) AND isset($_GET['p4_interval'])) {
             $_SESSION['filter']['p4_interval'] = "ge";
         }
        if (isset($_GET['p4']) AND preg_match('/^\d{1,10}$/', $_GET['p4'])) {
-            $_SESSION['filter']['p4'] = $_GET['p4'];
+            $_SESSION['filter']['p4'] = (int) $_GET['p4'];
         } else {
             unset($_SESSION['filter']['p4']);
             unset($_SESSION['filter']['p4_interval']);
@@ -332,7 +332,7 @@ if (isset($_GET['p5']) AND isset($_GET['p5_interval'])) {
             $_SESSION['filter']['p5_interval'] = "ge";
         }
        if (isset($_GET['p5']) AND preg_match('/^\d{1,10}$/', $_GET['p5'])) {
-            $_SESSION['filter']['p5'] = $_GET['p5'];
+            $_SESSION['filter']['p5'] = (int) $_GET['p5'];
         } else {
             unset($_SESSION['filter']['p5']);
             unset($_SESSION['filter']['p5_interval']);
@@ -352,7 +352,7 @@ if (isset($_GET['sr']) AND isset($_GET['sr_interval'])) {
             $_SESSION['filter']['sr_interval'] = "ge";
         }
        if (isset($_GET['sr']) AND preg_match('/^\d{1,10}$/', $_GET['sr'])) {
-            $_SESSION['filter']['sr'] = $_GET['sr'];
+            $_SESSION['filter']['sr'] = (int) $_GET['sr'];
         } else {
             unset($_SESSION['filter']['sr']);
             unset($_SESSION['filter']['sr_interval']);
@@ -372,7 +372,7 @@ if (isset($_GET['sw']) AND isset($_GET['sw_interval'])) {
             $_SESSION['filter']['sw_interval'] = "ge";
         }
        if (isset($_GET['sw']) AND preg_match('/^\d{1,10}$/', $_GET['sw'])) {
-            $_SESSION['filter']['sw'] = $_GET['sw'];
+            $_SESSION['filter']['sw'] = (int) $_GET['sw'];
         } else {
             unset($_SESSION['filter']['sw']);
             unset($_SESSION['filter']['sw_interval']);
@@ -392,7 +392,7 @@ if (isset($_GET['log']) AND isset($_GET['log_interval'])) {
             $_SESSION['filter']['log_interval'] = "ge";
         }
        if (isset($_GET['log']) AND preg_match('/^\d{1,10}$/', $_GET['log'])) {
-            $_SESSION['filter']['log'] = $_GET['log'];
+            $_SESSION['filter']['log'] = (int) $_GET['log'];
         } else {
             unset($_SESSION['filter']['log']);
             unset($_SESSION['filter']['log_interval']);
@@ -412,7 +412,7 @@ if (isset($_GET['gc']) AND isset($_GET['gc_interval'])) {
             $_SESSION['filter']['gc_interval'] = "ge";
         }
        if (isset($_GET['gc']) AND preg_match('/^\d{1,10}$/', $_GET['gc'])) {
-            $_SESSION['filter']['gc'] = $_GET['gc'];
+            $_SESSION['filter']['gc'] = (int) $_GET['gc'];
         } else {
             unset($_SESSION['filter']['gc']);
             unset($_SESSION['filter']['gc_interval']);
