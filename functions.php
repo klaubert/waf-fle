@@ -1337,8 +1337,7 @@ function superFilter($selector, $trailer, $filterType, $count = FALSE, $extraFie
     // Concatenate selector and trailer
     $sql = $sql . $trailer;
 
-
-   // print "$sql <br /><br />";
+    //print "$sql <br />";
 
     if ($DEBUG) {
         $debugInfo[__FUNCTION__][$debugCount]['query'] = $sql;
@@ -1761,6 +1760,7 @@ function deleteEventsByFilter()
         $starttime = microtime(true);
     }
     global $filterIndexHint;
+    global $deleteLimit;
     
     /* prepare statement using PDO*/
     global $dbconn;
@@ -1794,11 +1794,12 @@ function deleteEventsByFilter()
 
     // SQL Query trailer
     // Make a limit to avoid lock de table for long time and to allow response to browser
-    $trailer =  ' AND events.preserve = 0 LIMIT 2000 ';
+    $trailer =  ' AND events.preserve = 0 LIMIT ' . $deleteLimit;
 
     $extraField = NULL;
     // Call superFilter to count filtered events
     $eventsToDeleteCount = superFilter($selector, $trailer, $filterType, TRUE, $extraField);
+    
 
     if ($eventsToDeleteCount > 0) {
 
@@ -1852,6 +1853,7 @@ function falsePositiveByFilter()
     /* prepare statement using PDO*/
     global $dbconn;
     global $filterIndexHint;
+    global $deleteLimit;
     
     $filterType = 'fpFilter';
     // Create Temporary table to hold event_id's to mark as false positive
@@ -1879,7 +1881,7 @@ function falsePositiveByFilter()
     }
     // SQL Query trailer
     // Make a limit to avoid lock de table for long time and to allow response to browser
-    $trailer =  ' LIMIT 2000 ';
+    $trailer =  ' LIMIT ' . $deleteLimit;
 
     $extraField = NULL;
     // Call superFilter to count filtered events

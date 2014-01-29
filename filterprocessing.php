@@ -807,9 +807,10 @@ if ($_SESSION['filter']['StTime'] == "00:00:00" AND $_SESSION['filter']['FnTime'
 if (count($_SESSION['filter']) == 0) {
    unset($_SESSION['filter']);
 }
-   if (isset($_SESSION['filterIndexHint']) AND count($_SESSION['filterIndexHint']) > 0 AND $_SESSION['filterIndexHint'] != false) {
-      $_SESSION['filterIndexHint'] = array_unique($_SESSION['filterIndexHint']);
-      $filterIndexHint = " (" . implode(",", $_SESSION['filterIndexHint']) . ") ";
-   }
+
+if (isset($_SESSION['filterIndexHint']) AND count($_SESSION['filterIndexHint']) > 0 AND $_SESSION['filterIndexHint'] != false) {
+   $_SESSION['filterIndexHint'] = array_unique($_SESSION['filterIndexHint']);
+   $filterIndexHint = " (" . implode(",", $_SESSION['filterIndexHint']) . ") ";
+}
 
 ?>

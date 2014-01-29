@@ -33,6 +33,7 @@ if ($DEMO) {
 
 $ASYNC=TRUE;
 require_once("../session.php");
+require_once("../filterprocessing.php");
 
 header("Content-type: application/json");
 header("Cache-Control: no-cache");
@@ -58,7 +59,7 @@ if (isset($_GET['deleteByFilter']) AND $_GET['deleteByFilter'] == 1 AND preg_mat
 	} else {
 		$result = array('Total' => 0 , 'Current' => 0, 'Percent' => 100);
 	}
-	sleep(2);
+	sleep($deleteWait);
 	print json_encode($result);
 
 } elseif (isset($_GET['falsePositiveByFilter']) AND $_GET['falsePositiveByFilter'] == 1 AND preg_match('/\d{12,16}/', $_GET['fpId'])) {

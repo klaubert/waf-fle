@@ -487,7 +487,7 @@ if ($PhaseA['ClientIP'] == "" OR $PhaseA['ServerIP'] == "") {
 }
 
 // Insert event in database
- $sql_event = 'INSERT INTO `events` (`event_id`, `sensor_id`, `a_timestamp`, `a_timezone`,`a_date`,`a_uniqid`, `a_client_ip`,`a_client_ip_cc`,`a_client_ip_asn`, `a_client_port`, `a_server_ip`, `a_server_port`, `b_method`, `b_path`,`b_path_parameter`,`b_protocol`, `b_host`, `b_user_agent`, `b_referer`, `f_protocol`, `f_status`, `f_msg`,`f_content_length`, `f_connection`, `f_content_type`, `h_apache_error_file`, `h_apache_error_line`,`h_apache_error_level`, `h_apache_error_message`, `h_stopwatch_timestamp`, `h_stopwatch_duration`,`h_stopwatch_time_checkpoint_1`, `h_stopwatch_time_checkpoint_2`, `h_stopwatch_time_checkpoint_3`,  `h_stopwatch2_Timestamp`, `h_stopwatch2_duration`, `h_stopwatch2_combined`, `h_stopwatch2_p1`, `h_stopwatch2_p2`, `h_stopwatch2_p3`, `h_stopwatch2_p4`, `h_stopwatch2_p5`, `h_stopwatch2_sr`, `h_stopwatch2_sw`, `h_stopwatch2_l`, `h_stopwatch2_gc`, `h_producer`,`h_producer_ruleset`, `h_server`, `h_wa_info_app_id`, `h_wa_info_sess_id`, `h_wa_info_user_id`, `h_apache_handler`,`h_response_body_transf`,`h_severity`,`h_action_status`,`h_action_status_msg`,`h_engine_mode`,`h_score_total`,`h_score_SQLi`,`h_score_XSS`,`h_Interception_phase`) VALUES (NULL, :sensorid, :PhaseATimestamp, :PhaseATimezone, :PhaseADate, :PhaseAUniqID, INET_ATON(:PhaseAClientIP),:PhaseAClientIPCC, :PhaseAClientIPASN, :PhaseASourcePort, INET_ATON(:PhaseAServerIP), :PhaseAServerPort,  :PhaseBMethod, :PhaseBPath, :PhaseBPathParameter, :PhaseBProtocol, :PhaseBHost, :PhaseBUserAgent, :PhaseBReferer, :PhaseFProtocol, :PhaseFStatus, :PhaseFMSG, :PhaseFContentLength, :PhaseFConnection, :PhaseFContentType, :PhaseHApacheerrorFile, :PhaseHApacheerrorLine, :PhaseHApacheerrorLevel, :PhaseHApacheerrorMessage, :PhaseHStopwatchTimestamp, :PhaseHStopwatchDuration, :PhaseHStopwatchtimecheckpoint1, :PhaseHStopwatchtimecheckpoint2, :PhaseHStopwatchtimecheckpoint3, :PhaseHStopwatch2_Timestamp, :PhaseHStopwatch2_duration, :PhaseHStopwatch2_combined, :PhaseHStopwatch2_p1,  :PhaseHStopwatch2_p2, :PhaseHStopwatch2_p3, :PhaseHStopwatch2_p4, :PhaseHStopwatch2_p5, :PhaseHStopwatch2_sr, :PhaseHStopwatch2_sw, :PhaseHStopwatch2_l, :PhaseHStopwatch2_gc, :PhaseHProducer, :PhaseHProducerruleset, :PhaseHServer, :PhaseHWebAppInfoApplicationID, :PhaseHWebAppInfoSessionID, :PhaseHWebAppInfoUserID, :PhaseHApacheHandler, :PhaseHResponseBodyTransformed, :PhaseHSeverity, :PhaseHActionStatus, :PhaseHActionStatusMsg, :PhaseHEngineMode, :PhaseHScoreInTotal, :PhaseHScoreInSQLi, :PhaseHScoreInXSS, :PhaseHInterception_phase)';
+$sql_event = 'INSERT INTO `events` (`event_id`, `sensor_id`, `a_timestamp`, `a_timezone`,`a_date`,`a_uniqid`, `a_client_ip`,`a_client_ip_cc`,`a_client_ip_asn`, `a_client_port`, `a_server_ip`, `a_server_port`, `b_method`, `b_path`,`b_path_parameter`,`b_protocol`, `b_host`, `b_user_agent`, `b_referer`, `f_protocol`, `f_status`, `f_msg`,`f_content_length`, `f_connection`, `f_content_type`, `h_apache_error_file`, `h_apache_error_line`,`h_apache_error_level`, `h_apache_error_message`, `h_stopwatch_timestamp`, `h_stopwatch_duration`,`h_stopwatch_time_checkpoint_1`, `h_stopwatch_time_checkpoint_2`, `h_stopwatch_time_checkpoint_3`,  `h_stopwatch2_Timestamp`, `h_stopwatch2_duration`, `h_stopwatch2_combined`, `h_stopwatch2_p1`, `h_stopwatch2_p2`, `h_stopwatch2_p3`, `h_stopwatch2_p4`, `h_stopwatch2_p5`, `h_stopwatch2_sr`, `h_stopwatch2_sw`, `h_stopwatch2_l`, `h_stopwatch2_gc`, `h_producer`,`h_producer_ruleset`, `h_server`, `h_wa_info_app_id`, `h_wa_info_sess_id`, `h_wa_info_user_id`, `h_apache_handler`,`h_response_body_transf`,`h_severity`,`h_action_status`,`h_action_status_msg`,`h_engine_mode`,`h_score_total`,`h_score_SQLi`,`h_score_XSS`,`h_Interception_phase`) VALUES (NULL, :sensorid, :PhaseATimestamp, :PhaseATimezone, :PhaseADate, :PhaseAUniqID, INET_ATON(:PhaseAClientIP),:PhaseAClientIPCC, :PhaseAClientIPASN, :PhaseASourcePort, INET_ATON(:PhaseAServerIP), :PhaseAServerPort,  :PhaseBMethod, :PhaseBPath, :PhaseBPathParameter, :PhaseBProtocol, :PhaseBHost, :PhaseBUserAgent, :PhaseBReferer, :PhaseFProtocol, :PhaseFStatus, :PhaseFMSG, :PhaseFContentLength, :PhaseFConnection, :PhaseFContentType, :PhaseHApacheerrorFile, :PhaseHApacheerrorLine, :PhaseHApacheerrorLevel, :PhaseHApacheerrorMessage, :PhaseHStopwatchTimestamp, :PhaseHStopwatchDuration, :PhaseHStopwatchtimecheckpoint1, :PhaseHStopwatchtimecheckpoint2, :PhaseHStopwatchtimecheckpoint3, :PhaseHStopwatch2_Timestamp, :PhaseHStopwatch2_duration, :PhaseHStopwatch2_combined, :PhaseHStopwatch2_p1,  :PhaseHStopwatch2_p2, :PhaseHStopwatch2_p3, :PhaseHStopwatch2_p4, :PhaseHStopwatch2_p5, :PhaseHStopwatch2_sr, :PhaseHStopwatch2_sw, :PhaseHStopwatch2_l, :PhaseHStopwatch2_gc, :PhaseHProducer, :PhaseHProducerruleset, :PhaseHServer, :PhaseHWebAppInfoApplicationID, :PhaseHWebAppInfoSessionID, :PhaseHWebAppInfoUserID, :PhaseHApacheHandler, :PhaseHResponseBodyTransformed, :PhaseHSeverity, :PhaseHActionStatus, :PhaseHActionStatusMsg, :PhaseHEngineMode, :PhaseHScoreInTotal, :PhaseHScoreInSQLi, :PhaseHScoreInXSS, :PhaseHInterception_phase)';
 
 if (!isset($PhaseB['Method']) || is_null($PhaseB['Method'])) {
     $PhaseB['Method'] = "";
@@ -671,7 +671,6 @@ try {
         print "Error (insert events) Message: " . $e->getMessage() . "\n";
         print "Error (insert events) getTraceAsString: " . $e->getTraceAsString() . "\n";
 
-    print "xi2...\n";
     exit();
 }
 
@@ -731,10 +730,8 @@ try {
         print "Error (insert events) Message: " . $e->getMessage() . "\n";
         print "Error (insert events) getTraceAsString: " . $e->getTraceAsString() . "\n";
     }    
-    print "xi..3.\n";
     exit();
 }
-
 
 if (is_array($PhaseH_MSG) && $event_id != "") {
 
@@ -745,7 +742,6 @@ if (is_array($PhaseH_MSG) && $event_id != "") {
         if (!isset($msg['Message_Pattern']) || is_null($msg['Message_Pattern'])) {
             $msg['Message_Pattern'] = "";
         }
-
         if (!isset($msg['Message_Action']) || is_null($msg['Message_Action'])) {
             $msg['Message_Action'] = "";
         }
@@ -804,7 +800,6 @@ if (is_array($PhaseH_MSG) && $event_id != "") {
                                   print "Error (insert events) Message: " . $e->getMessage() . "\n";
                                   print "Error (insert events) getTraceAsString: " . $e->getTraceAsString() . "\n";
                                }     
-                               print "xi..4.\n";
                             exit();
                         }
                     }
@@ -826,7 +821,6 @@ if (is_array($PhaseH_MSG) && $event_id != "") {
 						  print "Error (insert events) Message: " . $e->getMessage() . "\n";
 						  print "Error (insert events) getTraceAsString: " . $e->getTraceAsString() . "\n";
 					   }     
-					   print "xi..5.\n";
 					exit();
 				}
             }
@@ -838,7 +832,6 @@ if (is_array($PhaseH_MSG) && $event_id != "") {
                 print "Error (insert events) Message: " . $e->getMessage() . "\n";
                 print "Error (insert events) getTraceAsString: " . $e->getTraceAsString() . "\n";
             }     
-            print "xi..6.\n";
             exit();
         }
     }

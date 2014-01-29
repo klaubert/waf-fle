@@ -20,6 +20,21 @@ $APC_ON = true;
 // Max events in events list
 $max_event_number = "25";
 
+// This directive limit events to delete, or mark as false positive, 
+// each pass when deleting events by filter.
+// You can tune it, but be aware that a very high value can block your 
+// database, and prevent new event insertion for a (long) time. 
+// Default: 2000
+$deleteLimit = 2000;
+
+// Wait time, in seconds, between each pass of delete event by filter. 
+// Normally this is needed to allow time for new events get inserted on 
+// database, avoiding database look in delete operation. You can tune 
+// this, but be aware that a much lower value can lock your database, 
+// and prevent new event insert for a (long) time;
+// Default: 2 seconds
+$deleteWait = 2;
+
 // CACHE_TIMEOUT=30; // This is used to make data cache of frequent used data
 $CACHE_TIMEOUT   = 30;
 $SESSION_TIMEOUT = 600;

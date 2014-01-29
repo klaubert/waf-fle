@@ -14,6 +14,11 @@ Bug: Fixed issue #20, setup now handle database privilege when mysql and
      hostname/address or even a wildcard on setup.
 Bug: Fixed issue #26, where the timming filters are not filtering 
      properly. 
+Bug: Fixed delete by filter when any filter beyond date range is used.
+Improve: Event delete limit ($deleteLimit) and delete wait ($deleteWait)
+         is now parameters in config.php, as sugested in issue #31. This 
+         parameters also affect Mark as False Positive events of Current 
+         Filter.
 Improve: when used with SSL mlog2waffle now allow to define if 
          certificate need to be validated or not. Needed when a self-
          signed certificate is used. Edit mlog2waffle.conf to configure.
