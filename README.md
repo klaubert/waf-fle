@@ -3,7 +3,7 @@ WAF-FLE - Readme
 
 Web Application Firewall: Fast Log and Event Console
 
-   Copyright (C) 2011 - 2013  Klaubert Herr 
+   Copyright (C) 2011 - 2014  Klaubert Herr 
    For new (released) versions, check at http://waf-fle.org
    WAF-FLE is relased under GPL v2 License
 
