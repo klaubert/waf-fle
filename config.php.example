@@ -8,10 +8,13 @@ $DB_USER  = "waffle_user";
 $DB_PASS  = "<FILL_User_Password>";
 $DATABASE = "waffle";
 
-// To enable full events compression in database use 'TRUE', to disable compression use 'FALSE'
+// To enable full events compression in database use 'TRUE', to disable 
+// compression use 'FALSE'
 $COMPRESSION = true;
 
-// Define the performance timing presentation, set 'mili' for miliseconds (1/1000 seconds), or 'micro' for microseconds (1/1000000 seconds).
+// Define the performance timing presentation, set 'mili' for 
+// miliseconds (1/1000 seconds), or 'micro' for microseconds 
+// (1/1000000 seconds).
 $timePreference = 'mili';
 
 // To enable APC cache use 'TRUE', to disable APC cache use 'FALSE'
@@ -35,18 +38,18 @@ $deleteLimit = 2000;
 // Default: 2 seconds
 $deleteWait = 2;
 
-// CACHE_TIMEOUT=30; // This is used to make data cache of frequent used data
+// CACHE_TIMEOUT=30; // This is used to make data cache of frequent used 
+// data
 $CACHE_TIMEOUT   = 30;
 $SESSION_TIMEOUT = 600;
 
 // Debug enable/disable
 $DEBUG = false;
 
-// Enable setup to initial run of WAF-FLE, it check prerequisite and configure database schema. Upgrade of version and database can be available too.
+// Enable setup to initial run of WAF-FLE, it check prerequisite and 
+// configure database schema. Upgrade of version and database can be 
+// available too.
 // While this is enable, no event is received or view.
 $SETUP = true;
-
-// Probably you will not need to change nothing after this point
-//
 
 ?>

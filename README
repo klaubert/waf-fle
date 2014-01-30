@@ -14,7 +14,7 @@ view, filter and analyze events created by ModSecurity (sent using mlogc or
 mlog2waffle), using the graphical dashboard to drill-down event and look
 quickly the most relevant events.
    
-Version 0.6.0
+Version 0.6.3
 ---------------
 Requirements:
    Apache 2.x server
@@ -141,7 +141,9 @@ below:
    
 UPGRADE:
 --------
-   0.6.0-rcX - 0.6.0 
+   0.6.0 -> 0.6.3
+      Just copy new files over old files. No change on database scheme.
+   0.6.0-rcX -> 0.6.0 
       Just copy new files over old files. No change on database scheme.
    0.5x -> 0.6.0-rc1
       Many changes on database schema. To upgrade the schema and migrate the

@@ -38,7 +38,7 @@ if (isset($SETUP) AND $SETUP == true ){
     exit;
 }
 
-$waffleVersion = '0.6.0';
+$waffleVersion = '0.6.3';
 // Set PHP default timezone as system timezone, need to avoid warning messages in PHP 5.3+
 date_default_timezone_set(@date_default_timezone_get());
 /* Constants   */
@@ -113,6 +113,9 @@ try {
    $checkVersion_sth->execute();
    $dbSchema = $checkVersion_sth->fetch(PDO::FETCH_ASSOC);
    $checkVersion_sth->closeCursor();
+   if ($dbSchema['waffle_version'] == '0.6.0') {
+       $dbSchema['waffle_version'] = '0.6.3';
+   }
    if ($dbSchema['waffle_version'] != $waffleVersion) {
       header ("Location: upgrade.php");
       exit;
