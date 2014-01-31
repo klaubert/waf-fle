@@ -79,7 +79,9 @@ sub send_event
 {
    my $ua = new LWP::UserAgent(keep_alive => 1, agent => "mlog2waffle/$VERSION" );
    $ua->timeout(5);
-   $ua->ssl_opts( verify_hostname => $CHECK_CERT );
+   if ( !$CHECK_CERT ) {
+      $ua->ssl_opts( verify_hostname => $CHECK_CERT );
+   }
    my $tid = threads->tid();
 
    my $timestamp;
@@ -346,7 +348,9 @@ sub inode {
 sub check_conn {
    my $ua = new LWP::UserAgent(agent => "mlog2waffle/$VERSION");
    $ua->timeout(5);
-   $ua->ssl_opts( verify_hostname => $CHECK_CERT );
+   if ( !$CHECK_CERT ) {
+      $ua->ssl_opts( verify_hostname => $CHECK_CERT );
+   }
 
    my $request = HTTP::Request->new(PUT => $CONSOLE_URI);
    $request->authorization_basic($CONSOLE_USERNAME, $CONSOLE_PASSWORD);

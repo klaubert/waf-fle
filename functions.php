@@ -95,7 +95,8 @@ try {
 } catch (PDOException $e) {
     header("HTTP/1.1 500 Internal Server Error");
     header("Status: 500");
-    print "HTTP/1.1 500 Internal Server Error <br />\n";
+    print "HTTP/1.1 500 Internal Server Error <br />Error in database 
+    connection!\n";
     if ($MLOG2WAFFLE_DEBUG OR $DEBUG) {
         print "Error (insert events) Message: " . $e->getMessage() . "\n";
         print "Error (insert events) getTraceAsString: " . $e->getTraceAsString() . "\n";

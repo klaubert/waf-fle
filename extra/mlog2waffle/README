@@ -25,7 +25,7 @@ REQUIREMENTS
 ------------
 To run mlog2waffle in your server you need the follow components
  - Perl
- - libwww
+ - libwww (6.0 or more recent for accept self-signed certificate)
  - File::Pid
  - File::Tail
  - LWP::UserAgent
