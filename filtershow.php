@@ -66,10 +66,10 @@ if (isset($_SESSION['filter'])) {
 
     if (isset($_SESSION['filter']['web_Hostname'])) {
         if (isset($_SESSION['filter']['Not_web_Hostname']) AND $_SESSION['filter']['Not_web_Hostname']) {
-            $showFilter .= "| Web Hostname: <span class=\"Negate\">".getWebHostName($_SESSION['filter']['web_Hostname']) . "</span>";
+            $showFilter .= "| Web Hostname: <span class=\"Negate\">".headerprintnobr(getWebHostName($_SESSION['filter']['web_Hostname'])) . "</span>";
             $showFilter .= "<span class=\"filter_control\" > (<a href=\"$thisPage?web_Hostname=".$_SESSION['filter']['web_Hostname']."&Not_web_Hostname=0\" title=\"Exclude the Web Hostname from Search\" class=\"filter_control\">Not</a>)";
         } else {
-            $showFilter .= "| Web Hostname: ".getWebHostName($_SESSION['filter']['web_Hostname']) ;
+            $showFilter .= "| Web Hostname: ".headerprintnobr(getWebHostName($_SESSION['filter']['web_Hostname'])) ;
             $showFilter .= "<span class=\"filter_control\" > (<a href=\"$thisPage?web_Hostname=".$_SESSION['filter']['web_Hostname']."&Not_web_Hostname=1\" title=\"Exclude the Web Hostname from Search\" class=\"filter_control\">Not</a>)";
         }
         $showFilter .= " (<a href=\"$thisPage?web_Hostname=x\" title=\"Clear Web Hostname Filter\" class=\"filter_control\">Del</a>)</span> ";
@@ -89,11 +89,11 @@ if (isset($_SESSION['filter'])) {
 
     if (isset($_SESSION['filter']['method'])) {
         if (isset($_SESSION['filter']['Not_method']) AND $_SESSION['filter']['Not_method']) {
-            $showFilter .= "| Method: <span class=\"Negate\">".$_SESSION['filter']['method']."</span>";
-            $showFilter .= "<span class=\"filter_control\" > (<a href=\"$thisPage?method=".$_SESSION['filter']['method']."&Not_method=0\" title=\"Exclude the Method from Filter\" class=\"filter_control\">Not</a>)";
+            $showFilter .= "| Method: <span class=\"Negate\">".headerprintnobr($_SESSION['filter']['method'])."</span>";
+            $showFilter .= "<span class=\"filter_control\" > (<a href=\"$thisPage?method=".headerprintnobr($_SESSION['filter']['method'])."&Not_method=0\" title=\"Exclude the Method from Filter\" class=\"filter_control\">Not</a>)";
         } else {
-            $showFilter .= "| Method: ".$_SESSION['filter']['method'];
-            $showFilter .= "<span class=\"filter_control\" > (<a href=\"$thisPage?method=".$_SESSION['filter']['method']."&Not_method=1\" title=\"Exclude the Method from Filter\" class=\"filter_control\">Not</a>)";
+            $showFilter .= "| Method: ".headerprintnobr($_SESSION['filter']['method']);
+            $showFilter .= "<span class=\"filter_control\" > (<a href=\"$thisPage?method=".headerprintnobr($_SESSION['filter']['method'])."&Not_method=1\" title=\"Exclude the Method from Filter\" class=\"filter_control\">Not</a>)";
         }
         $showFilter .= " (<a href=\"$thisPage?method=x\" title=\"Clear Method Filter\" class=\"filter_control\">Del</a>)</span> ";
     }
@@ -155,11 +155,11 @@ if (isset($_SESSION['filter'])) {
             $pathwc_tmp = '*';
         }
         if (isset($_SESSION['filter']['Not_path']) AND $_SESSION['filter']['Not_path']) {
-            $showFilter .= "| Path: <span class=\"Negate\">".$_SESSION['filter']['path'] . $pathwc_tmp . "</span>";
-            $showFilter .= "<span class=\"filter_control\" > (<a href=\"$thisPage?path=".$_SESSION['filter']['path'] . $pathwc_tmp . "&Not_path=0\" title=\"Exclude this Path from Filter\" class=\"filter_control\">Not</a>)";
+            $showFilter .= "| Path: <span class=\"Negate\">".headerprintnobr($_SESSION['filter']['path']) . $pathwc_tmp . "</span>";
+            $showFilter .= "<span class=\"filter_control\" > (<a href=\"$thisPage?path=".headerprintnobr($_SESSION['filter']['path']) . $pathwc_tmp . "&Not_path=0\" title=\"Exclude this Path from Filter\" class=\"filter_control\">Not</a>)";
         } else {
-            $showFilter .= "| Path: ".$_SESSION['filter']['path'] . $pathwc_tmp;
-            $showFilter .= "<span class=\"filter_control\" > (<a href=\"$thisPage?path=".$_SESSION['filter']['path'] . $pathwc_tmp . "&Not_path=1\" title=\"Exclude this Path from Filter\" class=\"filter_control\">Not</a>)";
+            $showFilter .= "| Path: ".headerprintnobr($_SESSION['filter']['path']) . $pathwc_tmp;
+            $showFilter .= "<span class=\"filter_control\" > (<a href=\"$thisPage?path=".headerprintnobr($_SESSION['filter']['path']) . $pathwc_tmp . "&Not_path=1\" title=\"Exclude this Path from Filter\" class=\"filter_control\">Not</a>)";
         }
         $showFilter .= " (<a href=\"$thisPage?path=x\" title=\"Clear Path Filter\" class=\"filter_control\">Del</a>)</span> ";
     }
@@ -179,11 +179,11 @@ if (isset($_SESSION['filter'])) {
     }
     if (isset($_SESSION['filter']['userId'])) {
         if (isset($_SESSION['filter']['Not_userId']) AND $_SESSION['filter']['Not_userId']) {
-            $showFilter .= "| User ID: <span class=\"Negate\">".$_SESSION['filter']['userId'] . "</span>";
-            $showFilter .= "<span class=\"filter_control\" > (<a href=\"$thisPage?userId=".$_SESSION['filter']['userId']."&Not_userId=0\" title=\"Exclude this User ID from Filter\" class=\"filter_control\">Not</a>)";
+            $showFilter .= "| User ID: <span class=\"Negate\">".headerprintnobr($_SESSION['filter']['userId']) . "</span>";
+            $showFilter .= "<span class=\"filter_control\" > (<a href=\"$thisPage?userId=".headerprintnobr($_SESSION['filter']['userId'])."&Not_userId=0\" title=\"Exclude this User ID from Filter\" class=\"filter_control\">Not</a>)";
         } else {
-            $showFilter .= "| User ID: ".$_SESSION['filter']['userId'];
-            $showFilter .= "<span class=\"filter_control\" > (<a href=\"$thisPage?userId=".$_SESSION['filter']['userId']."&Not_userId=1\" title=\"Exclude this User ID from Filter\" class=\"filter_control\">Not</a>)";
+            $showFilter .= "| User ID: ".headerprintnobr($_SESSION['filter']['userId']);
+            $showFilter .= "<span class=\"filter_control\" > (<a href=\"$thisPage?userId=".headerprintnobr($_SESSION['filter']['userId'])."&Not_userId=1\" title=\"Exclude this User ID from Filter\" class=\"filter_control\">Not</a>)";
         }
         $showFilter .= " (<a href=\"$thisPage?userId=x\" title=\"Clear User ID Filter\" class=\"filter_control\">Del</a>)</span> ";
     }

@@ -109,11 +109,10 @@
                         <?PHP
                             $hostnameList = getWebHosts();
                             foreach ( $hostnameList as $host) {
-                                var_dump($host);
                                 if ($_SESSION['filter']['web_Hostname'] == $host['host_id']) {
-                                    print "<option selected value=\"".$host['host_id']."\">".$host['hostname']."  </option>";
+                                    print "<option selected value=\"".$host['host_id']."\">".headerprintnobr($host['hostname'])."  </option>";
                                 } else {
-                                    print "<option value=\"".$host['host_id']."\">".$host['hostname']. "</option>";
+                                    print "<option value=\"".$host['host_id']."\">".headerprintnobr($host['hostname']). "</option>";
                                 }
                             }
                         ?>
@@ -367,9 +366,9 @@
                         $methodList = getMethodList();
                         foreach ( $methodList[0] as $met) {
                             if ($_SESSION['filter']['method'] == $met['b_method']) {
-                                print "<option selected value=\"".$met['b_method']."\">".$met['b_method']."</option>";
+                                print "<option selected value=\"".$met['b_method']."\">".headerprintnobr($met['b_method'])."</option>";
                             } else {
-                                print "<option value=\"".$met['b_method']."\">".$met['b_method']."</option>";
+                                print "<option value=\"".$met['b_method']."\">".headerprintnobr($met['b_method'])."</option>";
                             }
                         }
                     ?>
@@ -401,7 +400,7 @@
                         }
                     ?>                   
                     <?PHP
-                        print "<input type=\"text\" name=\"path\" value=\"".$_SESSION['filter']['path'].$pathwc_tmp."\" size=\"20\" style=\"width: 160px\" maxlength=\"50\" class=\"text ui-widget-content ui-corner-all\" autocomplete=\"off\">";
+                        print "<input type=\"text\" name=\"path\" value=\"".headerprintnobr($_SESSION['filter']['path']).$pathwc_tmp."\" size=\"20\" style=\"width: 160px\" maxlength=\"50\" class=\"text ui-widget-content ui-corner-all\" autocomplete=\"off\">";
                     ?>
                 </div>
             </label>
@@ -457,7 +456,7 @@
                         }
                     ?>                 
                     <?PHP
-                        print "<input type=\"text\" name=\"userId\" value=\"" . $_SESSION['filter']['userId'] ."\" size=\"20\" style=\"width: 160px\" class=\"text ui-widget-content ui-corner-all\" autocomplete=\"off\">";
+                        print "<input type=\"text\" name=\"userId\" value=\"" . headerprintnobr($_SESSION['filter']['userId']) ."\" size=\"20\" style=\"width: 160px\" class=\"text ui-widget-content ui-corner-all\" autocomplete=\"off\">";
                     ?>
                 </div>
             </label>

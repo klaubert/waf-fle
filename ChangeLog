@@ -4,10 +4,15 @@ WAF-FLE ChangeLog
 
 Version 0.6.4: 2014
 -------------
+Bug: Lack of output enconding in some filter fields (filter dialog and 
+     current filter), when a bogus hostname present in event, cause 
+     improper html rendering. Thanks to Marcus Semblano to report and 
+     supply with samples.
 Improve: mlog2waffle requirements better clarified em their README, and
          now is possible to use it with old version of libwww-perl, but 
          no self-signed certificate in that case;
 Improve: Better error message in case of database error;
+
 
 
 Version 0.6.3: Jan, 30 2014
