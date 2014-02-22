@@ -808,7 +808,7 @@ CREATE TABLE IF NOT EXISTS `tags_custom` (
   `tag_text` varchar(2048) DEFAULT NULL,
   PRIMARY KEY (`tag_id`),
   UNIQUE KEY `tag_name` (`tag_name`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Tags used by rules' AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Tags used by rules' AUTO_INCREMENT=1000 ;
 
 --
 -- Dumping data for table `tags_custom`
