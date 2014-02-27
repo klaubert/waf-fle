@@ -106,7 +106,6 @@ while ( $line < $BodySize) {
                     $PhaseA['ServerPort'] = $matchesA[10];
                 }
                 $PhaseA_full = $PhaseA_full . $BODY[$line];
-                $PhaseA_full = $PhaseA_full . $clientIpHeaderRegExp;
                 $line++;
             }
         }
