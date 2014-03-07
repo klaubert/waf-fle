@@ -12,6 +12,13 @@ Improve: mlog2waffle requirements better clarified em their README, and
          now is possible to use it with old version of libwww-perl, but 
          no self-signed certificate in that case;
 Improve: Better error message in case of database error;
+Improve: mlog2waffle now has a crontab script;
+Improve: Corrected push-mlogc.sh template in Event Feeder Wizard;
+Bug: Custom Tags has his ID's starting in 1000, to avoid conflict with 
+     native tags (thanks to juraj sakala);
+Bug: Typo corrected in mlog2waffle.conf (thanks to juraj sakala)
+Bug: Typo corrected in event feeder wizard;
+Bug: Text revised in event feeder wizard;
 
 
 
