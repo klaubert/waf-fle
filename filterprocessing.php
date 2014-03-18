@@ -199,6 +199,18 @@ if (isset($_GET['falsePositive'])) {
     }
 }
 
+// filter by Preserved
+if (isset($_GET['preserved'])) {
+    if ($_GET['preserved'] == "0") {
+        $_SESSION['filter']['preserved'] = FALSE;
+    } elseif ($_GET['preserved'] == "1") {
+        $_SESSION['filter']['preserved'] = TRUE;
+    } else {
+        unset($_SESSION['filter']['preserved']);
+    }
+}
+
+
 // Timing filters
 // filter by Duration
 if (isset($_GET['duration']) AND isset($_GET['duration_interval'])) {
