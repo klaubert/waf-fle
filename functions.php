@@ -3377,7 +3377,7 @@ function getDbInfo()
    /* prepare statement using PDO*/
    global $dbconn;
    global $DATABASE;
-   global $DB_HOST1;
+   global $DB_HOST;
    global $DB_USER;
    global $DB_PASS;
    global $dbconn;
