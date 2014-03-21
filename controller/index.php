@@ -120,9 +120,9 @@ while ( $line < $BodySize) {
             } else {
                 if (preg_match('/^(GET|POST|HEAD|PUT|DELETE|TRACE|PROPFIND|OPTIONS|CONNECT|PATCH)\s(.+)\s(HTTP\/[01]\.[019])/i', trim($BODY[$line]), $matchesB)) {
                     $PhaseB['Method']        = $matchesB[1];
-                    $PhaseB['pathParameter'] = parse_url($matchesB[2], PHP_URL_QUERY);
+                    $PhaseB['pathParameter'] = parse_url("http://dummy.ex".$matchesB[2], PHP_URL_QUERY);
                     // $pathParsed              = parse_url($matchesB[2], PHP_URL_PATH);
-                    $PhaseB['path']          = parse_url($matchesB[2], PHP_URL_PATH);
+                    $PhaseB['path']          = parse_url("http://dummy.ex".$matchesB[2], PHP_URL_PATH);
                     $PhaseB['Protocol']      = $matchesB[3];
                 } elseif (preg_match('/^Host:\s(.+)/i', trim($BODY[$line]), $matchesB)) {
                     $PhaseB['Host'] = $matchesB[1];
