@@ -1244,6 +1244,15 @@ function superFilter($selector, $trailer, $filterType, $count = FALSE, $extraFie
         }
     }
 
+   // looking for Preserved
+    if (isset($_SESSION[$filterType]['preserved'])) {
+        if ($_SESSION[$filterType]['preserved'] == FALSE) {
+            $sql = $sql . ' AND (events.preserve = FALSE) ';
+        } elseif ($_SESSION[$filterType]['preserved'] == TRUE) {
+            $sql = $sql . ' AND (events.preserve = TRUE) ';
+        }
+    }
+
     // Looking for duration
     if (isset($_SESSION[$filterType]['duration'])) {
         if ($_SESSION[$filterType]['duration_interval'] == "le") {

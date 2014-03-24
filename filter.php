@@ -571,6 +571,37 @@
         </div>
 
         <div class="filterRow">
+        <div class="tagTip" title="Preserved Events">
+            <label for="Preserved Events">
+                <div class="filterLeft">
+                    Preserved Events
+                </div>
+                <div class="filterRight">
+                    <?PHP
+                        print "<select id=\"preserved\" name=\"preserved\" size=\"1\" style=\"width: 210px\" class=\"text ui-widget-content ui-corner-all \">";
+
+                        if (isset($_SESSION['filter']['preserved']) AND $_SESSION['filter']['preserved'] == TRUE ){
+                            print "<option value=\"x\">           </option>";
+                            print "<option selected value=\"1\">Preserved     </option>";
+                            print "<option value=\"0\">Not Preserved </option>";
+                        } elseif(isset($_SESSION['filter']['preserved']) AND $_SESSION['filter']['preserved'] == FALSE){
+                            print "<option value=\"x\">           </option>";
+                            print "<option value=\"1\">Preserved     </option>";
+                            print "<option selected value=\"0\">Not Preserved </option>";
+                        } else {
+                            print "<option selected value=\"x\">           </option>";
+                            print "<option value=\"1\">Preserved     </option>";
+                            print "<option value=\"0\">Not Preserved </option>";
+                        }
+                        print "</select>";
+                    ?>
+                </div>
+            </label>
+            <div class="filterClear"></div>
+        </div>
+        </div>
+
+        <div class="filterRow">
             <label for="Unique ID">
                 <div class="filterLeft">
                     Unique ID

@@ -377,6 +377,19 @@ if (isset($_SESSION['filter'])) {
        $showFilter .= "  (<a href=\"$thisPage?falsePositive=x\" title=\"Clear False Positive Filter\" class=\"filter_control\">Del</a>)</span> ";
     }
     
+    // Preserved
+    if (isset($_SESSION['filter']['preserved'])) {
+       if ($_SESSION['filter']['preserved'] == FALSE) {
+          $showFilter .= "| <span class=\"Negate\">Preserved</span>";
+          $showFilter .= "<span class=\"filter_control\" > (<a href=\"$thisPage?preserved=1\" title=\"Change to Preserved Events\" class=\"filter_control\">Not</a>)";
+       } else {
+          $showFilter .= "| Preserved ";
+          $showFilter .= "<span class=\"filter_control\" > (<a href=\"$thisPage?preserved=0\" title=\"Change to Not Preserved Events\" class=\"filter_control\">Not</a>)";
+       }
+       $showFilter .= "  (<a href=\"$thisPage?preserved=x\" title=\"Clear False Positive Filter\" class=\"filter_control\">Del</a>)</span> ";
+    }
+
+    
     $showFilter .= "}";
     $showFilter .= " <a href=\"$thisPage?filter=x\"><b>Clear Filter</b></a> ";
     //$showFilter .= " </td>";
