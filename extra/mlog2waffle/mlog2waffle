@@ -51,6 +51,7 @@ our $MODE;
 our $FULL_TAIL;
 our $MODSEC_DIRECTORY;
 our $INDEX_FILE;
+our $LOG;
 our $ERROR_LOG;
 our $THREADMAX;
 our $CHECK_CONNECTIVITY;
@@ -74,6 +75,7 @@ my $commitedOffset : shared = 0;
 my $ino : shared;
 my $logLine;
 my $DAEMON;
+my $threadLog;
 
 sub send_event
 {
@@ -262,7 +264,7 @@ sub readIndex {
 
       if ($indexline =~ m{
          ^          # Start
-         .*      # Hostname
+         .*         # Hostname
          \d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\s      # IP Address
          \S+\s      # Username
          \S+\s      #
@@ -508,15 +510,19 @@ if ($DEBUG eq "TRUE") {
 }
 
 # start Log thread
-my $threadLog = new threads \&logWrite;
+if ($LOG eq "TRUE") {
+   $threadLog = new threads \&logWrite;
+}
 
 # Check if index file exist, exit if not
 unless (-e $INDEX_FILE) {
    print STDERR "Cannot read Index $INDEX_FILE: $!\n";
-   $logLine = "Cannot read Index $INDEX_FILE: $!\n";
-   $logQueue->enqueue($logLine);
-   $logQueue->enqueue(undef);
-   $threadLog->join;
+   if ($LOG eq "TRUE") {
+      $logLine = "Cannot read Index $INDEX_FILE: $!\n";
+      $logQueue->enqueue($logLine);
+      $logQueue->enqueue(undef);
+      $threadLog->join;
+   }
    exit 1;
 }
 
