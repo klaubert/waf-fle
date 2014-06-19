@@ -510,8 +510,8 @@ if (isset($_GET['webApp']) OR isset($_GET['Not_webApp'])) {
             unset($_SESSION['filter']['Not_webApp']);
         }
 
-        if (isset($_GET['webApp']) AND preg_match('/^\w{1,20}$/', $_GET['webApp'])) {
-            $_SESSION['filter']['webApp'] = @sanitize_paranoid_string($_GET['webApp']);
+        if (isset($_GET['webApp']) AND preg_match('/^[a-zA-Z0-9\.\-\_\@\s]{1,20}$/', $_GET['webApp'])) {
+            $_SESSION['filter']['webApp'] = $_GET['webApp'];
         } else {
             unset($_SESSION['filter']['webApp']);
             unset($_SESSION['filter']['Not_webApp']);
