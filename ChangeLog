@@ -24,10 +24,16 @@ Bug: Typo corrected in event feeder wizard;
 Bug: Text revised in event feeder wizard;
 Bug: Better URL handling in request, patch from Juraj Sakala);
 Bug: Typo correction in functions.php, patch from Juraj Sakala);
+Bug: Issue #37, bad dashboard page formating, patch from Juraj Sakala);
 Bug: This change addresses the issue 43 at 
      http://code.google.com/p/waf-fle/issues/. It reflects problem with 
      parsing of the modsec index file line where is empty or malformed 
      Host header. Patch from Juraj Sakala
+Bug: Change the management menu behavior, to address a performance 
+     impact described by Juraj Sakala (in issue #14 on GitHub). A 
+     temporary denial of service happens while database events are 
+     counted for get sensor information. Now the user can change (on 
+     config.php and in runtime) if Sensor Info will be loaded or not.
 
 
 Version 0.6.3: Jan, 30 2014

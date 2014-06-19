@@ -669,7 +669,7 @@ require_once("../filterprocessing.php");
                     </table>
                 </div>
             </div>
-	    <div id="clear"> </div>           
+	        <div id="clear"> </div>           
          </div>
 
          </div>

@@ -43,6 +43,12 @@ $deleteWait = 2;
 $CACHE_TIMEOUT   = 30;
 $SESSION_TIMEOUT = 600;
 
+// Enable/Disable the SensorInfo data in management menu. This can be 
+// overwritten by user in user interface, and the change will affect and
+// will be valid only for that user and while session still valid. The 
+// default is "true"
+$GetSensorInfo = true;
+
 // Debug enable/disable
 $DEBUG = false;
 
