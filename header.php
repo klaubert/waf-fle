@@ -273,6 +273,17 @@ if ($jsChart) {
 				range: true,
 				values: [17, 67]
 			});
+			
+			$( "#webhost" ).autocomplete({
+				source: function(request, response) {
+					$.getJSON("ajax.php", { getWebHostsPartial: request.term }, response); 
+				},
+				delay: 400,
+				select: function(event, ui) {
+					$('#hiddenWebHostName').val(ui.item.id);
+				},
+				minLength: 3,
+			});
 		});
 
 		var progress_key = '';

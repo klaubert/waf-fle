@@ -1,0 +1,4 @@
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+
+# start mlog2waffle periodically, in this case 5 minutes
+*/5 * * * * root mlog2waffle 

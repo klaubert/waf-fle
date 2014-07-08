@@ -105,7 +105,8 @@ CREATE TABLE IF NOT EXISTS `events` (
   KEY `severity` (`a_date`,`h_severity`,`event_id`,`a_timestamp`),
   KEY `path` (`a_date`,`b_path`(32),`event_id`,`a_timestamp`),
   KEY `method` (`b_method`),
-  KEY `webhost` (`b_host`)
+  KEY `webhost` (`b_host`),
+  KEY `sensor_id2` (`sensor_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Events received from sensors' AUTO_INCREMENT=1 ;
 
 --

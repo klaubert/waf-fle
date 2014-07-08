@@ -17,8 +17,22 @@ Improve: you can disable/enable error log in mlog2waffle in
 Improve: waf-fle.conf minor text adjustment
 Improve: Corrected push-mlogc.sh template in Event Feeder Wizard;
 Improve: Filter for preserved events added. Thanks to Juraj Sakala;
-Bug: Custom Tags has his ID's starting in 1000, to avoid conflict with 
-     native tags (thanks to juraj sakala);
+Improve: Better session handling.
+         - The session are regenerated when a sucessful login occour, 
+         and after 10 times the SESSION_TIMEOUT, make session more 
+         robust against session hijack/fixation.
+         - Expiration are now better handled, timeout happen between 
+         the finish of a page processing and the next access;
+Bug: In some circunstances the filter dialog are unable to show web 
+     hostnames (ie. when more that 2000 entries are available), this 
+     is a limitation/protection of browsers. Now the hostname was 
+     changed from a combo-box, to a text input with autocomplete powered 
+     by a Ajax interface, that brings hostnames when you type it on 
+     hostname field. This fixes issue #15 on github. Thanks to Juraj
+     Sakala for report and discuss it; 
+Bug: Session is now enforced rightly when an AJAX operation is called.
+Bug: Custom Tags ID's changed to in 1000, to avoid conflict with native 
+     tags (thanks to juraj sakala);
 Bug: Typo corrected in mlog2waffle.conf (thanks to Juraj Sakala)
 Bug: Typo corrected in event feeder wizard;
 Bug: Text revised in event feeder wizard;
@@ -29,11 +43,21 @@ Bug: This change addresses the issue 43 at
      http://code.google.com/p/waf-fle/issues/. It reflects problem with 
      parsing of the modsec index file line where is empty or malformed 
      Host header. Patch from Juraj Sakala
+Bug: Issue #45, unescaped output on TopRules chart, make chart unusable 
+     with special character in rule description. Thanks to Ibere Tizio, 
+     by report and propose a fix.
 Bug: Change the management menu behavior, to address a performance 
      impact described by Juraj Sakala (in issue #14 on GitHub). A 
      temporary denial of service happens while database events are 
      counted for get sensor information. Now the user can change (on 
      config.php and in runtime) if Sensor Info will be loaded or not.
+     Database schema change to fix this, but will change in update 
+     process only on next release, if you want to change now access you 
+     MySQL and use the command below (this can need some time and disk 
+     space): 
+     
+     # use waffle;
+     # ALTER TABLE `waffle`.`events` ADD INDEX `sensor3` (`sensor_id`);
 
 
 Version 0.6.3: Jan, 30 2014

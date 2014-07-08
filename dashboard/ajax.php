@@ -15,9 +15,7 @@
  *      Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  *      MA 02110-1301, USA.
  */
-
 ?>
-
 <?PHP
 require_once("../functions.php");
 global $DEBUG;
@@ -31,13 +29,15 @@ if ($DEMO) {
 	return;
 }
 
-$ASYNC=TRUE;
 require_once("../session.php");
 require_once("../filterprocessing.php");
 
 header("Content-type: application/json");
 header("Cache-Control: no-cache");
 if (isset($_GET['deleteByFilter']) AND $_GET['deleteByFilter'] == 1 AND preg_match('/\d{12,16}/', $_GET['delId'])) {
+	// used when the operation can require additional time to be processed (more time than SESSION_TIMEOUT), extending 3 times
+	$ASYNC=TRUE;
+
 	$delId = $_GET['delId'];
 
 	if (!isset($_SESSION['delId'][$delId]['Total'])) {
@@ -63,6 +63,9 @@ if (isset($_GET['deleteByFilter']) AND $_GET['deleteByFilter'] == 1 AND preg_mat
 	print json_encode($result);
 
 } elseif (isset($_GET['falsePositiveByFilter']) AND $_GET['falsePositiveByFilter'] == 1 AND preg_match('/\d{12,16}/', $_GET['fpId'])) {
+	// used when the operation can require additional time to be processed (more time than SESSION_TIMEOUT), extending 3 times
+	$ASYNC=TRUE;
+
 	$fpId = $_GET['fpId'];
 
 	if (!isset($_SESSION['fpId'][$fpId]['Total'])) {
@@ -89,6 +92,9 @@ if (isset($_GET['deleteByFilter']) AND $_GET['deleteByFilter'] == 1 AND preg_mat
 	print json_encode($result);
 
 }elseif (isset($_GET['deleteSensorByFilter']) AND $_GET['deleteSensorByFilter'] == 1 AND preg_match('/\d{12,16}/', $_GET['delId'])) {
+	// used when the operation can require additional time to be processed (more time than SESSION_TIMEOUT), extending 3 times
+	$ASYNC=TRUE;
+
 	$delId = $_GET['delId'];
 
 	if (!isset($_SESSION['delId'][$delId]['Total'])) {
@@ -112,10 +118,7 @@ if (isset($_GET['deleteByFilter']) AND $_GET['deleteByFilter'] == 1 AND preg_mat
 			unset($_SESSION['delId']);
 		} else {
 			$result = array('Total' => $_SESSION['delId'][$delId]['Total'] , 'Current' => $_SESSION['delId'][$delId]['Deleted'], 'Percent' => $deletedPercent, 'SensorDelete' => $deleteSensorResult);			
-		}
-
-
-		
+		}		
 	} else {
 		$deleteSensorResult = deleteSensor($_SESSION['delFilter']['src_sensor']);
 		unset($_SESSION['delFilter']);
@@ -124,7 +127,20 @@ if (isset($_GET['deleteByFilter']) AND $_GET['deleteByFilter'] == 1 AND preg_mat
 	}
 	sleep(2);
 	print json_encode($result);
+} elseif (isset($_GET['getWebHostsPartial'])) {
+// Query web hostnames partially, using autocomplete from filter interface.
+	if (strlen($_GET['getWebHostsPartial']) > 2) {
+		$webHostsList = getWebHostsPartial($_GET['getWebHostsPartial']);
+	} else {
+		$webHostsList = "{}";
+	}
+	print json_encode($webHostsList);
 } else {
 	print "Error\n";
 }
+
+
+// update last activity timestamp, on page processing finish
+session_refresh();
+
 ?>

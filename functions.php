@@ -3321,6 +3321,53 @@ function getWebHostName($hostId)
     return $webHostName;
 }
 
+// Get the Web Hostname on database from a AJAX autocomplete input text box 
+function getWebHostsPartial($hostName)
+{
+    global $DEBUG;
+    if ($DEBUG) {
+        global $debugInfo;
+        $debugCount = count($debugInfo[__FUNCTION__]);
+        $starttime = microtime(true);
+    }
+
+    /* prepare statement using PDO*/
+    global $dbconn;
+    global $APC_ON;
+    global $CACHE_TIMEOUT;
+
+    $sql = 'SELECT `host_id` AS id, `hostname` AS value FROM `events_hostname` WHERE `hostname` LIKE :hostName ORDER BY `hostname` limit 1000';
+    if ($DEBUG) {
+       $debugInfo[__FUNCTION__][$debugCount]['query'] = $sql;
+    }
+    try {
+       $sth = $dbconn->prepare($sql);
+       $hostName=$hostName.'%';
+       $sth->bindParam(":hostName", $hostName);
+       // Execute the query
+       $sth->execute();
+       // Fetch all values matching the condition, returning only values
+       $webhosts = $sth->fetchAll(PDO::FETCH_CLASS);
+    } catch (PDOException $e) {
+       header("HTTP/1.1 500 Internal Server Error");
+       header("Status: 500");
+       print "HTTP/1.1 500 Internal Server Error \n";
+       if ($DEBUG) {
+          print "Error (".__FUNCTION__.") Message: " . $e->getMessage() . "\n";
+          print "Error (".__FUNCTION__.") getTraceAsString: " . $e->getTraceAsString() . "\n";
+       }
+       exit();
+    }
+    if ($DEBUG) {
+        $stoptime = microtime(true);
+        $timespend = $stoptime - $starttime;
+
+        $debugInfo[__FUNCTION__][$debugCount]['time'] = $timespend;
+    }
+    return $webhosts;
+}
+
+
 // Get the Web Hostname on database
 function getWebHosts()
 {
@@ -4125,5 +4172,15 @@ function arrayUnique($myArray)
 
     return $myArray;
 }
+
+// update last activity timestamp, on page processing finish
+function session_refresh() 
+{
+	if (isset($_SESSION['login'])) {
+		$_SESSION['LAST_ACTIVITY'] = time(); 
+	}
+	return;
+}
+
 
 ?>

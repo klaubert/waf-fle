@@ -115,6 +115,10 @@ if ($DEBUG) {
     }
     print "</pre>";
 }
+
+// update last activity timestamp, on page processing finish
+session_refresh();
+
 ?>
 
 </body>

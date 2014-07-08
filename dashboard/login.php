@@ -40,10 +40,13 @@ if ($_POST['submit'] == "submit") {
             $_SESSION['userName'] = ucfirst(strtolower($userlogon[0]['username']));
             $_SESSION['userID']   = $userlogon[0]['user_id'];
             $_SESSION['email']    = $userlogon[0]['email'];
+            $_SESSION['LAST_ACTIVITY'] = time(); // define first "last activity" timestamp
+            $_SESSION['CREATED'] = time(); // initialize the session create timestamp
 
             if ($userlogon[0]['changePass']) {
                $_SESSION['forceChangePass'] = true;
             } 
+            session_regenerate_id(true);    // change session ID for the current session an invalidate old session ID
             header("HTTP/1.1 302 Found");
             header("Location: index.php");
             header("Connection: close");

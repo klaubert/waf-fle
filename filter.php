@@ -90,7 +90,8 @@
         </div>
 
         <div class="filterRow">
-            <label for="Target Hostname">
+            <label for="Target Hostname" class="tagTip" title="Start type the web hostname used in requests. As soon you start to type the available hostnames will appear to you.
+            <br> (The 1000 first will be showed, try to be specific).">
                 <div class="filterLeft">
                     Target Hostname
                 </div>
@@ -102,21 +103,9 @@
                         } else {
                             print "<input type=\"checkbox\" name=\"Not_web_Hostname\" value=\"1\" class=\"text ui-widget-content ui-corner-all\">";
                         }
-                    ?>                    
-                
-                    <select id="filter_select" name="web_Hostname" size="1" style="width: 165px" class="text ui-widget-content ui-corner-all ">
-                        <option value="x">All Web Hosts </option>
-                        <?PHP
-                            $hostnameList = getWebHosts();
-                            foreach ( $hostnameList as $host) {
-                                if ($_SESSION['filter']['web_Hostname'] == $host['host_id']) {
-                                    print "<option selected value=\"".$host['host_id']."\">".headerprintnobr($host['hostname'])."  </option>";
-                                } else {
-                                    print "<option value=\"".$host['host_id']."\">".headerprintnobr($host['hostname']). "</option>";
-                                }
-                            }
-                        ?>
-                    </select>
+                    ?>                
+					  <input id="webhost" class="text ui-widget">
+					  <input type="hidden" id="hiddenWebHostName" name="web_Hostname">
                 </div>
             </label>
             <div class="filterClear"></div>
