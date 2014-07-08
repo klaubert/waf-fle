@@ -25,6 +25,11 @@ ini_set('display_errors', 0);
 // Print errors in php log (normally apache errors log), but not notice logs
 error_reporting(E_ALL ^ E_NOTICE);
 
+// $PcreErrRuleId handling;
+if (!isset($PcreErrRuleId) OR !preg_match('/^\d+$/', $PcreErrRuleId)) {
+    $PcreErrRuleId = 1;
+}
+
 if (is_readable("../config.php")) {
     require_once "config.php";
 } else {

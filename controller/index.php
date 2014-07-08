@@ -207,7 +207,23 @@ while ( $line < $BodySize) {
                 if (preg_match('/^Message:\s/i', trim($BODY[$line]))) {
                     // look for message Action
                     $message_start = 0;
-                    $message_stop  = strpos(trim($BODY[$line]), ". ", $message_start);
+		    //Libinject SQLi workaround
+                    if (preg_match('/detected\sSQLi\susing/', trim($BODY[$line]))) {
+                        $message_stop  = strpos(trim($BODY[$line]), "' ", $message_start);
+			$message_stop++;
+                    //Execution error - PCRE limit exceeded handling
+                    } elseif (preg_match('/Execution\serror\s-\sPCRE\slimits\sexceeded/', trim($BODY[$line]))) {
+                        $PhaseH_MSG[$hline]['Message_Msg'] = "Execution Error - PCRE limit exceeded";
+                        $PhaseH_MSG[$hline]['Message_RuleId'] = $PcreErrRuleId;
+                        preg_match('/id\s\"(\d+)\"/', trim($BODY[$line]), $PcreRuleId);
+                        $PhaseH_MSG[$hline]['Message_Data'] = "RuleId:" . $PcreRuleId[1];
+                        $PhaseH_full = $PhaseH_full . $BODY[$line];
+                        $hline++;
+                        $line++;
+                        continue;
+                    } else {
+                        $message_stop  = strpos(trim($BODY[$line]), ". ", $message_start);
+                    }
                     $message_length = $message_stop - $message_start;
                     $action = substr(trim($BODY[$line]), $message_start, $message_length) . "\n";
                     $message_start = $message_stop;
