@@ -32,6 +32,22 @@ if (is_readable("../config.php")) {
     exit;
 }
 
+// Check if required directives are present
+if (!isset($deleteLimit)) {
+	print "Your config.php has no \$deleteLimit directive defined.<br />\n";
+	print "Please define it to continue.";
+	exit;
+} 
+if (!isset($SESSION_TIMEOUT)) {
+	print "Your config.php has no \$SESSION_TIMEOUT directive defined. <br />\n";
+	print "Please define it to continue.";
+	exit;
+} 
+if (!isset($max_event_number)) {
+	print "Your config.php has no \$max_event_number directive defined. <br />\n";
+	print "Please define it to continue.";
+	exit;
+}
 
 if (isset($SETUP) AND $SETUP == true ){
     header("Location: setup.php");
