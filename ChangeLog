@@ -43,6 +43,8 @@ Bug: This change addresses the issue 43 at
      http://code.google.com/p/waf-fle/issues/. It reflects problem with 
      parsing of the modsec index file line where is empty or malformed 
      Host header. Patch from Juraj Sakala
+Bug: fixed issue #43, when processing filter with "not tag" generate an 
+     error.
 Bug: Issue #45, unescaped output on TopRules chart, make chart unusable 
      with special character in rule description. Thanks to Ibere Tizio, 
      by report and propose a fix.

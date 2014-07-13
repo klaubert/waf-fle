@@ -1028,6 +1028,8 @@ function superFilter($selector, $trailer, $filterType, $count = FALSE, $extraFie
     if (isset($_SESSION[$filterType]['tag']) AND !isset($_SESSION[$filterType]['ruleid'])) {
         if (!isset($_SESSION[$filterType]['Not_tag'])) {
             $sql = $sql . ' JOIN events_messages ON events.event_id = events_messages.event_id JOIN events_messages_tag ON events_messages_tag.msg_id = events_messages.msg_id ';
+        }else {
+            $sql = $sql . ' JOIN events_messages ON events.event_id = events_messages.event_id ';           
         }
     }
 
@@ -1365,8 +1367,6 @@ function superFilter($selector, $trailer, $filterType, $count = FALSE, $extraFie
 
     // Concatenate selector and trailer
     $sql = $sql . $trailer;
-
-    //print "$sql <br />";
 
     if ($DEBUG) {
         $debugInfo[__FUNCTION__][$debugCount]['query'] = $sql;
