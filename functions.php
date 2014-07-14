@@ -4105,7 +4105,6 @@ function validateIP($ip)
     }
 
     if (preg_match('/^([12]?\d{1,2}\.[12]?\d{1,2}\.[12]?\d{1,2}\.[12]?\d{1,2})(\/\d{1,2})?$/', $ip)) {
-		print "IP1: $ip <br/>";
         if (ip2long($ip)) {
             $valid = TRUE;
         } elseif (networkRange($ip)) {
