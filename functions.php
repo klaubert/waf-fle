@@ -4104,8 +4104,8 @@ function validateIP($ip)
         $starttime = microtime(TRUE);
     }
 
-    //if (preg_match('/([12]?[0-9]{1,2}\.[12]?[0-9]{1,2}\.[12]?[0-9]{1,2}\.[12]?[0-9]{1,2})/', $ip)) {
-    if (preg_match('/([12]?[0-9]{1,2}\.[12]?[0-9]{1,2}\.[12]?[0-9]{1,2}\.[12]?[0-9]{1,2})(\/\d{1,2})?/', $ip)) {
+    if (preg_match('/^([12]?\d{1,2}\.[12]?\d{1,2}\.[12]?\d{1,2}\.[12]?\d{1,2})(\/\d{1,2})?$/', $ip)) {
+		print "IP1: $ip <br/>";
         if (ip2long($ip)) {
             $valid = TRUE;
         } elseif (networkRange($ip)) {
@@ -4127,12 +4127,9 @@ function validateIP($ip)
 
 function networkRange($ipAddRange)
 {
-    if (preg_match('/([12]?[0-9]{1,2}\.[12]?[0-9]{1,2}\.[12]?[0-9]{1,2}\.[12]?[0-9]{1,2})(\/\d{1,2})?/', $ipAddRange, $ip_result)) {
+    if (preg_match('/^([12]?\d{1,2}\.[12]?\d{1,2}\.[12]?\d{1,2}\.[12]?\d{1,2})\/(\d{1,2})$/', $ipAddRange, $ip_result)) {
         $ip_addr = $ip_result[1];
-        $cidr = str_replace("/", "", $ip_result[2]);
-        if ($cidr == null) {
-            $cidr = 32;
-        }
+        $cidr = $ip_result[2];
         if (validateIP($ip_addr) AND sanitize_int($cidr, $min = '1', $max = '32')) {
             $subnet_mask = long2ip(-1 << (32 - (int)$cidr));
             $ip          = ip2long($ip_addr);

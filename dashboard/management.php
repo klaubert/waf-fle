@@ -131,7 +131,7 @@ if (isset($_GET['s'])) {  // Sensors Tasks
             break;
         }
 
-        $sensorIp = @sanitize_paranoid_string($_POST['IP']);
+        $sensorIp = $_POST['IP']; // will be validated in specific functions.
         if ($sensorIp == "") {
             $sensorIp = null;
         } elseif (preg_match('/^Any$/i', $sensorIp)) {
