@@ -52,6 +52,8 @@ Bug: Issue #47, type in redirect definition on waf-fle.conf (apache
      config file) for WAF-FLE.
 Bug: Issue #47, error in IP address validation function of Add Sensor in 
      managment interface.     
+Bug: Fixes github issue #13, processing of client ip range defined by a 
+     netmask.
 Bug: Change the management menu behavior, to address a performance 
      impact described by Juraj Sakala (in issue #14 on GitHub). A 
      temporary denial of service happens while database events are 

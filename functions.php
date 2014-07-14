@@ -4143,7 +4143,7 @@ function networkRange($ipAddRange)
             $ipRange['network']       = long2ip($nw);
             $ipRange['networklong']   = sprintf("%u", $nw);
             $ipRange['broadcast']     = long2ip($bc);
-            $ipRange['broadcastlong'] = sprintf("%u", $bc);
+            $ipRange['broadcastlong'] = sprintf("%u", ip2long($ipRange['broadcast']));
             $ipRange['hosts']         = ($bc - $nw + 1);
             $ipRange['range']         = long2ip($nw) . " -> " . long2ip($bc);
 
