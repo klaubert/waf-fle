@@ -17,6 +17,12 @@ Improve: you can disable/enable error log in mlog2waffle in
 Improve: waf-fle.conf minor text adjustment
 Improve: Corrected push-mlogc.sh template in Event Feeder Wizard;
 Improve: Filter for preserved events added. Thanks to Juraj Sakala;
+Improve: Some grammar correction. Thanks to Cliton Nichols;
+Improve: Now accept events sent by mod_security compiled/patched by 
+         Atomic Turtle to change label "Producer" to "WAF". Issue #22 
+         and #48;
+Improve: mlog2waffle now support event index created by mod_security 
+         compiled/patched by Atomic Turtle;
 Improve: Better session handling.
          - The session are regenerated when a sucessful login occour, 
          and after 10 times the SESSION_TIMEOUT, make session more 
@@ -180,7 +186,7 @@ Improve: New, optimized database scheme to speed filters. That change
          require a database upgrade when migrate from version 0.5 to 
          0.6:
          - full section of events is now stored in a independent table
-         - Some columns was changed to better types and sizes
+         - Some columns were changed to better types and sizes
 Improve: Changed all database access to PDO, more clear and toward to 
          database abstraction, resulting in only one database connection
 Improve: Add GPL warning in all files

@@ -609,7 +609,7 @@ if (isset($_GET['u'])) {
                print "<td width=\"450\" align=\"left\">";
                   print "<table id=\"sensorInfo\">";
                   print "<tr>";
-                  print "<td><span id=\"header_cap\">Event's total:</span></td><td>";
+                  print "<td><span id=\"header_cap\">Events total:</span></td><td>";
                   if ($_SESSION['getSensorInfo'] == true) {
 					  print number_format($sensorInfo['sensorEvents']);
 				  }

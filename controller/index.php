@@ -374,7 +374,7 @@ while ( $line < $BodySize) {
                     $PhaseH['Stopwatch2_sw'] = (isset($matchesH[10]) ? $matchesH[10] : null); // persistent storage write duration
                     $PhaseH['Stopwatch2_l'] = (isset($matchesH[11]) ? $matchesH[11] : null);  // time spent on audit log
                     $PhaseH['Stopwatch2_gc'] = (isset($matchesH[12]) ? $matchesH[12] : null);  // time spend on garbage collection
-                } elseif (preg_match('/^Producer:\s(.+\.)$/i', trim($BODY[$line]), $matchesH)) {
+                } elseif (preg_match('/^(?:Producer|WAF):\s(.+\.)$/i', trim($BODY[$line]), $matchesH)) {
                     if (preg_match('/(.+);\s(.+)\.$/i', $matchesH[1], $prod)) {
                         $PhaseH['Producer']         = (isset($prod[1]) ? $prod[1] : null);
                         $PhaseH['Producer_ruleset'] = (isset($prod[2]) ? $prod[2] : null);

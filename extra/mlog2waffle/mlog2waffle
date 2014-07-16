@@ -255,16 +255,26 @@ sub readIndex {
    my $indexline;
    while ($errorCond == 0) {
       $indexline=<ModsecIndex>;
+
       # Wait 1sec if no new content on file
       if ($indexline eq "") {
          sleep 1;
       }
       return 0 if ($errorCond > 0);  # An error was triggered in other thread
+
       chomp($indexline);
 
       if ($indexline =~ m{
          ^          # Start
-         .*         # Hostname
+         (?:        # Support to Atomic Turtle mod_security log format
+         \[modsecurity\]\s
+         \[[^\]]+\]\s
+         \[[^\]]+\]\s
+         \[[^\]]+\]\s
+         \[(?<file>[^\]]+)\]\s)
+         |
+         (?:
+         .*      # Hostname
          \d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\s      # IP Address
          \S+\s      # Username
          \S+\s      #
@@ -277,20 +287,32 @@ sub readIndex {
          \"\S+\"\s  #
          \S+\s      # UniqID
          \S+\s      # Session ID
-         (\S+)\s    # Event File
+         (?<file>\S+)\s    # Event File
          \d+\s      #
-         (\d+)\s    # Event Lenght
-         (\S+)      # Event Hash
+         (?<length>\d+)\s    # Event Lenght
+         (?<hash>\S+)      # Event Hash
+	     )
       }x) {
-
-         my $file = $MODSEC_DIRECTORY . "/" . $1;
+         my $file = $MODSEC_DIRECTORY . "/" . $+{file};
+         my $length;
+         my $hash;
          if ($MODE eq "batch") {
             $size = tell ModsecIndex;
          } else {
             $size = 0;
          }
-         my $event_data = $file . "_|_" . $2 . "_|_" . $3 . "_|_" . $indexline . "_|_" . $size;
+         if ($+{length}) {
+            $length = $+{length};
+         } else {
+            $length = -s $file;
+         }
+         if ($+{hash}) {
+            $hash = $+{hash};
+         } else {
+            $hash = '';
+         }
 
+         my $event_data = $file . "_|_" . $length . "_|_" . $hash . "_|_" . $indexline . "_|_" . $size;
          $queue->enqueue($event_data);
             
          if ($queue->pending() > $THREADMAX * 50) {
