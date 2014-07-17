@@ -104,7 +104,7 @@
                             print "<input type=\"checkbox\" name=\"Not_web_Hostname\" value=\"1\" class=\"text ui-widget-content ui-corner-all\">";
                         }
                     ?>                
-					  <input id="webhost" class="text ui-widget">
+					  <input id="webhost" style="width: 160px" class="text ui-widget-content ui-corner-all">
 					  <input type="hidden" id="hiddenWebHostName" name="web_Hostname">
                 </div>
             </label>
