@@ -4131,9 +4131,13 @@ function validateIP($ip)
 
 function networkRange($ipAddRange)
 {
-    if (preg_match('/^([12]?\d{1,2}\.[12]?\d{1,2}\.[12]?\d{1,2}\.[12]?\d{1,2})\/(\d{1,2})$/', $ipAddRange, $ip_result)) {
+    if (preg_match('/^([12]?\d{1,2}\.[12]?\d{1,2}\.[12]?\d{1,2}\.[12]?\d{1,2})(\/\d{1,2})?$/', $ipAddRange, $ip_result)) {
         $ip_addr = $ip_result[1];
-        $cidr = $ip_result[2];
+        if ($ip_result[2] != "") {
+                $cidr = str_replace("/", "", $ip_result[2]);
+        } else {
+                $cidr = 32;
+        }
         if (validateIP($ip_addr) AND sanitize_int($cidr, $min = '1', $max = '32')) {
             $subnet_mask = long2ip(-1 << (32 - (int)$cidr));
             $ip          = ip2long($ip_addr);
