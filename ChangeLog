@@ -17,6 +17,11 @@ Improve: you can disable/enable error log in mlog2waffle in
 Improve: waf-fle.conf minor text adjustment
 Improve: Corrected push-mlogc.sh template in Event Feeder Wizard;
 Improve: Filter for preserved events added. Thanks to Juraj Sakala;
+Improve: Better event handling in controller, code cleanup, including 
+         broken log format of libinjetion, thanks to Juraj Sakala for 
+         propose code and show the libinject problem in issue #17;
+Improve: Event details are reordered to put "Rule Message" first, event 
+         details later;
 Improve: Some grammar correction. Thanks to Cliton Nichols;
 Improve: Now accept events sent by mod_security compiled/patched by 
          Atomic Turtle to change label "Producer" to "WAF". Issue #22 
@@ -36,6 +41,9 @@ Bug: In some circunstances the filter dialog are unable to show web
      by a Ajax interface, that brings hostnames when you type it on 
      hostname field. This fixes issue #15 on github. Thanks to Juraj
      Sakala for report and discuss it; 
+Bug: Fixes issue #7 (github) were "PCRE limits exceeded" start to be 
+     handled properly with attribution of a virtual rule id, default in 
+     99999, with patch of Juraj Sakala.
 Bug: Session is now enforced rightly when an AJAX operation is called.
 Bug: Custom Tags ID's changed to in 1000, to avoid conflict with native 
      tags (thanks to juraj sakala);

@@ -185,11 +185,11 @@ require_once("../header.php");
          if (preg_match('/^Access denied/i', $event_detail['h_message_action'][$key])) {
             print "<b>";
          }
+         if ( $event_detail['h_message_ruleMsg'][$key] != '') {
+            print "<b>Rule Message:</b> ".headerprintnobr($event_detail['h_message_ruleMsg'][$key]) . "<br />";
+         }
          if ( $event_detail['h_message_pattern'][$key] != '') {
             print "<b>Event:</b> ".headerprintnobr($event_detail['h_message_pattern'][$key]) ." <br />";
-         }
-         if ( $event_detail['h_message_ruleMsg'][$key] != '') {
-            print "<b>Message:</b> ".headerprintnobr($event_detail['h_message_ruleMsg'][$key]) . "<br />";
          }
          if ( $event_detail['h_message_ruleData'][$key] != '') {
             print "<b>Data:</b> ".headerprintnobr($event_detail['h_message_ruleData'][$key]) ." <br />";

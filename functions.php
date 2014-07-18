@@ -27,7 +27,7 @@ error_reporting(E_ALL ^ E_NOTICE);
 
 // $PcreErrRuleId handling;
 if (!isset($PcreErrRuleId) OR !preg_match('/^\d+$/', $PcreErrRuleId)) {
-    $PcreErrRuleId = 1;
+    $PcreErrRuleId = 99999;
 }
 
 if (is_readable("../config.php")) {
