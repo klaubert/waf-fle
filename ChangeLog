@@ -45,6 +45,7 @@ Fixed Bugs:
   netmask;
 - Issue #18, fixes regression on client IP filter with no netmask, 
   thanks to Juraj Sakala for the patch;
+- Added parsing to events with "pause" action;
 - Change the management menu behavior, to address a performance impact 
   described by Juraj Sakala (in issue #14 on GitHub). A temporary denial 
   of service happens while database events are counted for get sensor 
@@ -82,7 +83,7 @@ Improvements:
   more robust against session hijack/fixation.
 - Session expiration are now better handled, timeout happen between the
   finish of a page processing and the next access;
-
+- Event list is better orderd now, first by event_id, later by timestamp
 
 Version 0.6.3: Jan, 30 2014
 -------------

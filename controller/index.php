@@ -207,9 +207,8 @@ while ( $line < $BodySize) {
                 $currentHLine = trim($BODY[$line]);
                 if (preg_match('/^Message:\s/i', $currentHLine)) {
 					$message_start = 0;
-					
                     // look for message Action
-					if (preg_match('/^Message:\s(Warning|Access[^\.]+)\.\s/i', $currentHLine, $matchesH)) {
+					if (preg_match('/^Message:\s((Warning|Access|Paus)(.*?))\.\s/i', $currentHLine, $matchesH)) {
                         $PhaseH_MSG[$hline]['Message_Action'] = $matchesH[1];
                         foreach ($ActionStatus as $key => $statusValue) {
                             if (preg_match('/'.$statusValue.'/i', $matchesH[1])) {
@@ -263,7 +262,6 @@ while ( $line < $BodySize) {
                         }
                         $message_length = $message_stop - $message_start;
                         $msg_content = substr($currentHLine, $message_start, $message_length);
-                        print "$msg_content\n";
 
                         $message_start = $message_stop;
 

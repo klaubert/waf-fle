@@ -83,6 +83,8 @@ $ActionStatus[3]  = "Access denied using proxy to"; // action: Proxy
 $ActionStatus[10] = "Access allowed";  // action: Allow
 $ActionStatus[11] = "Access to phase allowed";
 $ActionStatus[12] = "Access to request allowed";
+$ActionStatus[13]  = "Paused Access"; // action: Pause
+$ActionStatus[14]  = "Pausing transaction for"; // action: Pause
 $ActionStatus[20] = "Warning";  // action: Pass or Detection Only
 
 
@@ -1594,7 +1596,7 @@ function eventFilter($offset, $maxnumber, $eventCount)
         $selector = $selector . 'USE INDEX '.$filterIndexHint;
     }
     // SQL Query trailer
-    $trailer = ' ORDER BY events.a_timestamp DESC LIMIT '.(($offset-1)*$maxnumber).", $maxnumber";
+    $trailer = ' ORDER BY events.event_id DESC,events.a_timestamp DESC LIMIT '.(($offset-1)*$maxnumber).", $maxnumber";
 
     // Call superFilter to filter and get the events
     $eventCount = superFilter($selector, $trailer, $filterType, TRUE);
