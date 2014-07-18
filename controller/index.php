@@ -60,7 +60,11 @@ if ($login_status['status'] == 1) {
     exit();
 }
 if ($login_status['sensor_client_ip_header'] != "") {
-	$clientIpHeaderRegExp = "^".$login_status['sensor_client_ip_header'].":\s([12]?[0-9]{1,2}\.[12]?[0-9]{1,2}\.[12]?[0-9]{1,2}\.[12]?[0-9]{1,2})";
+    if (isset($IPHeaderUseLast) AND $IPHeaderUseLast) {
+        $clientIpHeaderRegExp = "^".$login_status['sensor_client_ip_header'].":.+([12]?[0-9]{1,2}\.[12]?[0-9]{1,2}\.[12]?[0-9]{1,2}\.[12]?[0-9]{1,2})$";
+    } else {
+        $clientIpHeaderRegExp = "^".$login_status['sensor_client_ip_header'].":\s([12]?[0-9]{1,2}\.[12]?[0-9]{1,2}\.[12]?[0-9]{1,2}\.[12]?[0-9]{1,2})";
+    }
 }
 
 // Body: read and treatment
