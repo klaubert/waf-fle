@@ -49,10 +49,10 @@ $SESSION_TIMEOUT = 600;
 // default is "true"
 $GetSensorInfo = true;
 
-// Set rule id number for "Execution Error - PCRE limit exceeded" message.
+// Set rule id number for "Execution Error - PCRE limit exceeded".
 // This number must not be used in any other rule id;
-// Default: 1
-$PcreErrRuleId = 1;
+// Default: 99999
+$PcreErrRuleId = 99999;
 
 // Debug enable/disable
 $DEBUG = false;
