@@ -4,6 +4,8 @@ WAF-FLE ChangeLog
 Version 0.6.4: 2014
 -------------
 Fixed Bugs:
+- Issue #39 (google code) fixed to allow character [ and ] in and msg 
+  event log. While not usual, can happen. Other fields was affected to.
 - Lack of output enconding in some filter fields (filter dialog and 
   current filter), when a bogus hostname present in event, cause 
   improper html rendering. Thanks to Marcus Semblano to report and 

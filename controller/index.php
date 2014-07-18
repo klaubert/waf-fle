@@ -254,15 +254,16 @@ while ( $line < $BodySize) {
                         if ($message_start === false) {
                             break;
                          }
-                        $message_stop = strpos($currentHLine, "] ", $message_start);
+                        $message_stop = strpos($currentHLine, "\"] ", $message_start);
                         if ($message_stop === false) {
-                            $message_stop = strpos($currentHLine, "]", $message_start);
+                            $message_stop = strpos($currentHLine, "\"]", $message_start);
                             if ($message_stop === false) {
                                 $message_stop = strlen($currentHLine);
                             }
                         }
                         $message_length = $message_stop - $message_start;
                         $msg_content = substr($currentHLine, $message_start, $message_length);
+                        print "$msg_content\n";
 
                         $message_start = $message_stop;
 
