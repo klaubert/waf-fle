@@ -41,7 +41,6 @@ if (file_exists("../config.php")) {
             $dbh->exec("CREATE USER '".$DB_USER."'@'".$clientHost."' IDENTIFIED BY '".$DB_PASS."';
                GRANT SELECT, INSERT, UPDATE, DELETE, CREATE TEMPORARY TABLES ON `".$DATABASE."`.* TO '".$DB_USER."'@'".$clientHost."';                        
                FLUSH PRIVILEGES;");
-
          } catch (PDOException $e) {
             die("DB ERROR: ". $e->getMessage());
          }
@@ -374,7 +373,7 @@ if (file_exists("../config.php")) {
       }
    }   
 
-   print "<b>Checking config.php settings...</b><br>";
+    print "<b>Checking config.php settings...</b><br>";
 
     print "&nbsp;&nbsp; config.php present...<br />";
     require_once "../config.php";
@@ -624,7 +623,7 @@ if (file_exists("../config.php")) {
 }
 
 ?>
-...
+
 </p>
 
 </body>

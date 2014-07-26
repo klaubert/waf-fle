@@ -68,7 +68,7 @@ require_once("../filterprocessing.php");
 					submitformDel(); else unselectAll(this);">Delete</a></li>
 							<li><a class="left" href="#" onClick="if(confirm('Confirm event preservation?'))
 					submitformPreserve(); else unselectAll(this);" value="Preserve">Preserve</a></li>
-                            <li><a class="rigth" href="#" onClick="if(confirm('Confirm event preservation?'))
+                            <li><a class="rigth" href="#" onClick="if(confirm('Confirm event as False Positive?'))
 					submitformMarkFP(); else unselectAll(this);" value="mark">Mark as False Positive</a></li>
 							<li><a class="right dropdown" href="#">Filter Actions<span class="arrow"></span></a>
 							<ul class="width-3">

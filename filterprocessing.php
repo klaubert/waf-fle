@@ -199,6 +199,18 @@ if (isset($_GET['falsePositive'])) {
     }
 }
 
+// filter by Preserved
+if (isset($_GET['preserved'])) {
+    if ($_GET['preserved'] == "0") {
+        $_SESSION['filter']['preserved'] = FALSE;
+    } elseif ($_GET['preserved'] == "1") {
+        $_SESSION['filter']['preserved'] = TRUE;
+    } else {
+        unset($_SESSION['filter']['preserved']);
+    }
+}
+
+
 // Timing filters
 // filter by Duration
 if (isset($_GET['duration']) AND isset($_GET['duration_interval'])) {
@@ -498,8 +510,8 @@ if (isset($_GET['webApp']) OR isset($_GET['Not_webApp'])) {
             unset($_SESSION['filter']['Not_webApp']);
         }
 
-        if (isset($_GET['webApp']) AND preg_match('/^\w{1,20}$/', $_GET['webApp'])) {
-            $_SESSION['filter']['webApp'] = @sanitize_paranoid_string($_GET['webApp']);
+        if (isset($_GET['webApp']) AND preg_match('/^[a-zA-Z0-9\.\-\_\@\s]{1,20}$/', $_GET['webApp'])) {
+            $_SESSION['filter']['webApp'] = $_GET['webApp'];
         } else {
             unset($_SESSION['filter']['webApp']);
             unset($_SESSION['filter']['Not_webApp']);
@@ -541,12 +553,9 @@ if (isset($_GET['esrc']) OR isset($_GET['Not_esrc'])) {
         } else {
             unset($_SESSION['filter']['Not_esrc']);
         }
-        if (isset($_GET['esrc']) AND preg_match('/^(?:2[0-4]\d|25[0-5]|[01]?\d\d?)\.(?:2[0-4]\d|25[0-5]|[01]?\d\d?)\.(?:2[0-4]\d|25[0-5]|[01]?\d\d?)\.(?:2[0-4]\d|25[0-5]|[01]?\d\d?)(?P<cidr>\/\d{1,2})?$/', $_GET['esrc'], $ipSplit)) {
-            $cidr = str_replace("/", "", $ipSplit['cidr']);
-            if ($cidr == NULL OR (1 <= $cidr AND $cidr <= 32)) {
-                $_SESSION['filter']['esrc'] = $_GET['esrc'];
-                $_SESSION['filterIndexHint'][] = "a_client_ip";
-            }
+        if (isset($_GET['esrc']) AND validateIP($_GET['esrc'])) {
+			$_SESSION['filter']['esrc'] = $_GET['esrc'];
+			$_SESSION['filterIndexHint'][] = "a_client_ip";
         } else {
             unset($_SESSION['filter']['esrc']);
             unset($_SESSION['filter']['Not_esrc']);

@@ -28,7 +28,21 @@ $pagId = 'management';
 require_once "../session.php";
 require_once "../header.php";
 
-
+if (isset($_GET['sensorInfo'])) {  // Runtime sensor info enable/disable
+	if ($_GET['sensorInfo'] == 0) {
+		$_SESSION['getSensorInfo'] = false;
+	} elseif ($_GET['sensorInfo'] == 1) {
+		$_SESSION['getSensorInfo'] = true;
+	}	
+} elseif (isset($GetSensorInfo)) { // Config time sensor info enable/disable
+	if (!isset($_SESSION['getSensorInfo'])) {
+		if ($GetSensorInfo == false) { 
+			$_SESSION['getSensorInfo'] = false;
+		} else {
+			$_SESSION['getSensorInfo'] = true;			
+		}
+	}
+}
 if (isset($_GET['s'])) {  // Sensors Tasks
    // Delete a sensor
    do if (isset($_GET['delete']) AND isset($_GET['sensor']) AND $sensorToDelete = @sanitize_int($_GET['sensor'], $min = '0')) {
@@ -117,7 +131,7 @@ if (isset($_GET['s'])) {  // Sensors Tasks
             break;
         }
 
-        $sensorIp = @sanitize_paranoid_string($_POST['IP']);
+        $sensorIp = $_POST['IP']; // will be validated in specific functions.
         if ($sensorIp == "") {
             $sensorIp = null;
         } elseif (preg_match('/^Any$/i', $sensorIp)) {
@@ -397,17 +411,20 @@ if (isset($_GET['u'])) {
    
    print "<tr>";
       print "<td><span id=\"header_cap\">APC Cache extension:</span></td><td> ";
-      if ($APC_ON) {
-         print "Extension Loaded, enabled for PHP and turned On in WAF-FLE";
-      } else {
-         if (extension_loaded('apc')) {
-            print "Extension loaded, ";
-         } 
+      
+         if (extension_loaded('apcu')) {
+            print "Extension APCu (" . phpversion('apcu') . ") loaded, ";
+         } elseif (extension_loaded('apc')) {
+			 print "Extension APCu (" . phpversion('apc') . ") loaded, ";
+		 }
          if (ini_get('apc.enabled')) {
-            print "Extension enabled, ";
+            print "enabled ";
          }
-         print "Disabled in WAF-FLE";
-      }
+	if ($APC_ON) {
+		print " and turned \"on\" in WAF-FLE";
+	} else {
+		print " but disabled in WAF-FLE";
+	}
       print "</td>";
    print "</tr>";
    if ($APC_ON) {
@@ -562,11 +579,17 @@ if (isset($_GET['u'])) {
             print "<table id=\"ManagementTable\">";
             print "<tr>";
             print "<th width=\"350\" align=\"left\">Sensor Details</th>";
-            print "<th width=\"450\" align=\"left\">Info/Stats</th>";
+            if ($_SESSION['getSensorInfo'] == true) {
+				print "<th width=\"450\" align=\"left\">Info/Stats (<a href=\"?sensorInfo=0\">disable load of this sensor info</a>)</th>";
+            } else {
+				print "<th width=\"450\" align=\"left\">Info/Stats (<a href=\"?sensorInfo=1\">enable load of this sensor info</a>)</th>";
+			}
             print "<th width=\"200\" align=\"left\"></th>";
             print "</tr>";
             foreach ( $sensors[0] as $sensor) {
-               $sensorInfo = getSensorInfo($sensor['sensor_id']);
+			   if ($_SESSION['getSensorInfo'] == true) {
+                  $sensorInfo = getSensorInfo($sensor['sensor_id']);
+			   }
                print "<tr>";
                print "<td width=\"350\" align=\"left\">";
                   print "<table id=\"sensorInfo\">";
@@ -589,7 +612,11 @@ if (isset($_GET['u'])) {
                print "<td width=\"450\" align=\"left\">";
                   print "<table id=\"sensorInfo\">";
                   print "<tr>";
-                  print "<td><span id=\"header_cap\">Event's total:</span></td><td>". number_format($sensorInfo['sensorEvents']) ." </td>";
+                  print "<td><span id=\"header_cap\">Events total:</span></td><td>";
+                  if ($_SESSION['getSensorInfo'] == true) {
+					  print number_format($sensorInfo['sensorEvents']);
+				  }
+				  print " </td>";
                   print "</tr><tr>";
                   print "<td><span id=\"header_cap\">Last event in:</span></td><td>".$sensorInfo['a_date']." </td>";
                   print "</tr><tr>";

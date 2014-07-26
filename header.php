@@ -231,7 +231,7 @@ if ($jsChart) {
 				if (barPercent < 100) {
 					setTimeout("falsePositiveProgress()", 3000);
 				} else {
-					$('#FPshowmsg').html("<p><br /><center>All events was marked!<br />Please close this dialog and reload the page.</center></p>");
+					$('#FPshowmsg').html("<p><br /><center>All events were marked!<br />Please close this dialog and reload the page.</center></p>");
 					$("#dialogFalsePositiveByFilter:button:contains('Cancel')").text("Close");
 				}
 			});
@@ -273,6 +273,17 @@ if ($jsChart) {
 				range: true,
 				values: [17, 67]
 			});
+			
+			$( "#webhost" ).autocomplete({
+				source: function(request, response) {
+					$.getJSON("ajax.php", { getWebHostsPartial: request.term }, response); 
+				},
+				delay: 400,
+				select: function(event, ui) {
+					$('#hiddenWebHostName').val(ui.item.id);
+				},
+				minLength: 3,
+			});
 		});
 
 		var progress_key = '';
@@ -305,7 +316,7 @@ if ($jsChart) {
 				if (barPercent < 100) {
 					setTimeout("deleteProgress()", 3000);
 				} else {
-					$('#showdelmsg').html("<p><br /><center>All events was deleted!<br />Please close this dialog and reload the page.</center></p>");
+					$('#showdelmsg').html("<p><br /><center>All events were deleted!<br />Please close this dialog and reload the page.</center></p>");
 					$("#dialogDeleteSensor:button:contains('Cancel')").text("Close");
 				}
 			});
@@ -339,9 +350,9 @@ if ($jsChart) {
 					setTimeout("deleteSensorProgress()", 3000);
 				} else {
 					if (SensorDeleteStatus == true) {
-						$('#showdelmsgDeleteSensor').html("<p><br /><center>All events was deleted! Sensor deleted sucessfully!<br />Please close this dialog and reload the page.</center></p>");
+						$('#showdelmsgDeleteSensor').html("<p><br /><center>All events were deleted! Sensor deleted sucessfully!<br />Please close this dialog and reload the page.</center></p>");
 					} else {
-						$('#showdelmsgDeleteSensor').html("<p><br /><center>All events was deleted!<br />An error happen in sensor delete! Please close this dialog, reload the page and try again.</center></p>");
+						$('#showdelmsgDeleteSensor').html("<p><br /><center>All events were deleted!<br />An error happen in sensor delete! Please close this dialog, reload the page and try again.</center></p>");
 					}
 				}
 			});

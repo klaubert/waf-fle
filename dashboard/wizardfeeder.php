@@ -46,7 +46,7 @@ require_once "../header.php";
         (
             $_GET['usage']=="piped" 
             OR 
-                ($_GET['usage'] == "schedulled" AND isset($_GET['logfile']))
+                ($_GET['usage'] == "scheduled" AND isset($_GET['logfile']))
             OR 
                 ($_GET['usage'] == "service" AND isset($_GET['logfile']))
         ) AND isset($_GET['address']) AND isset($_GET['logdir'])) {  // Show config template
@@ -94,7 +94,7 @@ require_once "../header.php";
                         print "<li><a href=\"#tabs-2\">mlog2waffle config<br>/etc/mlog2waffle.conf</a></li>";
                     }
                     print "<li><a href=\"#tabs-4\">Log Directory<br> &nbsp;</a></li>";
-                    if ($_GET['usage'] == "schedulled") {
+                    if ($_GET['usage'] == "scheduled") {
                         print "<li><a href=\"#tabs-3\">Crontab<br />contrab -e</a></li>";
                        // print "<li><a href=\"#tabs-5\">Log Rotate<br />/etc/logrotate.d/modsecurity</a></li>";
                     } elseif ($_GET['usage'] == "service") {
@@ -136,7 +136,7 @@ SecAuditLogStorageDir <?PHP print headerprintnobr($_GET['logdir']) ;?>
 
 </pre>
 <?PHP
-                    } elseif ($_GET['usage'] == "schedulled") {
+                    } elseif ($_GET['usage'] == "scheduled") {
                     ?>
 <pre>
                     
@@ -322,7 +322,7 @@ ServerErrorTimeout  60
 #
 # In this way you can set mlog2waffle to tail mode (see below) and 
 # check file continuously, sending events in real time to WAF-FLE, or
-# run a schedulled "batch" mode.
+# run a scheduled "batch" mode.
 # 
 # Requirements: File::Tail perl module, use your own or the provided 
 # with WAF-FLE package (you may need to ajust the path in mlogc-waffle).
@@ -351,10 +351,10 @@ $ERROR_LOG = "<?PHP print headerprintnobr(dirname($_GET['logdir'])); ?>/mlogc-er
 # Define the execution mode:
 #  - "tail": for run continuously, waiting for new entries on log file; 
 #  - "batch": for run and exit at end, but recording (offset file) the 
-#     position in the last run, speeding up next execution. You can schedulle
+#     position in the last run, speeding up next execution. You can schedule
 #     the mlogc-waffle in crontab to run periocally (for example, each 5min).
 $MODE = "<?PHP 
-if ($_GET['usage'] == "schedulled") {
+if ($_GET['usage'] == "scheduled") {
     print "batch";
 }elseif($_GET['usage'] == "service") {
     print "tail";
@@ -400,10 +400,10 @@ $DEBUG_FILE = "<?PHP print headerprintnobr(dirname($_GET['logdir'])); ?>/mlog2wa
                 </div>
                 <div id="tabs-3">
                 <?PHP
-                    if ($_GET['usage'] == "schedulled") {
+                    if ($_GET['usage'] == "scheduled") {
                         if ($_GET['feeder'] == "mlogc") {
                     ?>
-                    To use mlogc schedulled, you need: <br>
+                    To use mlogc scheduled, you need: <br>
                     <b>1.</b> mlogc-batch-load.pl, a script available in ModSecurity sources, used to process Audit Log, and create a event index, used by mlogc the send events.<br>
                     <br>
                     <b>2.</b> Use the a script like below to prepare and feed events:<br>
@@ -415,7 +415,7 @@ $DEBUG_FILE = "<?PHP print headerprintnobr(dirname($_GET['logdir'])); ?>/mlog2wa
 # Check if a old execution still running, and kill it
 Status=0;
 while [ $Status -eq 0 ]; do
-  PmlogcBatch=`/sbin/pidof -x /usr/sbin/mlogc-batch-load.pl`
+  PmlogcBatch=`/sbin/pidof -x /usr/local/modsecurity/bin/mlogc-batch-load.pl`
   PplStatus=$?
   Pmlogc=`/sbin/pidof -x /usr/sbin/mlogc`
   PmlogcStatus=$?
@@ -435,9 +435,10 @@ while [ $Status -eq 0 ]; do
 done
 
 # Start mlogc push
-echo "Enviando logs para a console";
+echo "Sending logs to WAF-FLE";
 date
-/usr/sbin/mlogc-batch-load.pl <?PHP print headerprintnobr($_GET['logdir']); ?> /usr/sbin/mlogc /etc/mlogc.conf
+/usr/local/modsecurity/bin/mlogc-batch-load.pl <?PHP print headerprintnobr($_GET['logdir']); ?> \ 
+/usr/local/modsecurity/bin/mlogc /etc/mlogc.conf
 
 find  <?PHP print headerprintnobr($_GET['logdir']); ?> -type d -empty -delete
 </pre>                    
@@ -453,7 +454,7 @@ find  <?PHP print headerprintnobr($_GET['logdir']); ?> -type d -empty -delete
                         } elseif ($_GET['feeder'] == "mlog2waffle") {
                             ?>
                             
-                            To use mlog2waffle schedulled, you need:<br><br />
+                            To use mlog2waffle scheduled, you need:<br><br />
                             
                             <b>1. </b> You need to copy mlog2waffle you your sensor box (you can found the script in WAF-FLE_DIR/extra/mlog2waffle/), in "/usr/sbin/" (or other directory that you wish).<br />
                             <br />                            
@@ -532,7 +533,7 @@ find  <?PHP print headerprintnobr($_GET['logdir']); ?> -type d -empty -delete
                     } else{
                         $('#logfile').removeAttr('disabled','disabled');
                 };
-                if ($('#usage_schedulled').is(':checked')) {
+                if ($('#usage_scheduled').is(':checked')) {
                     if ($('#mlogc').is(':checked')){
                         $("#logfile").val("/var/log/mlogc/modsec_audit.log");  
                     } else if ($('#mlogc2waffle').is(':checked')){
@@ -558,8 +559,8 @@ find  <?PHP print headerprintnobr($_GET['logdir']); ?> -type d -empty -delete
                     <b>Choice your event feeder:</b>
                 </div>
                 <div class="wizardRight">
-                    <label class="tagTip" title="mlogc is a log feeder shipped with modsecurity, normally used piped with apache/modsecurity logs, but can be used too in schedulled way." ><input type="radio" id="mlogc" name="feeder" value="mlogc" onchange="toggleStatus()"> mlogc </label> <br />
-                    <label class="tagTip" title="mlog2waffle is a new log feeder, distributed with WAF-FLE, writen to be used as a service, or schedulled, but not piped."><input type="radio" name="feeder" value="mlogc2waffle" id="mlogc2waffle"  onchange="toggleStatus()"> mlog2waffle</label>
+                    <label class="tagTip" title="mlogc is a log feeder shipped with modsecurity, normally used piped with apache/modsecurity logs, but can be used too in scheduled way." ><input type="radio" id="mlogc" name="feeder" value="mlogc" onchange="toggleStatus()"> mlogc </label> <br />
+                    <label class="tagTip" title="mlog2waffle is a new log feeder, distributed with WAF-FLE, writen to be used as a service, or scheduled, but not piped."><input type="radio" name="feeder" value="mlogc2waffle" id="mlogc2waffle"  onchange="toggleStatus()"> mlog2waffle</label>
                 </div>
                 <div class="filterClear"></div>
             </div>
@@ -569,9 +570,9 @@ find  <?PHP print headerprintnobr($_GET['logdir']); ?> -type d -empty -delete
                     <b>Choice usage:</b>
                 </div>
                 <div class="wizardRight">
-                    <label class="tagTip" title="<b>Piped</b> means that the ModSecurity log file will be feeded directly to a program (normaly mlogc) and not written to disk. Audit log keep stored on disk, until the program process each entry and send to WAF-FLE.<br>This make logs to be sent as soon as it is generated." ><input type="radio" id="usage_piped" name="usage" value="piped" onchange="toggleStatus()"> Piped with Apache/Modsecurity logs </label> <br />
-                    <label class="tagTip" title="<b>Schedulled</b> means that the ModSecurity log file will be writed to disk, and a task will be schedulled on crontab to read the log file, and than process all entries. Audit log keep stored on disk, until the task  process each entry and send to WAF-FLE.<br>This make logs to be sent in a periodically basis (depending upon the frequency of crontab entry), but not immediately."><input type="radio" id="usage_schedulled" name="usage" value="schedulled" onchange="toggleStatus()"> Schedulled in crontab </label><br />
-                    <label class="tagTip" title="<b>Service</b> means that the ModSecurity log file will be writed to disk, and a service running on machine will read the log file, as soon as it is generated, processing all entries. Audit log keep stored on disk, until the service process each entry and send it to WAF-FLE.<br>This make logs to be sent as soon as it is generated.<br>"><input type="radio" class="mlog2waffe" id="usage_service" name="usage" value="service" onchange="toggleStatus()" > Service deamon   </label>
+                    <label class="tagTip" title="<b>Piped mode</b>: means that the ModSecurity log file will feed mlogc directly and will not be written to disk. Audit log keep stored on disk, until the program process each entry and send to WAF-FLE. <br>This make logs be sent as soon as it is generated, in real time." ><input type="radio" id="usage_piped" name="usage" value="piped" onchange="toggleStatus()"> Piped with Apache/Modsecurity logs </label> <br />
+                    <label class="tagTip" title="<b>Scheduled in crontab or batch mode</b>: means that the ModSecurity log file will be written to disk, and a scheduled task on crontab will read and process the log file. Audit log is stored on disk until the task process each entry, and send they to WAF-FLE. This make logs be sent periodically (depending upon the frequency of crontab entry), but not immediately. <br> Typically, the logs are sent each 5 minutes."><input type="radio" id="usage_scheduled" name="usage" value="scheduled" onchange="toggleStatus()"> Scheduled in crontab </label><br />
+                    <label class="tagTip" title="<b>Service daemon or tail mode</b>: means that ModSecurity's log file will be written to disk, and a service running on sensor box will read the log file, as soon as it is generated, processing all entries. Audit log is stored on disk, until each entry has been processed and sent to the WAF-FLE. <br>This make the logs be sent in real time.<br>"><input type="radio" class="mlog2waffe" id="usage_service" name="usage" value="service" onchange="toggleStatus()" > Service deamon   </label>
                 </div>
                 <div class="filterClear"></div>
             </div>

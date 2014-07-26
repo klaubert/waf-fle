@@ -518,7 +518,7 @@ require_once("../filterprocessing.php");
                $topRulesData = null;
                $maxRulesCount = 0;
                foreach ($topRulesBar as $rulesData) {
-                  $topRulesData = $topRulesData . "['" . $rulesData["message_ruleId"] . "'," . $rulesData["rule_count"] . ",'" . $rulesData["message_ruleMsg"] . "','" . $rulesData["message_ruleId"] . "'],";
+                  $topRulesData = $topRulesData . "['" . $rulesData["message_ruleId"] . "'," . $rulesData["rule_count"] . ",'" . headerprintnobr($rulesData["message_ruleMsg"]) . "','" . $rulesData["message_ruleId"] . "'],";
                   if ($maxRulesCount < $rulesData['rule_count']) {
                      $maxRulesCount = $rulesData['rule_count'];
                   }
@@ -668,7 +668,8 @@ require_once("../filterprocessing.php");
                     </tbody>
                     </table>
                 </div>
-            </div>            
+            </div>
+	        <div id="clear"> </div>           
          </div>
 
          </div>

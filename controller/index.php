@@ -106,7 +106,6 @@ while ( $line < $BodySize) {
                     $PhaseA['ServerPort'] = $matchesA[10];
                 }
                 $PhaseA_full = $PhaseA_full . $BODY[$line];
-                $PhaseA_full = $PhaseA_full . $clientIpHeaderRegExp;
                 $line++;
             }
         }
@@ -120,9 +119,9 @@ while ( $line < $BodySize) {
             } else {
                 if (preg_match('/^(GET|POST|HEAD|PUT|DELETE|TRACE|PROPFIND|OPTIONS|CONNECT|PATCH)\s(.+)\s(HTTP\/[01]\.[019])/i', trim($BODY[$line]), $matchesB)) {
                     $PhaseB['Method']        = $matchesB[1];
-                    $PhaseB['pathParameter'] = parse_url($matchesB[2], PHP_URL_QUERY);
+                    $PhaseB['pathParameter'] = parse_url("http://dummy.ex".$matchesB[2], PHP_URL_QUERY);
                     // $pathParsed              = parse_url($matchesB[2], PHP_URL_PATH);
-                    $PhaseB['path']          = parse_url($matchesB[2], PHP_URL_PATH);
+                    $PhaseB['path']          = parse_url("http://dummy.ex".$matchesB[2], PHP_URL_PATH);
                     $PhaseB['Protocol']      = $matchesB[3];
                 } elseif (preg_match('/^Host:\s(.+)/i', trim($BODY[$line]), $matchesB)) {
                     $PhaseB['Host'] = $matchesB[1];
@@ -205,62 +204,64 @@ while ( $line < $BodySize) {
                 break;
             } else {
                 // Is a message line?
-                if (preg_match('/^Message:\s/i', trim($BODY[$line]))) {
+                $currentHLine = trim($BODY[$line]);
+                if (preg_match('/^Message:\s/i', $currentHLine)) {
+					$message_start = 0;
                     // look for message Action
-                    $message_start = 0;
-                    $message_stop  = strpos(trim($BODY[$line]), ". ", $message_start);
-                    $message_length = $message_stop - $message_start;
-                    $action = substr(trim($BODY[$line]), $message_start, $message_length) . "\n";
-                    $message_start = $message_stop;
-
-                    if (preg_match('/^Message:\s(Warning|Access.+)?/i', $action, $matchesH)) {
-
+					if (preg_match('/^Message:\s((Warning|Access|Paus)(.*?))\.\s/i', $currentHLine, $matchesH)) {
                         $PhaseH_MSG[$hline]['Message_Action'] = $matchesH[1];
                         foreach ($ActionStatus as $key => $statusValue) {
-
                             if (preg_match('/'.$statusValue.'/i', $matchesH[1])) {
-
                                 if (isset($PhaseH['ActionStatus']) AND $PhaseH['ActionStatus'] > $key) {
-
                                     $PhaseH['ActionStatus']    = $key;
                                     $PhaseH['ActionStatusMsg'] = $matchesH[1];
 
                                 } elseif (!isset($PhaseH['ActionStatus'])) {
-
                                     $PhaseH['ActionStatus']    = $key;
                                     $PhaseH['ActionStatusMsg'] = $matchesH[1];
                                 }
                             }
                         }
+                        $message_start  = strpos($currentHLine, ". ", 0) + 2;
                     } else {
+						$message_start  = 9;
+					}
+
+                    //Execution error - PCRE limit exceeded handling
+                    if (preg_match('/Execution\serror\s-\sPCRE\slimits\sexceeded/', trim($BODY[$line]))) {
+                        $PhaseH_MSG[$hline]['Message_Msg'] = "Execution Error - PCRE limit exceeded";
+                        $PhaseH_MSG[$hline]['Message_RuleId'] = $PcreErrRuleId;
+                        preg_match('/id\s\"(\d+)\"/', trim($BODY[$line]), $PcreRuleId);
+                        $PhaseH_MSG[$hline]['Message_Data'] = "RuleId:" . $PcreRuleId[1];
                         $PhaseH_full = $PhaseH_full . $BODY[$line];
+                        $hline++;
                         $line++;
                         continue;
-                    }
+                    } 
 
-                    // look for Pattern
-                    //$message_stop  = strpos(trim($BODY[$line]), " [", $message_start) ?: strlen(trim($BODY[$line]));
-                    $message_stop  = strpos(trim($BODY[$line]), " [", $message_start);
+                    // look for Pattern 
+                    // include workaround to make compatible with libinject broken log format
+                    $message_stop  = strpos($currentHLine, " [file", $message_start);
                     $message_length = $message_stop - $message_start;
-                    $pattern =  substr(trim($BODY[$line]), $message_start, $message_length);
-                    $PhaseH_MSG[$hline]['Message_Pattern']    = (isset($pattern) ? trim($pattern, " .") : null);
+                    $pattern =  substr($currentHLine, $message_start, $message_length);
+                    $PhaseH_MSG[$hline]['Message_Pattern'] = (isset($pattern) ? rtrim($pattern, ".") : null);
                     $message_start = $message_stop;
 
                     // look for metadata
                     while (true){
-                        $message_start = strpos(trim($BODY[$line]), " [", $message_start);
+                        $message_start = strpos($currentHLine, " [", $message_start);
                         if ($message_start === false) {
                             break;
                          }
-                        $message_stop = strpos(trim($BODY[$line]), "] ", $message_start);
+                        $message_stop = strpos($currentHLine, "\"] ", $message_start);
                         if ($message_stop === false) {
-                            $message_stop = strpos(trim($BODY[$line]), "]", $message_start);
+                            $message_stop = strpos($currentHLine, "\"]", $message_start);
                             if ($message_stop === false) {
-                                $message_stop = strlen(trim($BODY[$line]));
+                                $message_stop = strlen($currentHLine);
                             }
                         }
                         $message_length = $message_stop - $message_start;
-                        $msg_content = substr(trim($BODY[$line]), $message_start, $message_length);
+                        $msg_content = substr($currentHLine, $message_start, $message_length);
 
                         $message_start = $message_stop;
 
@@ -375,7 +376,7 @@ while ( $line < $BodySize) {
                     $PhaseH['Stopwatch2_sw'] = (isset($matchesH[10]) ? $matchesH[10] : null); // persistent storage write duration
                     $PhaseH['Stopwatch2_l'] = (isset($matchesH[11]) ? $matchesH[11] : null);  // time spent on audit log
                     $PhaseH['Stopwatch2_gc'] = (isset($matchesH[12]) ? $matchesH[12] : null);  // time spend on garbage collection
-                } elseif (preg_match('/^Producer:\s(.+\.)$/i', trim($BODY[$line]), $matchesH)) {
+                } elseif (preg_match('/^(?:Producer|WAF):\s(.+\.)$/i', trim($BODY[$line]), $matchesH)) {
                     if (preg_match('/(.+);\s(.+)\.$/i', $matchesH[1], $prod)) {
                         $PhaseH['Producer']         = (isset($prod[1]) ? $prod[1] : null);
                         $PhaseH['Producer_ruleset'] = (isset($prod[2]) ? $prod[2] : null);

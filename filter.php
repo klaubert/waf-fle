@@ -90,7 +90,8 @@
         </div>
 
         <div class="filterRow">
-            <label for="Target Hostname">
+            <label for="Target Hostname" class="tagTip" title="Start type the web hostname used in requests. As soon you start to type the available hostnames will appear to you.
+            <br> (The 1000 first will be showed, try to be specific).">
                 <div class="filterLeft">
                     Target Hostname
                 </div>
@@ -102,22 +103,9 @@
                         } else {
                             print "<input type=\"checkbox\" name=\"Not_web_Hostname\" value=\"1\" class=\"text ui-widget-content ui-corner-all\">";
                         }
-                    ?>                    
-                
-                    <select id="filter_select" name="web_Hostname" size="1" style="width: 165px" class="text ui-widget-content ui-corner-all ">
-                        <option value="x">All Web Hosts </option>
-                        <?PHP
-                            $hostnameList = getWebHosts();
-                            foreach ( $hostnameList as $host) {
-                                var_dump($host);
-                                if ($_SESSION['filter']['web_Hostname'] == $host['host_id']) {
-                                    print "<option selected value=\"".$host['host_id']."\">".$host['hostname']."  </option>";
-                                } else {
-                                    print "<option value=\"".$host['host_id']."\">".$host['hostname']. "</option>";
-                                }
-                            }
-                        ?>
-                    </select>
+                    ?>                
+					  <input id="webhost" style="width: 160px" class="text ui-widget-content ui-corner-all">
+					  <input type="hidden" id="hiddenWebHostName" name="web_Hostname">
                 </div>
             </label>
             <div class="filterClear"></div>
@@ -367,9 +355,9 @@
                         $methodList = getMethodList();
                         foreach ( $methodList[0] as $met) {
                             if ($_SESSION['filter']['method'] == $met['b_method']) {
-                                print "<option selected value=\"".$met['b_method']."\">".$met['b_method']."</option>";
+                                print "<option selected value=\"".$met['b_method']."\">".headerprintnobr($met['b_method'])."</option>";
                             } else {
-                                print "<option value=\"".$met['b_method']."\">".$met['b_method']."</option>";
+                                print "<option value=\"".$met['b_method']."\">".headerprintnobr($met['b_method'])."</option>";
                             }
                         }
                     ?>
@@ -401,7 +389,7 @@
                         }
                     ?>                   
                     <?PHP
-                        print "<input type=\"text\" name=\"path\" value=\"".$_SESSION['filter']['path'].$pathwc_tmp."\" size=\"20\" style=\"width: 160px\" maxlength=\"50\" class=\"text ui-widget-content ui-corner-all\" autocomplete=\"off\">";
+                        print "<input type=\"text\" name=\"path\" value=\"".headerprintnobr($_SESSION['filter']['path']).$pathwc_tmp."\" size=\"20\" style=\"width: 160px\" maxlength=\"50\" class=\"text ui-widget-content ui-corner-all\" autocomplete=\"off\">";
                     ?>
                 </div>
             </label>
@@ -457,7 +445,7 @@
                         }
                     ?>                 
                     <?PHP
-                        print "<input type=\"text\" name=\"userId\" value=\"" . $_SESSION['filter']['userId'] ."\" size=\"20\" style=\"width: 160px\" class=\"text ui-widget-content ui-corner-all\" autocomplete=\"off\">";
+                        print "<input type=\"text\" name=\"userId\" value=\"" . headerprintnobr($_SESSION['filter']['userId']) ."\" size=\"20\" style=\"width: 160px\" class=\"text ui-widget-content ui-corner-all\" autocomplete=\"off\">";
                     ?>
                 </div>
             </label>
@@ -562,6 +550,37 @@
                             print "<option selected value=\"x\">           </option>";
                             print "<option value=\"1\">Marked     </option>";
                             print "<option value=\"0\">Not Marked </option>";
+                        }
+                        print "</select>";
+                    ?>
+                </div>
+            </label>
+            <div class="filterClear"></div>
+        </div>
+        </div>
+
+        <div class="filterRow">
+        <div class="tagTip" title="Preserved Events">
+            <label for="Preserved Events">
+                <div class="filterLeft">
+                    Preserved Events
+                </div>
+                <div class="filterRight">
+                    <?PHP
+                        print "<select id=\"preserved\" name=\"preserved\" size=\"1\" style=\"width: 210px\" class=\"text ui-widget-content ui-corner-all \">";
+
+                        if (isset($_SESSION['filter']['preserved']) AND $_SESSION['filter']['preserved'] == TRUE ){
+                            print "<option value=\"x\">           </option>";
+                            print "<option selected value=\"1\">Preserved     </option>";
+                            print "<option value=\"0\">Not Preserved </option>";
+                        } elseif(isset($_SESSION['filter']['preserved']) AND $_SESSION['filter']['preserved'] == FALSE){
+                            print "<option value=\"x\">           </option>";
+                            print "<option value=\"1\">Preserved     </option>";
+                            print "<option selected value=\"0\">Not Preserved </option>";
+                        } else {
+                            print "<option selected value=\"x\">           </option>";
+                            print "<option value=\"1\">Preserved     </option>";
+                            print "<option value=\"0\">Not Preserved </option>";
                         }
                         print "</select>";
                     ?>

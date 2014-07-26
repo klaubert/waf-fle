@@ -25,6 +25,11 @@ ini_set('display_errors', 0);
 // Print errors in php log (normally apache errors log), but not notice logs
 error_reporting(E_ALL ^ E_NOTICE);
 
+// $PcreErrRuleId handling;
+if (!isset($PcreErrRuleId) OR !preg_match('/^\d+$/', $PcreErrRuleId)) {
+    $PcreErrRuleId = 99999;
+}
+
 if (is_readable("../config.php")) {
     require_once "config.php";
 } else {
@@ -32,13 +37,29 @@ if (is_readable("../config.php")) {
     exit;
 }
 
+// Check if required directives are present
+if (!isset($deleteLimit)) {
+	print "Your config.php has no \$deleteLimit directive defined.<br />\n";
+	print "Please define it to continue.";
+	exit;
+} 
+if (!isset($SESSION_TIMEOUT)) {
+	print "Your config.php has no \$SESSION_TIMEOUT directive defined. <br />\n";
+	print "Please define it to continue.";
+	exit;
+} 
+if (!isset($max_event_number)) {
+	print "Your config.php has no \$max_event_number directive defined. <br />\n";
+	print "Please define it to continue.";
+	exit;
+}
 
 if (isset($SETUP) AND $SETUP == true ){
     header("Location: setup.php");
     exit;
 }
 
-$waffleVersion = '0.6.3';
+$waffleVersion = '0.6.4';
 // Set PHP default timezone as system timezone, need to avoid warning messages in PHP 5.3+
 date_default_timezone_set(@date_default_timezone_get());
 /* Constants   */
@@ -62,6 +83,8 @@ $ActionStatus[3]  = "Access denied using proxy to"; // action: Proxy
 $ActionStatus[10] = "Access allowed";  // action: Allow
 $ActionStatus[11] = "Access to phase allowed";
 $ActionStatus[12] = "Access to request allowed";
+$ActionStatus[13]  = "Paused Access"; // action: Pause
+$ActionStatus[14]  = "Pausing transaction for"; // action: Pause
 $ActionStatus[20] = "Warning";  // action: Pass or Detection Only
 
 
@@ -95,14 +118,16 @@ try {
 } catch (PDOException $e) {
     header("HTTP/1.1 500 Internal Server Error");
     header("Status: 500");
-    print "HTTP/1.1 500 Internal Server Error <br />\n";
+    print "<h1>HTTP/1.1 500 Internal Server Error </h1><br />Error in database 
+    connection, check if database is created, if permissions are correctly defined<br /><br />\n";
+    print "<b><font color=\"red\">If you are trying to install WAF-FLE, edit <i>config.php</i> and make \$SETUP \"true\"</font></b> <br /><br />";
+    print "Error: (insert events) Message: " . $e->getMessage() . "<br />\n";
     if ($MLOG2WAFFLE_DEBUG OR $DEBUG) {
-        print "Error (insert events) Message: " . $e->getMessage() . "\n";
-        print "Error (insert events) getTraceAsString: " . $e->getTraceAsString() . "\n";
+        print "Error: (insert events) getTraceAsString: " . $e->getTraceAsString() . "<br />\n";
     }
+
     die();
 }
-
 
 // Check WAF-FLE vs. Database schema version
 $sqlDatabaseVersion = 'SELECT `waffle_version` FROM `version` LIMIT 1';
@@ -114,7 +139,7 @@ try {
    $dbSchema = $checkVersion_sth->fetch(PDO::FETCH_ASSOC);
    $checkVersion_sth->closeCursor();
    if ($dbSchema['waffle_version'] == '0.6.0') {
-       $dbSchema['waffle_version'] = '0.6.3';
+       $dbSchema['waffle_version'] = '0.6.4';
    }
    if ($dbSchema['waffle_version'] != $waffleVersion) {
       header ("Location: upgrade.php");
@@ -1011,6 +1036,8 @@ function superFilter($selector, $trailer, $filterType, $count = FALSE, $extraFie
     if (isset($_SESSION[$filterType]['tag']) AND !isset($_SESSION[$filterType]['ruleid'])) {
         if (!isset($_SESSION[$filterType]['Not_tag'])) {
             $sql = $sql . ' JOIN events_messages ON events.event_id = events_messages.event_id JOIN events_messages_tag ON events_messages_tag.msg_id = events_messages.msg_id ';
+        }else {
+            $sql = $sql . ' JOIN events_messages ON events.event_id = events_messages.event_id ';           
         }
     }
 
@@ -1243,6 +1270,15 @@ function superFilter($selector, $trailer, $filterType, $count = FALSE, $extraFie
         }
     }
 
+   // looking for Preserved
+    if (isset($_SESSION[$filterType]['preserved'])) {
+        if ($_SESSION[$filterType]['preserved'] == FALSE) {
+            $sql = $sql . ' AND (events.preserve = FALSE) ';
+        } elseif ($_SESSION[$filterType]['preserved'] == TRUE) {
+            $sql = $sql . ' AND (events.preserve = TRUE) ';
+        }
+    }
+
     // Looking for duration
     if (isset($_SESSION[$filterType]['duration'])) {
         if ($_SESSION[$filterType]['duration_interval'] == "le") {
@@ -1339,8 +1375,6 @@ function superFilter($selector, $trailer, $filterType, $count = FALSE, $extraFie
 
     // Concatenate selector and trailer
     $sql = $sql . $trailer;
-
-    //print "$sql <br />";
 
     if ($DEBUG) {
         $debugInfo[__FUNCTION__][$debugCount]['query'] = $sql;
@@ -1563,7 +1597,7 @@ function eventFilter($offset, $maxnumber, $eventCount)
         $selector = $selector . 'USE INDEX '.$filterIndexHint;
     }
     // SQL Query trailer
-    $trailer = ' ORDER BY events.a_timestamp DESC LIMIT '.(($offset-1)*$maxnumber).", $maxnumber";
+    $trailer = ' ORDER BY events.event_id DESC,events.a_timestamp DESC LIMIT '.(($offset-1)*$maxnumber).", $maxnumber";
 
     // Call superFilter to filter and get the events
     $eventCount = superFilter($selector, $trailer, $filterType, TRUE);
@@ -2401,7 +2435,11 @@ function deleteSensor($sensor_id)
     }
 
    if ($APC_ON) {
-      apc_clear_cache('user');
+	   if (phpversion('apcu')) {
+		  apc_clear_cache();   
+	   } elseif (phpversion('apc')) {
+	      apc_clear_cache('user');   
+	   }
    }
 
    if ($DEBUG) {
@@ -2471,7 +2509,11 @@ function saveSensor($sensorToSave, $sensorName, $sensorIp, $sensorDescription, $
        exit();
     }
     if ($APC_ON) {
-        apc_clear_cache('user');
+	   if (phpversion('apcu')) {
+		  apc_clear_cache();   
+	   } elseif (phpversion('apc')) {
+	      apc_clear_cache('user');   
+	   }
     }
     if ($DEBUG) {
         $stoptime = microtime(true);
@@ -2528,7 +2570,11 @@ function disableEnableSensor($sensorToDisable, $status)
        exit();
     }
     if ($APC_ON) {
-        apc_clear_cache('user');
+	   if (phpversion('apcu')) {
+		  apc_clear_cache();   
+	   } elseif (phpversion('apc')) {
+	      apc_clear_cache('user');   
+	   }
     }
     if ($DEBUG) {
         $stoptime = microtime(true);
@@ -3311,6 +3357,53 @@ function getWebHostName($hostId)
     return $webHostName;
 }
 
+// Get the Web Hostname on database from a AJAX autocomplete input text box 
+function getWebHostsPartial($hostName)
+{
+    global $DEBUG;
+    if ($DEBUG) {
+        global $debugInfo;
+        $debugCount = count($debugInfo[__FUNCTION__]);
+        $starttime = microtime(true);
+    }
+
+    /* prepare statement using PDO*/
+    global $dbconn;
+    global $APC_ON;
+    global $CACHE_TIMEOUT;
+
+    $sql = 'SELECT `host_id` AS id, `hostname` AS value FROM `events_hostname` WHERE `hostname` LIKE :hostName ORDER BY `hostname` limit 1000';
+    if ($DEBUG) {
+       $debugInfo[__FUNCTION__][$debugCount]['query'] = $sql;
+    }
+    try {
+       $sth = $dbconn->prepare($sql);
+       $hostName=$hostName.'%';
+       $sth->bindParam(":hostName", $hostName);
+       // Execute the query
+       $sth->execute();
+       // Fetch all values matching the condition, returning only values
+       $webhosts = $sth->fetchAll(PDO::FETCH_CLASS);
+    } catch (PDOException $e) {
+       header("HTTP/1.1 500 Internal Server Error");
+       header("Status: 500");
+       print "HTTP/1.1 500 Internal Server Error \n";
+       if ($DEBUG) {
+          print "Error (".__FUNCTION__.") Message: " . $e->getMessage() . "\n";
+          print "Error (".__FUNCTION__.") getTraceAsString: " . $e->getTraceAsString() . "\n";
+       }
+       exit();
+    }
+    if ($DEBUG) {
+        $stoptime = microtime(true);
+        $timespend = $stoptime - $starttime;
+
+        $debugInfo[__FUNCTION__][$debugCount]['time'] = $timespend;
+    }
+    return $webhosts;
+}
+
+
 // Get the Web Hostname on database
 function getWebHosts()
 {
@@ -3376,7 +3469,7 @@ function getDbInfo()
    /* prepare statement using PDO*/
    global $dbconn;
    global $DATABASE;
-   global $DB_HOST1;
+   global $DB_HOST;
    global $DB_USER;
    global $DB_PASS;
    global $dbconn;
@@ -4031,8 +4124,7 @@ function validateIP($ip)
         $starttime = microtime(TRUE);
     }
 
-    //if (preg_match('/([12]?[0-9]{1,2}\.[12]?[0-9]{1,2}\.[12]?[0-9]{1,2}\.[12]?[0-9]{1,2})/', $ip)) {
-    if (preg_match('/([12]?[0-9]{1,2}\.[12]?[0-9]{1,2}\.[12]?[0-9]{1,2}\.[12]?[0-9]{1,2})(\/\d{1,2})?/', $ip)) {
+    if (preg_match('/^([12]?\d{1,2}\.[12]?\d{1,2}\.[12]?\d{1,2}\.[12]?\d{1,2})(\/\d{1,2})?$/', $ip)) {
         if (ip2long($ip)) {
             $valid = TRUE;
         } elseif (networkRange($ip)) {
@@ -4054,11 +4146,12 @@ function validateIP($ip)
 
 function networkRange($ipAddRange)
 {
-    if (preg_match('/([12]?[0-9]{1,2}\.[12]?[0-9]{1,2}\.[12]?[0-9]{1,2}\.[12]?[0-9]{1,2})(\/\d{1,2})?/', $ipAddRange, $ip_result)) {
+    if (preg_match('/^([12]?\d{1,2}\.[12]?\d{1,2}\.[12]?\d{1,2}\.[12]?\d{1,2})(\/\d{1,2})?$/', $ipAddRange, $ip_result)) {
         $ip_addr = $ip_result[1];
-        $cidr = str_replace("/", "", $ip_result[2]);
-        if ($cidr == null) {
-            $cidr = 32;
+        if ($ip_result[2] != "") {
+                $cidr = str_replace("/", "", $ip_result[2]);
+        } else {
+                $cidr = 32;
         }
         if (validateIP($ip_addr) AND sanitize_int($cidr, $min = '1', $max = '32')) {
             $subnet_mask = long2ip(-1 << (32 - (int)$cidr));
@@ -4074,7 +4167,7 @@ function networkRange($ipAddRange)
             $ipRange['network']       = long2ip($nw);
             $ipRange['networklong']   = sprintf("%u", $nw);
             $ipRange['broadcast']     = long2ip($bc);
-            $ipRange['broadcastlong'] = sprintf("%u", $bc);
+            $ipRange['broadcastlong'] = sprintf("%u", ip2long($ipRange['broadcast']));
             $ipRange['hosts']         = ($bc - $nw + 1);
             $ipRange['range']         = long2ip($nw) . " -> " . long2ip($bc);
 
@@ -4115,5 +4208,15 @@ function arrayUnique($myArray)
 
     return $myArray;
 }
+
+// update last activity timestamp, on page processing finish
+function session_refresh() 
+{
+	if (isset($_SESSION['login'])) {
+		$_SESSION['LAST_ACTIVITY'] = time(); 
+	}
+	return;
+}
+
 
 ?>

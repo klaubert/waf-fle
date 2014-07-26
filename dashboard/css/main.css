@@ -738,3 +738,15 @@ div.ui-datepicker{
     padding:2px;
     min-height:24px;
 }
+
+.ui-autocomplete-loading {
+    background: white url("../images/ui-anim_basic_16x16.gif") right center no-repeat;
+}
+.ui-autocomplete {
+    max-height: 240px;
+    max-width: 240px;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+}
+

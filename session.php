@@ -20,26 +20,17 @@
 <?PHP
 /** Maintain user session */
 session_start();
+
 // This session expiration/regeneration code was adapted from http://stackoverflow.com/questions/520237/how-do-i-expire-a-php-session-after-30-minutes
-if (!$_SESSION['login']) {
-    if ($ASYNC != true) {
-        logoff();
-    } else {
-        if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > $SESSION_TIMEOUT)) {
-            if ($ASYNC != true) {
-                logoff();
-            } else {
-                $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
-      
-                if (!isset($_SESSION['CREATED'])) {
-                    $_SESSION['CREATED'] = time();
-                } elseif (time() - $_SESSION['CREATED'] > $SESSION_TIMEOUT) {
-                    // session started more than $SESSION_TIMEOUT minates ago
-                    session_regenerate_id(true);    // change session ID for the current session an invalidate old session ID
-                    $_SESSION['CREATED'] = time();  // update creation time
-                }
-            }
-        }
-    }
+if (isset($_SESSION['login']) && isset($_SESSION['LAST_ACTIVITY']) && isset($_SESSION['CREATED'])) {
+	// check if session still valid
+    if ((time() - $_SESSION['LAST_ACTIVITY']) > $SESSION_TIMEOUT) {
+		logoff();
+	} elseif (time() - $_SESSION['CREATED'] > $SESSION_TIMEOUT * 10) { 
+		// session started more than $SESSION_TIMEOUT * 10 ago, regenerate sessionid
+		session_regenerate_id(true);    // change session ID for the current session an invalidate old session ID
+	}
+} else {
+   logoff();
 }
 ?>
