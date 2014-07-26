@@ -59,7 +59,7 @@ if (isset($SETUP) AND $SETUP == true ){
     exit;
 }
 
-$waffleVersion = '0.6.3';
+$waffleVersion = '0.6.4';
 // Set PHP default timezone as system timezone, need to avoid warning messages in PHP 5.3+
 date_default_timezone_set(@date_default_timezone_get());
 /* Constants   */
@@ -118,15 +118,16 @@ try {
 } catch (PDOException $e) {
     header("HTTP/1.1 500 Internal Server Error");
     header("Status: 500");
-    print "HTTP/1.1 500 Internal Server Error <br />Error in database 
-    connection!\n";
+    print "<h1>HTTP/1.1 500 Internal Server Error </h1><br />Error in database 
+    connection, check if database is created, if permissions are correctly defined<br /><br />\n";
+    print "<b><font color=\"red\">If you are trying to install WAF-FLE, edit <i>config.php</i> and make \$SETUP \"true\"</font></b> <br /><br />";
+    print "Error: (insert events) Message: " . $e->getMessage() . "<br />\n";
     if ($MLOG2WAFFLE_DEBUG OR $DEBUG) {
-        print "Error (insert events) Message: " . $e->getMessage() . "\n";
-        print "Error (insert events) getTraceAsString: " . $e->getTraceAsString() . "\n";
+        print "Error: (insert events) getTraceAsString: " . $e->getTraceAsString() . "<br />\n";
     }
+
     die();
 }
-
 
 // Check WAF-FLE vs. Database schema version
 $sqlDatabaseVersion = 'SELECT `waffle_version` FROM `version` LIMIT 1';
@@ -138,7 +139,7 @@ try {
    $dbSchema = $checkVersion_sth->fetch(PDO::FETCH_ASSOC);
    $checkVersion_sth->closeCursor();
    if ($dbSchema['waffle_version'] == '0.6.0') {
-       $dbSchema['waffle_version'] = '0.6.3';
+       $dbSchema['waffle_version'] = '0.6.4';
    }
    if ($dbSchema['waffle_version'] != $waffleVersion) {
       header ("Location: upgrade.php");
@@ -2434,7 +2435,11 @@ function deleteSensor($sensor_id)
     }
 
    if ($APC_ON) {
-      apc_clear_cache('user');
+	   if (phpversion('apcu')) {
+		  apc_clear_cache();   
+	   } elseif (phpversion('apc')) {
+	      apc_clear_cache('user');   
+	   }
    }
 
    if ($DEBUG) {
@@ -2504,7 +2509,11 @@ function saveSensor($sensorToSave, $sensorName, $sensorIp, $sensorDescription, $
        exit();
     }
     if ($APC_ON) {
-        apc_clear_cache('user');
+	   if (phpversion('apcu')) {
+		  apc_clear_cache();   
+	   } elseif (phpversion('apc')) {
+	      apc_clear_cache('user');   
+	   }
     }
     if ($DEBUG) {
         $stoptime = microtime(true);
@@ -2561,7 +2570,11 @@ function disableEnableSensor($sensorToDisable, $status)
        exit();
     }
     if ($APC_ON) {
-        apc_clear_cache('user');
+	   if (phpversion('apcu')) {
+		  apc_clear_cache();   
+	   } elseif (phpversion('apc')) {
+	      apc_clear_cache('user');   
+	   }
     }
     if ($DEBUG) {
         $stoptime = microtime(true);

@@ -1,17 +1,18 @@
 WAF-FLE ChangeLog
 
 
-Version 0.6.4: 2014
+Version 0.6.4: Jul, 25 2014
 -------------
 Fixed Bugs:
-- Issue #39 (google code) fixed to allow character [ and ] in and msg 
-  event log. While not usual, can happen. Other fields was affected to.
-- Lack of output enconding in some filter fields (filter dialog and 
+- Issue #39 (google code) fixed to allow character [ and ] in the msg 
+  event log. While not usual, can happen. Other fields were also 
+  affected.
+- Lack of output encoding in some filter fields (filter dialog and 
   current filter), when a bogus hostname present in event, cause 
   improper html rendering. Thanks to Marcus Semblano to report and 
-  supply with;
+  supply with path;
 - In some circunstances the filter dialog are unable to show web 
-  hostnames (ie. when more that 2000 entries are available), this is a 
+  hostnames (ie. when more that 2000 entries), this is a 
   limitation/protection of browsers. Now the hostname was changed from a 
   combo-box, to a text input with autocomplete powered by a Ajax
   interface, that brings hostnames when you type it on hostname field. 
@@ -21,8 +22,8 @@ Fixed Bugs:
   properly with attribution of a virtual rule id configurable in 
   config.php (default in 99999), with patch of Juraj Sakala;
 - Session is now enforced correctly when an AJAX operation is called.
-- Custom Tags ID's changed to in 1000, to avoid conflict with native 
-  tags (thanks to Juraj Sakala);
+- Custom Tags ID's changed to start in 1000, to avoid conflict with 
+  native tags (thanks to Juraj Sakala);
 - Typo corrected in mlog2waffle.conf (thanks to Juraj Sakala);
 - Typo corrected in event feeder wizard;
 - Text revised in event feeder wizard;
@@ -30,22 +31,22 @@ Fixed Bugs:
 - Typo correction in functions.php, patch from Juraj Sakala;
 - Bad dashboard page formating (Issue #37), patch from Juraj Sakala;
 - This change addresses the issue #43 (at Google Code), it reflects 
-  problem with parsing of the modsec index file line where is empty or 
+  problem with the modsec index file line parsing, that has an empty or 
   malformed Host header. Patch from Juraj Sakala;
 - Fixed issue #43, when processing filter with "not tag" generate an 
   error.
 - Issue #45, unescaped output on TopRules chart, make chart unusable 
-  with special character in rule description. Thanks to Ibere Tizio, by 
-  report and propose a fix.
-- Issue #47, type in redirect definition on waf-fle.conf (apache config 
+  when a special character is in rule description. Thanks to Ibere Tizio, 
+  by report and propose a fix.
+- Issue #47, typo in redirect definition on waf-fle.conf (apache config 
   file) for WAF-FLE;
 - Issue #47, error in IP address validation function of Add Sensor in 
-  managment interface;
+  management interface;
 - Fixes github issue #13, processing of client ip range defined by a 
   netmask;
 - Issue #18, fixes regression on client IP filter with no netmask, 
   thanks to Juraj Sakala for the patch;
-- Added parsing to events with "pause" action;
+- Added parsing and filter to events with "pause" action;
 - Change the management menu behavior, to address a performance impact 
   described by Juraj Sakala (in issue #14 on GitHub). A temporary denial 
   of service happens while database events are counted for get sensor 
@@ -58,8 +59,7 @@ Fixed Bugs:
      # ALTER TABLE `waffle`.`events` ADD INDEX `sensor3` (`sensor_id`);
 
 Improvements:
---------------
-- mlog2waffle requirements better clarified em their README, and now is 
+- mlog2waffle requirements better clarified in their README, and now is 
   possible to use it with old version of libwww-perl, but no self-signed 
   certificate in that case;
 - Better error message in case of database error;
@@ -72,7 +72,7 @@ Improvements:
   log format of libinjetion, thanks to Juraj Sakala for propose code and 
   show the libinject problem in issue #17;
 - Event details are reordered to put "Rule Message" first, event details 
-  later;
+  after;
 - Some grammar correction. Thanks to Cliton Nichols;
 - Now accept events sent by mod_security compiled/patched by Atomic 
   Turtle to change label "Producer" to "WAF". Issue #22 and #48;
@@ -83,7 +83,13 @@ Improvements:
   more robust against session hijack/fixation.
 - Session expiration are now better handled, timeout happen between the
   finish of a page processing and the next access;
-- Event list is better orderd now, first by event_id, later by timestamp
+- Event list is better sorted now, first by event_id, later by timestamp
+- Better error message when the user are trying to setup WAF-FLE and 
+  have not defined the $SETUP variable in config.php.
+- Improved APCu support, as PHP version 5.5 now need to use APCu instead
+  of deprecated APC, some adjust in code was done with better 
+  information in management/info about which module is load.
+
 
 Version 0.6.3: Jan, 30 2014
 -------------

@@ -411,17 +411,20 @@ if (isset($_GET['u'])) {
    
    print "<tr>";
       print "<td><span id=\"header_cap\">APC Cache extension:</span></td><td> ";
-      if ($APC_ON) {
-         print "Extension Loaded, enabled for PHP and turned On in WAF-FLE";
-      } else {
-         if (extension_loaded('apc')) {
-            print "Extension loaded, ";
-         } 
+      
+         if (extension_loaded('apcu')) {
+            print "Extension APCu (" . phpversion('apcu') . ") loaded, ";
+         } elseif (extension_loaded('apc')) {
+			 print "Extension APCu (" . phpversion('apc') . ") loaded, ";
+		 }
          if (ini_get('apc.enabled')) {
-            print "Extension enabled, ";
+            print "enabled ";
          }
-         print "Disabled in WAF-FLE";
-      }
+	if ($APC_ON) {
+		print " and turned \"on\" in WAF-FLE";
+	} else {
+		print " but disabled in WAF-FLE";
+	}
       print "</td>";
    print "</tr>";
    if ($APC_ON) {

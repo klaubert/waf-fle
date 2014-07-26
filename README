@@ -5,16 +5,18 @@ Web Application Firewall: Fast Log and Event Console
 
    Copyright (C) 2011 - 2014  Klaubert Herr 
    For new versions, check at http://waf-fle.org
-   WAF-FLE is relased under GPL v2 License
+   WAF-FLE is released under GPL v2 License
+
 
 SUMMARY:
 ---------
-WAF-FLE is a Console for the ModSecurity, it allow the ModSecurity admin to
-view, filter and analyze events created by ModSecurity (sent using mlogc or
-mlog2waffle), using the graphical dashboard to drill-down event and look
-quickly the most relevant events.
-   
-Version 0.6.3
+WAF-FLE is a Console for the ModSecurity, it allows the ModSecurity admin
+to view, filter and analyze events created by ModSecurity (sent using 
+mlogc or mlog2waffle), using the graphical dashboard to drill-down 
+events and look quickly the most relevant events.
+
+
+Version 0.6.4
 ---------------
 Requirements:
    Apache 2.x server
@@ -25,20 +27,28 @@ Requirements:
    MySQL 5.1 or later
     
 Supported:
-   APC (php cache);
-   Consider to install and enable APC to improve WAF-FLE performance.
+   APC or APCu (php cache);
+   Consider to install and enable APC/APCu to improve WAF-FLE performance.
 
      
 CHANGES:
 --------
 Check ChangeLog file.
-  
-  
+
+
+DOCUMENTATION:
+-------------
+Check "Deployment Guide" (english version) or the "Guia de implantação" 
+(brazillian portuguese version) to see how to deploy WAF-FLE step-by-step, 
+many scenarios, and some tuning for database.
+You can download Deployment Guide from WAF-FLE website http://waf-fle.org
+
+ 
 GeoIP Preparation:
 ------------------
-In order to make things work properly, you need to make some 'hack' in GeoIP
-configuration, once the PHP don't have a function to check Automomous System
-Number (ASN).
+In order to make things work properly, you need to make some 'hack' in 
+GeoIP configuration, once the PHP don't have a function to check 
+Automomous System Number (ASN).
   
 Install the PHP-GeoIP extension
    - On Ubuntu you can use: 
@@ -47,7 +57,8 @@ Install the PHP-GeoIP extension
      yum install php53u-pecl-geoip
    - On RHEL/CentOS 6, you can use EPEL
   
-   After this instalation, you need to download MaxMind GeoIP Database, follow:
+   After this instalation, you need to download MaxMind GeoIP Database, 
+   follow:
    mkdir /usr/share/GeoIP/
    cd /usr/share/GeoIP/
    http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz
@@ -60,27 +71,30 @@ Install the PHP-GeoIP extension
    mv GeoLiteCity.dat GeoIPCity.dat
    # To make php GeoIP extension work with ASNum database
    cp GeoIPASNum.dat GeoIPISP.dat  
+
       
 INSTALLATION:
 --------------  
-This version of WAF-FLE was tested with (but should work in others OS's once
-the requirements are met):
-  - CentOS 5, 6: ModSecurity 2.5/2.6
-  - Ubuntu 10, 11, 12: ModSecurity 2.6/2.7
+This version of WAF-FLE was tested with (but should work in others OS's
+once the requirements are met):
+  - CentOS 5, 6: ModSecurity 2.5/2.6/2.7
+  - Ubuntu 10, 11, 12: ModSecurity 2.6/2.7/2.8
   
-Extract the WAF-FLE in a directory like "/usr/local/waf-fle", outside Apache
-web root. Copy the "extra/waf-fle.conf" to Apache configuration directory
-(normaly /etc/httpd/conf.d), edit the file to reflect the WAF-FLE location.
+Extract the WAF-FLE in a directory like "/usr/local/waf-fle", outside 
+Apache web root. Copy the "extra/waf-fle.conf" to Apache configuration
+directory (normaly /etc/httpd/conf.d), edit the file to reflect the 
+WAF-FLE location. 
 Reload Apache configuration.
   
 Database setup:
-Starting with this version, you have two ways to create the database, manually
-(like in the last version), or using the WAF-FLE Web Setup (recomended):
+You have two ways to create the database, manually, or using the WAF-FLE
+Web Setup (recomended):
   
 1) Creating Database Manually:
    
-   Create a database on MySQL, give permission to a user, and edit config.php
-   to inform the Host, Database, User and Password used to access MySQL.
+   Create a database on MySQL, give permission to a user, and edit 
+   config.php to inform the Host, Database, User and Password used to 
+   access MySQL.
    
    Import "waffle.mysql" scheme to created the database on MySQL:
 
@@ -93,9 +107,9 @@ Starting with this version, you have two ways to create the database, manually
    
    # mysql -p waffle < extra/waffle.mysql
 
-   Create waffle_user user on database and grant privileges (don't forget to
-   change the password below). If your mysql server is on a different machine,
-   change the permission line on GRANT command, and in config.php
+   Create waffle_user user on database and grant privileges (don't forget
+   to change the password below). If your mysql server is on a different 
+   machine, change the permission line on GRANT command, and in config.php
    
    # mysql -p
 
@@ -112,49 +126,54 @@ Starting with this version, you have two ways to create the database, manually
     
    
 2) Using WAF-FLE Web Setup to create Database and check dependencies:
-   Edit the config.php to define all needed parameters, like database server,
-   username and password, and turn $SETUP variable "true", after that you need
-   to point your browser to http(s)://<WAF-FLE_HOST>/waf-fle/setup.php, follow
+   Edit the config.php to define all needed parameters, like database 
+   server, username and password, and turn $SETUP variable "true", after 
+   that you need to point your browser to http(s)://<WAF-FLE_HOST>/waf-fle/setup.php, follow
    the steps in the page.
 
 
 ATTENTION CRS USERS:
 --------------------
 
-If you run WAF-FLE in a machine with ModSecurity (you could use a different
-server to WAF-FLE if you wish), using Core Rule Set (CRS), you can experience
-problems with some rules that run in phase 1. One case is with the rule
-"allowed method" (id 960032), other rules that match in phase 1 probably will
-cause problems too.
-The exception made in waf-fle.conf don't work with this rules. Because this,
-you are adviced to use a bypass rule, put in proper order in your CRS
-structure.
+If you run WAF-FLE in a machine with ModSecurity (you could use a 
+different server to WAF-FLE if you wish), using Core Rule Set (CRS), you
+can experience problems with some rules that run in phase 1. One case is 
+with the rule "allowed method" (id 960032), other rules that match in 
+phase 1 probably will cause problems too.
+The exception made in waf-fle.conf don't work with this rules. Because 
+this, you are adviced to use a bypass rule, put in proper order in your 
+CRS structure.
 
-For example, you can create a "modsecurity_crs_11_waffle.conf" file with rule
-below:
+For example, you can create a "modsecurity_crs_11_waffle.conf" file with 
+rule below:
   SecRule REQUEST_FILENAME '^/controller/$' \
     "phase:1,msg:'Match',id:99999,nolog,noauditlog,allow,ctl:RuleEngine=On"
 
-  This rule turn modsecurity engine only to controller path (to avoid unwanted
-  log in DetectionOnly mode)
+  This rule turn modsecurity engine only to controller path (to avoid 
+  unwanted log in DetectionOnly mode)
 
    
 UPGRADE:
 --------
+   0.6.3 -> 0.6.4
+      Copy new files over old files. No change on database scheme. 
+      Update you config.php file with new directives from 
+      config.php.example
    0.6.0 -> 0.6.3
       Just copy new files over old files. No change on database scheme.
    0.6.0-rcX -> 0.6.0 
       Just copy new files over old files. No change on database scheme.
    0.5x -> 0.6.0-rc1
-      Many changes on database schema. To upgrade the schema and migrate the
-      data you must edit the config.php and define all needed parameters, like
-      database server, username and password, and turn $SETUP variable "true"
-      in config.php. After that you need to point your browser to
-      http(s)://webserver/waf-fle/setup.php, follow the steps in that page.
-      If you already have lots of events in database, the migration can take a
-      long time.
-      At this time, the upgrade script will neither compress data, nor process
-      GeoIP data from source ip.
+      Many changes on database schema. To upgrade the schema and migrate 
+      the data you must edit the config.php and define all needed 
+      parameters, like database server, username and password, and turn 
+      $SETUP variable "true" in config.php. After that you need to point 
+      your browser to http(s)://webserver/waf-fle/setup.php, follow the 
+      steps in that page.
+      If you already have lots of events in database, the migration can 
+      take a long time.
+      At this time, the upgrade script will neither compress data, nor 
+      process GeoIP data from source ip.
     
    0.5 -> 0.5.1
       Just copy new files over old files. No change on database scheme.
@@ -164,18 +183,19 @@ RECEIVING EVENTS:
 -----------------
 Once the setup is finished, you can configure a sensor and start to send
 events from his.
-To achieve this you need to use the Management menu -> create a New Sensor,
-use this information to set mlogc/mlog2waffle configuration properly. 
-In management interface you have the "Event Feeder Wizard" that you can use to
-create mlogc and mlog2waffle configurations.
+To achieve this you need to use the Management menu -> create a New 
+Sensor, use this information to set mlogc/mlog2waffle configuration 
+properly. 
+In management interface you have the "Event Feeder Wizard" that you can 
+use to create mlogc and mlog2waffle configurations.
 As soon as the events get generated by ModSecurity its will be showed on
 WAF-FLE. 
 
 Sensor Configuration, Option 1, mlogc:
 -------------------------------
-   On the sensor you'll need to use the mlogc provided with ModSecurity. You
-   can follow the standard configuration of mlogc, but directing the logs to
-   WAF-FLEas bellow:
+   On the sensor you'll need to use the mlogc provided with ModSecurity. 
+   You can follow the standard configuration of mlogc, but directing the 
+   logs to WAF-FLEas bellow:
 
       ConsoleURI          "http://waf-fle_address:80/controller/"
       SensorUsername      "SENSOR_USERNAME"
@@ -183,19 +203,20 @@ Sensor Configuration, Option 1, mlogc:
 
    Sensor Configuration, Option 2, mlog2waffle:
    -------------------------------
-   You can use the mlog2waffle provided with WAF-FLE. Check more details in
-   extra/mlog2waffle/README for details. 
-   mlog2waffle is writed in perl and can run as a service or in crontab, not
-   piped with Apache.
+   You can use the mlog2waffle provided with WAF-FLE. Check more details 
+   in extra/mlog2waffle/README for details. 
+   mlog2waffle is writed in perl and can run as a service or in crontab, 
+   not piped with Apache.
    In this version mlog2waffle must be considered in beta stage, use with
    caution.
 
+
 EXTRA CONFIG:
 -------------
-If you run WAF-FLE in a exclusive server or dedicated virtual host you can
-consider to make a redirection of root location "/" to /waf-fle/, using the
-lines commented on WAF-FLE Apache config waf-fle.conf (you'll need mod_alias
-loaded):
+If you run WAF-FLE in a exclusive server or dedicated virtual host you 
+can consider to make a redirection of root location "/" to /waf-fle/, 
+using the lines commented on WAF-FLE Apache config waf-fle.conf (you'll 
+need mod_alias loaded):
    
    RedirectMatch ^/$ /waf-fle/
      
@@ -207,9 +228,9 @@ SUPPORT:
 To get support in a Best Effort basis, use:   
    - Group/Mailing List: https://groups.google.com/forum/#!forum/waf-fle
    - Issue Tracking: http://code.google.com/p/waf-fle/issues/list   
-   
+
 
 Included content copyright
 ---------------------------
-Some icons are copyright © Yusuke Kamiyamane. All rights reserved. Licensed
-under a Creative Commons Attribution 3.0 license.
+Some icons are copyright © Yusuke Kamiyamane. All rights reserved. 
+Licensed under a Creative Commons Attribution 3.0 license.
