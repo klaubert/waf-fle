@@ -1,5 +1,14 @@
 WAF-FLE ChangeLog
 
+Version 0.6.5: 2014
+-------------
+Improve:
+- Issue #21 and #22, some mysql installations can have changed mysql the 
+  run-time configuration "sql mode", what prevents WAF-FLE to work 
+  properly. Now, an adjust in connection to database reset "sql mode" to
+  the default, avoiding unexpected errors when inserting data in 
+  database.
+
 
 Version 0.6.4: Jul, 25 2014
 -------------

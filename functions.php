@@ -114,7 +114,8 @@ try {
     $dbconn = new PDO('mysql:host='.$DB_HOST.';dbname='.$DATABASE, $DB_USER, $DB_PASS);
     $dbconn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
     $dbconn->setAttribute( PDO::ATTR_EMULATE_PREPARES, false );
-
+    // assure that mysql use default sql mode
+    $dbconn->query('SET SESSION sql_mode = ""');
 } catch (PDOException $e) {
     header("HTTP/1.1 500 Internal Server Error");
     header("Status: 500");
