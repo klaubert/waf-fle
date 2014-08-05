@@ -271,10 +271,10 @@ sub readIndex {
          \[[^\]]+\]\s
          \[[^\]]+\]\s
          \[[^\]]+\]\s
-         \[(?<file>[^\]]+)\]\s)
+         \[([^\]]+)\]\s)
          |
          (?:
-         .*      # Hostname
+         .*         # Hostname
          \d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\s      # IP Address
          \S+\s      # Username
          \S+\s      #
@@ -287,13 +287,19 @@ sub readIndex {
          \"\S+\"\s  #
          \S+\s      # UniqID
          \S+\s      # Session ID
-         (?<file>\S+)\s    # Event File
+         (\S+)\s    # Event File
          \d+\s      #
-         (?<length>\d+)\s    # Event Lenght
-         (?<hash>\S+)      # Event Hash
+         (\d+)\s    # Event Lenght
+         (\S+)      # Event Hash
 	     )
       }x) {
-         my $file = $MODSEC_DIRECTORY . "/" . $+{file};
+         my $filename;
+		 if ( $1 ) {
+			 $filename = $1;
+		 } else {
+			 $filename = $2;
+		 }
+         my $file = $MODSEC_DIRECTORY . "/" . $filename;
          my $length;
          my $hash;
          if ($MODE eq "batch") {
@@ -301,13 +307,13 @@ sub readIndex {
          } else {
             $size = 0;
          }
-         if ($+{length}) {
-            $length = $+{length};
+         if ($3) {
+            $length = $3;
          } else {
             $length = -s $file;
          }
-         if ($+{hash}) {
-            $hash = $+{hash};
+         if ($4) {
+            $hash = $4;
          } else {
             $hash = '';
          }

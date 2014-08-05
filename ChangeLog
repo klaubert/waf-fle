@@ -8,6 +8,9 @@ Improve:
   properly. Now, an adjust in connection to database reset "sql mode" to
   the default, avoiding unexpected errors when inserting data in 
   database.
+- Make mlog2waffle compatible with perl older that 5.10, by stop to use
+  regular expression with named capture group.
+
 
 
 Version 0.6.4: Jul, 25 2014
