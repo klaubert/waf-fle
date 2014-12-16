@@ -48,7 +48,7 @@ our $CONSOLE_USERNAME;
 our $CONSOLE_PASSWORD;
 our $OFFSET_FILE;
 our $MODE;
-our $INOTIFY;
+our $INOTIFY_TAIL;
 our $FULL_TAIL;
 our $MODSEC_DIRECTORY;
 our $INDEX_FILE;
@@ -319,7 +319,7 @@ sub readIndex {
       } else {
          $tailmode = 0;
       }
-      if ($INOTIFY eq "TRUE") {
+      if ($INOTIFY_TAIL eq "TRUE") {
         use File::Tail::Inotify2;
         my $watcher = File::Tail::Inotify2->new(file => $INDEX_FILE, on_read => \&readLine);
         $watcher->poll;
