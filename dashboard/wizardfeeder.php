@@ -158,7 +158,7 @@ SecAuditLogParts ABIDEFGHZ
 #
 SecAuditLogType Concurrent
 
-SecAuditLog /var/log/mlogc/modsec_audit.log
+SecAuditLog <?PHP print headerprintnobr($_GET['logfile']) . "\n"; ?>
 
 # Specify the path for concurrent audit logging.
 SecAuditLogStorageDir <?PHP print headerprintnobr($_GET['logdir']) ."\n"; ?>
@@ -440,7 +440,7 @@ date
 /usr/local/modsecurity/bin/mlogc-batch-load.pl <?PHP print headerprintnobr($_GET['logdir']); ?> \ 
 /usr/local/modsecurity/bin/mlogc /etc/mlogc.conf
 
-find  <?PHP print headerprintnobr($_GET['logdir']); ?> -type d -empty -delete
+find  <?PHP print headerprintnobr($_GET['logdir']); ?>/* -type d -empty -delete
 </pre>                    
                     <br>
                     
