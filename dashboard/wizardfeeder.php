@@ -440,7 +440,7 @@ date
 /usr/local/modsecurity/bin/mlogc-batch-load.pl <?PHP print headerprintnobr($_GET['logdir']); ?> \ 
 /usr/local/modsecurity/bin/mlogc /etc/mlogc.conf
 
-find  <?PHP print headerprintnobr($_GET['logdir']); ?>/* -type d -empty -delete
+find  <?PHP print headerprintnobr($_GET['logdir']); ?> -type d -empty -delete
 </pre>                    
                     <br>
                     
