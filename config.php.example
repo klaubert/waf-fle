@@ -54,6 +54,12 @@ $GetSensorInfo = true;
 // Default: 99999
 $PcreErrRuleId = 99999;
 
+// Set this variable to true if you want to chose the last IP address as 
+// original address from the header you have defined as Client IP 
+// in the sensor configuration page.
+// Default is false.
+$IPHeaderUseLast = false;
+
 // Debug enable/disable
 $DEBUG = false;
 

@@ -60,7 +60,11 @@ if ($login_status['status'] == 1) {
     exit();
 }
 if ($login_status['sensor_client_ip_header'] != "") {
-	$clientIpHeaderRegExp = "^".$login_status['sensor_client_ip_header'].":\s([12]?[0-9]{1,2}\.[12]?[0-9]{1,2}\.[12]?[0-9]{1,2}\.[12]?[0-9]{1,2})";
+    if (isset($IPHeaderUseLast) AND $IPHeaderUseLast) {
+        $clientIpHeaderRegExp = "^".$login_status['sensor_client_ip_header'].":\s([0-9.]+,\s)*([12]?[0-9]{1,2}\.[12]?[0-9]{1,2}\.[12]?[0-9]{1,2}\.[12]?[0-9]{1,2})$";
+    } else {
+        $clientIpHeaderRegExp = "^".$login_status['sensor_client_ip_header'].":(\s)([12]?[0-9]{1,2}\.[12]?[0-9]{1,2}\.[12]?[0-9]{1,2}\.[12]?[0-9]{1,2})";
+    }
 }
 
 // Body: read and treatment
@@ -132,7 +136,7 @@ while ( $line < $BodySize) {
                 } elseif (preg_match('/^User-Agent:\s(.+)/i', trim($BODY[$line]), $matchesB)) {
                     $PhaseB['User-Agent'] = $matchesB[1];
                 } elseif ($login_status['sensor_client_ip_header'] != "" AND preg_match("/$clientIpHeaderRegExp/i", trim($BODY[$line]), $matchesB)) {
-                    $PhaseA['ClientIP'] = $matchesB[1];  // Set Client IP (to Phase A) when a HTTP Header is defined to carry real client ip, and sensor are marked to respect this
+                    $PhaseA['ClientIP'] = $matchesB[2];  // Set Client IP (to Phase A) when a HTTP Header is defined to carry real client ip, and sensor are marked to respect this
                 }
                 
                 $PhaseB_full = $PhaseB_full . $BODY[$line];
