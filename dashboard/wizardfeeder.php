@@ -158,7 +158,7 @@ SecAuditLogParts ABIDEFGHZ
 #
 SecAuditLogType Concurrent
 
-SecAuditLog /var/log/mlogc/modsec_audit.log
+SecAuditLog <?PHP print headerprintnobr($_GET['logfile']) . "\n"; ?>
 
 # Specify the path for concurrent audit logging.
 SecAuditLogStorageDir <?PHP print headerprintnobr($_GET['logdir']) ."\n"; ?>
