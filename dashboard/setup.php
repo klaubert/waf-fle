@@ -23,7 +23,8 @@ if (file_exists("../config.php")) {
    }   
    // Create database...
    if (isset($_GET['createDB'])) {
-      if ($_POST['go'] == 'create') {
+      // This will fix undefined index error
+      if (iseet($_POST['go']) && $_POST['go'] == 'create') {
          $handle = fopen($databaseSchema, "r");
          $createTable_events = fread($handle, filesize($databaseSchema));
 
@@ -405,7 +406,8 @@ if (file_exists("../config.php")) {
     // in case of some error, exit
     if ($configphpError) {
         print "<b>Configuration file \"config.php\" has errors, check above what's wrong. After solved, run setup again!</b><br>";
-        break;
+      //  break statement is no longer allowed to use in php7 inside "if"
+        return false;
     } else {
         print "&nbsp;&nbsp; Config looks correct.<br>";
     }
@@ -504,7 +506,8 @@ if (file_exists("../config.php")) {
     }
     if ($extensionError) {
         print "<b>Erro in PHP Extensions, check above what's wrong. After dependency solved, run setup again!</b><br>";
-        break;
+        //  break statement is no longer allowed to use in php7 inside "if"
+        return false ;
     }
     print "<br />";
 
