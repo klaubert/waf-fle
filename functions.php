@@ -1592,12 +1592,12 @@ function eventFilter($offset, $maxnumber, $eventCount)
     }
 
     // Query for events
-    $selector = 'INSERT INTO list_events(event_id) SELECT DISTINCT events.event_id FROM date_range, events ';
+    $selector = 'INSERT INTO list_events(event_id) SELECT DISTINCT event_id FROM (SELECT DISTINCT events.event_id,events.a_timestamp FROM date_range, events ';
     if (count($_SESSION['filterIndexHint']) > 0 and $_SESSION['filterIndexHint'] != false) {
         $selector = $selector . 'USE INDEX '.$filterIndexHint;
     }
     // SQL Query trailer
-    $trailer = ' ORDER BY events.event_id DESC,events.a_timestamp DESC LIMIT '.(($offset-1)*$maxnumber).", $maxnumber";
+    $trailer = ' ORDER BY events.event_id DESC,events.a_timestamp DESC) AS sortedevents LIMIT '.(($offset-1)*$maxnumber).", $maxnumber";
 
     // Call superFilter to filter and get the events
     $eventCount = superFilter($selector, $trailer, $filterType, TRUE);
@@ -2493,6 +2493,7 @@ function saveSensor($sensorToSave, $sensorName, $sensorIp, $sensorDescription, $
         $sth->bindParam(":ip", $sensorIp);
         $sth->bindParam(":type", $sensorType);
         $sth->bindParam(":description", $sensorDescription);
+        $clientIpInHeader = (int)$clientIpInHeader;
         $sth->bindParam(":clientIpInHeader", $clientIpInHeader);
         $sth->bindParam(":clientIpHeader", $clientIpHeader);
 
