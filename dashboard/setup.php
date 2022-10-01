@@ -405,7 +405,7 @@ if (file_exists("../config.php")) {
     // in case of some error, exit
     if ($configphpError) {
         print "<b>Configuration file \"config.php\" has errors, check above what's wrong. After solved, run setup again!</b><br>";
-        break;
+        die();
     } else {
         print "&nbsp;&nbsp; Config looks correct.<br>";
     }
@@ -503,8 +503,8 @@ if (file_exists("../config.php")) {
         $extensionError = true;
     }
     if ($extensionError) {
-        print "<b>Erro in PHP Extensions, check above what's wrong. After dependency solved, run setup again!</b><br>";
-        break;
+        print "<b>Error in PHP Extensions, check above what's wrong. After dependency solved, run setup again!</b><br>";
+        die();
     }
     print "<br />";
 

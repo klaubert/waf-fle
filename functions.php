@@ -1593,7 +1593,7 @@ function eventFilter($offset, $maxnumber, $eventCount)
 
     // Query for events
     $selector = 'INSERT INTO list_events(event_id) SELECT DISTINCT events.event_id FROM date_range, events ';
-    if (count($_SESSION['filterIndexHint']) > 0 and $_SESSION['filterIndexHint'] != false) {
+    if (!empty($_SESSION['filterIndexHint'])) {
         $selector = $selector . 'USE INDEX '.$filterIndexHint;
     }
     // SQL Query trailer
@@ -1693,7 +1693,7 @@ function eventFilterCount($filterType = 'filter')
     } else {
         $selector = 'SELECT count(events.event_id) as eventsCount FROM date_range, events ';
     }
-    if (count($_SESSION['filterIndexHint']) > 0 and $_SESSION['filterIndexHint'] != false) {
+    if (!empty($_SESSION['filterIndexHint'])) {
         $selector = $selector . 'USE INDEX '.$filterIndexHint;
     }
     $numargs = func_num_args();
